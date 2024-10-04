@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('entry_codes', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('client_id')->unsigned();
+            $table->bigInteger('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('token');
             $table->string('image')->nullable();
             $table->boolean('status')->default(1);

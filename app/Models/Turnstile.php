@@ -11,8 +11,8 @@ class Turnstile extends Model
 
     protected $guarded =[];
 
-    public function clients(): BelongsTo{
+    public function users(): BelongsTo{
 
-        return $this->belongsTo(Client::class,foreignKey: 'client_id');
+        return $this->belongsTo(User::class,foreignKey: 'user_id');
     }
 }

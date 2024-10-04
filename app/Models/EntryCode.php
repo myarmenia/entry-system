@@ -13,6 +13,6 @@ class EntryCode extends Model
 
     public function entry_codes(): BelongsTo{
 
-        return $this->belongsTo(Client::class,'client_id');
+        return $this->belongsTo(User::class,'user_id');
     }
 }
