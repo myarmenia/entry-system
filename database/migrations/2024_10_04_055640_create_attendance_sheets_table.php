@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('attendance_sheets', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('people_id')->unsigned()->nullable();
+            $table->foreign('people_id')->references('id')->on('people')->onDelete('cascade');
             $table->timestamp('entry_date')->nullable();
             $table->timestamp('exit_date')->nullable();
             $table->timestamps();

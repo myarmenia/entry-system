@@ -12,25 +12,7 @@ class Client extends Model
 
     protected $guarded =[];
 
-    public function person_position(): BelongsToMany{
-
-        return $this->belongsToMany(PersonPosition::class);
-
-    }
-    public function entry_codes(): HasMany{
-
-        return $this->hasMany(EntryCode::class);
-    }
-    public function people(): HasMany{
-
-        return $this->hasMany(Person::class);
-    }
-    public function turnstiles(){
-
-        return $this->hasMany(Turnstile::class);
-
-    }
-
+    
 
 
 }

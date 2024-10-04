@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<main id="main" class="main">
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
@@ -27,5 +28,5 @@
     </div>
 </div>
 
-<p class="text-center text-primary"><small>Tutorial by ItSolutionStuff.com</small></p>
+<main>
 @endsection

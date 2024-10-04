@@ -10,9 +10,9 @@ class Person extends Model
     use HasFactory;
     protected $guarded =[];
 
-    public function clients(): BelongsTo{
+    public function users(): BelongsTo{
 
-        return $this->belongsTo(Client::class,'client_id');
+        return $this->belongsTo(User::class,'user_id');
     }
     public function person_permissions(){
         return $this->hasMany(PersonPermission::class);

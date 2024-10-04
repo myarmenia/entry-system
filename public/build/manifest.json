@@ -1,9 +1,12 @@
 {
   "resources/js/app.js": {
-    "file": "assets/app-CrG75o6_.js",
+    "file": "assets/app-0-9ppjNO.js",
     "name": "app",
     "src": "resources/js/app.js",
-    "isEntry": true
+    "isEntry": true,
+    "css": [
+      "assets/app-DUEfxN0n.css"
+    ]
   },
   "resources/sass/app.scss": {
     "file": "assets/app-DBEl1KqF.css",
