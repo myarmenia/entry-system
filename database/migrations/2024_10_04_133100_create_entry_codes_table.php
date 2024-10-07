@@ -12,14 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('entry_codes', function (Blueprint $table) {
-            $table->id();
+            $table->id()->from(1000);
             $table->bigInteger('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('token');
+            $table->string('token')->unique();
             $table->string('image')->nullable();
             $table->boolean('status')->default(1);
-            $table->string('number')->unique()->nullable();
-            $table->boolean('activation')->default(1);
+            $table->boolean('activation')->default(0);
             $table->string('type');
             $table->timestamps();
         });

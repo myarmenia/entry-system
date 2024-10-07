@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PeopleRequest extends FormRequest
+class EntryCodeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,10 +22,11 @@ class PeopleRequest extends FormRequest
     public function rules(): array
     {
 
-        return [
+            return [
 
-            'token' => 'required',
-            'type' => 'required',
-        ];
+                'token' => 'required',
+                'type' => 'required',
+            ];
+       
     }
 }

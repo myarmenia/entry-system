@@ -1,9 +1,13 @@
 <?php
 namespace App\Traits;
 
+use App\Models\EntryCode;
+use App\Models\PersonPermission;
 use App\Services\FileUploadService;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 
 trait StoreTrait
 {
@@ -12,44 +16,52 @@ trait StoreTrait
 
     public function itemStore( $request)
     {
-        // dd($request);
-        $data = $request->except(['token', 'number', 'type','image','activation']);
+
+        $data = $request->except('image');
 
         $className = $this->model();
 
         if (class_exists($className)) {
 
-        $model = new $className;
-        $relation_foreign_key = $model->getForeignKey();
-        $table_name = $model->getTable();
+            $model = new $className;
 
-        if (in_array('user_id', Schema::getColumnListing($table_name))) {
-            $data['user_id'] = Auth::id();
+            $relation_foreign_key = $model->getForeignKey();
+            $table_name = $model->getTable();
 
-        }
+            if (in_array('user_id', Schema::getColumnListing($table_name))) {
+                $data['user_id'] = Auth::id();
 
-
-        $item = $model::create($data);
-
-            if ($item) {
-
-                if ($photo = $request['image'] ?? null) {
-                $path = FileUploadService::upload($request['image'], $table_name . '/' . $item->id);
-                $photoData = [
-                    'path' => $path,
-                    'name' => $photo->getClientOriginalName()
-                ];
-dd($item);
-                $item->entry_code()->create($photoData);
-                }
-
-
-
-
-                return true;
             }
-            return true;
-        }
+
+            $item = $model::create($data);
+
+            if ($photo = $request['image'] ?? null) {
+                $path = FileUploadService::upload($request['image'], $table_name . '/' .$item->id);
+
+                    $item->image = $path;
+                    $item->save();
+                    $filePath = 'private/' . $path;
+                    // dd($filePath);
+                    if (Storage::disk('local')->exists($path)) {
+                        // dd(888);
+                        // Serve the file as a response (to display or download it)
+                        return true;
+                    } else {
+                        dd(777);
+                        // Handle the case where the file doesn't exist
+                        return abort(404, 'File not found.');
+                    }
+
+            }
+
+        return true;
+
+
+
+    }
+
+
+
     }
 
 

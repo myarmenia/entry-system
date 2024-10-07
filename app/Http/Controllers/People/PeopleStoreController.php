@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\People;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\PeopleRequest;
-use App\Models\Person;
+use App\Http\Requests\EntryCodeRequest;
+use App\Models\EntryCode;
 use App\Traits\StoreTrait;
 use Illuminate\Http\Request;
 
@@ -14,10 +14,10 @@ class PeopleStoreController extends Controller
 
    public function model()
    {
-      return Person::class;
+      return EntryCode::class;
    }
 
-    public function store(PeopleRequest $request)
+    public function store(EntryCodeRequest $request)
 
     {
         // dd($request->all());
