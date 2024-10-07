@@ -9,6 +9,7 @@ class Person extends Model
 {
     use HasFactory;
     protected $guarded =[];
+    protected $table = 'people';
 
     public function users(): BelongsTo{
 

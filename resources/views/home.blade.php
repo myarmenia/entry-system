@@ -23,6 +23,8 @@
 
 </div> --}}
 
+
+{{-- commentel em heto karox e petq gal  --}}
    {{-- @include("navbar") --}}
 
 
@@ -34,7 +36,7 @@
 
     <section class="section">
       <div class="row">
-        
+
         <div class="col-lg-12">
 
 
@@ -42,8 +44,12 @@
 
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Bordered Table</h5>
-              <p>Add <code>.table-bordered</code> for borders on all sides of the table and cells.</p>
+                <div class = "d-flex justify-content-between">
+                    <h5 class="card-title">Աշխատակիցների ցուցակ</h5>
+                    <a href="{{ route('people-create') }}">Create</a>
+
+
+                </div>
               <!-- Bordered Table -->
               <table class="table table-bordered">
                 <thead>
