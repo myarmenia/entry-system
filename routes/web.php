@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ActionController;
 use App\Http\Controllers\People\PeopleCreateController;
+use App\Http\Controllers\People\PeopleEditController;
 use App\Http\Controllers\People\PeopleStoreController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
@@ -33,8 +34,10 @@ Route::group(['middleware' => ['auth']], function() {
 
     Route::get('/create',PeopleCreateController::class)->name('people-create');
     Route::post('/store', [PeopleStoreController::class,'store'])->name('people-store');
+    Route::get('/edit/{id}',[PeopleEditController::class,'edit'])->name('people-edit');
+    Route::put('/update',['PeopleUpdateController::class','update'])->name('entry_codes-update');
+    Route::get('get-file', [FileUploadService::class, 'get_file'])->name('get-file');
 
 
 });
-Route::get('get-file', [FileUploadService::class, 'get_file'])->name('get-file');
 

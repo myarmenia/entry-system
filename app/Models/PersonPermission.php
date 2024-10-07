@@ -11,9 +11,15 @@ class PersonPermission extends Model
 
     protected $guarded =[];
     public function people(): BelongsTo{
-        
+
         return $this->belongsTo(Person::class,'people_id');
     }
+
+    public function entry_codes(): BelongsTo{
+
+        return $this->belongsTo(EntryCode::class,'entry_code_id');
+    }
+
 
 
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Person extends Model
 {
@@ -15,13 +16,15 @@ class Person extends Model
 
         return $this->belongsTo(User::class,'user_id');
     }
-    public function person_permissions(){
-        return $this->hasMany(PersonPermission::class);
+    public function person_permission(): HasOne{
+        return $this->hasOne(PersonPermission::class);
     }
 
-    public function attendance_sheets(){
+    public function attendance_sheets(): HasMany
+    {
         return $this->hasMany(AttendanceSheet::class);
     }
+
 
 
 }
