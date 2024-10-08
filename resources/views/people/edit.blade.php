@@ -41,7 +41,16 @@
 
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Խմբագրել</h5>
+
+              <h5 class="card-title">
+                <nav>
+                    <ol class="breadcrumb">
+                      <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+
+                      <li class="breadcrumb-item active">Խմբագրել</li>
+                    </ol>
+                  </nav>
+              </h5>
 
               <!-- General Form Elements -->
               <form action="{{ route('entry_codes-update',$data->id)}}" method="post" enctype="multipart/form-data">
@@ -52,7 +61,7 @@
 
                   <label for="inputText" class="col-sm-3 col-form-label">Անուն</label>
                   <div class="col-sm-9">
-                    <input type="text" class="form-control" name="name"  value={{$data->person_permissions->people->name  }}>
+                    <input type="text" class="form-control" name="name"  value="{{ $data->person_permissions->people->name ?? null }}">
                   </div>
 
                 </div>
@@ -60,7 +69,7 @@
 
                     <label for="inputText1" class="col-sm-3 col-form-label" >Ազգանուն </label>
                     <div class="col-sm-9">
-                      <input type="text" class="form-control" name="surname" value={{ $data->person_permissions->people->surname }}>
+                      <input type="text" class="form-control" name="surname" value="{{ $data->person_permissions->people->surname??null }}">
                     </div>
 
                 </div>
@@ -68,13 +77,13 @@
                 <div class="row mb-3">
                   <label for="inputEmail" class="col-sm-3 col-form-label">Էլ.հասցե</label>
                   <div class="col-sm-9">
-                    <input type="email" class="form-control"  name="email"  value={{ $data->person_permissions->people->email }}>
+                    <input type="email" class="form-control"  name="email"  value="{{ $data->person_permissions->people->email??null }}">
                   </div>
                 </div>
                 <div class="row mb-3">
                     <label for="inputEmail" class="col-sm-3 col-form-label">Հեռախոսահամար</label>
                     <div class="col-sm-9">
-                      <input type="text" class="form-control" name="phone"  value={{ $data->person_permissions->people->phone }}>
+                      <input type="text" class="form-control" name="phone"  value="{{ $data->person_permissions->people->phone??null }}">
                     </div>
                   </div>
                   <div class="row mb-3">
