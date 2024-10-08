@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
-
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 class EntryCodeRequest extends FormRequest
 {
     /**
@@ -21,13 +22,15 @@ class EntryCodeRequest extends FormRequest
      */
     public function rules(): array
     {
-        dd('Request');
+        return [
+            'token' => 'required',
+            'type' => 'required',
+            'mac' => 'required'
+        ];
+    }
 
-            return [
-
-                'token' => 'required',
-                'type' => 'required',
-            ];
-       
+    protected function failedValidation(Validator $validator)
+    {
+      throw new HttpResponseException(response()->json(['errors' => $validator->errors()], 422));
     }
 }
