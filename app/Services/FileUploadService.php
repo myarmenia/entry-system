@@ -16,10 +16,9 @@ class FileUploadService
         // $filename = $data->getClientOriginalName();
 
         $path = Storage::disk('local')->putFileAs(
-
           'public/' . $folder_path,
-          $data,
-          $filename
+           $data,
+           $filename
         );
 
         return $path;

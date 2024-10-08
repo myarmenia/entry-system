@@ -45,6 +45,7 @@
                     <a href="{{ route('people-create') }}">Create</a>
                 </div>
               <!-- Bordered Table -->
+
               <table class="table table-bordered">
                 <thead>
                   <tr>
@@ -60,17 +61,24 @@
                 <tbody>
 
                     @foreach ($data as $entry_code)
+                    {{-- {{dd($entry_code['person_permissions'])}} --}}
                         <tr>
                             <th scope="row">{{ $entry_code->id }}</th>
 
                             <td>
-                                {{-- <img src="{{ \Storage::dis($entry_code->image) }}" style="width:150px"> --}}
-                                <img src="{{ \Storage::disk('local')->get($entry_code->image) }}" style="width:150px">
+                                <img src = "{{ route('get-file',['path' => $entry_code->image ]) }}" style="width:100px">
                             </td>
-                            <td>D</td>
-                            <td>28</td>
-                            <td>2016-05-25</td>
                             <td>
+                                {{-- {{ $entry_code['person_permissions'] != null &&   $entry_code['person_permissions']['people'] !=null ? $data->person_permissions->people->name : null}} --}}
+                            </td>
+                             <td>
+                                {{-- {{ $entry_code['person_permissions'] != null &&   $entry_code->person_permissions->people !=null ? $data->person_permissions->people->surname : null }} --}}
+                            </td>
+                            <td>
+                                {{-- {{ $entry_code['person_permissions'] != null &&   $entry_code->person_permissions->people !=null  ? $data->person_permissions->people->phone : null }} --}}
+                            </td>
+                            <td>
+
                                 <div class="dropdown action"
                                  {{-- data-id="{{ $entry_code['id'] }}" data-tb-name="entry_codes" --}}
                                  >

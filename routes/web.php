@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ActionController;
+use App\Http\Controllers\EntryCode\EntryCodeUpdateController;
 use App\Http\Controllers\People\PeopleCreateController;
 use App\Http\Controllers\People\PeopleEditController;
 use App\Http\Controllers\People\PeopleStoreController;
@@ -35,9 +36,10 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/create',PeopleCreateController::class)->name('people-create');
     Route::post('/store', [PeopleStoreController::class,'store'])->name('people-store');
     Route::get('/edit/{id}',[PeopleEditController::class,'edit'])->name('people-edit');
-    Route::put('/update',['PeopleUpdateController::class','update'])->name('entry_codes-update');
-    Route::get('get-file', [FileUploadService::class, 'get_file'])->name('get-file');
+    Route::put('/update/{id}',[EntryCodeUpdateController::class,'update'])->name('entry_codes-update');
+
 
 
 });
 
+Route::get('get-file', [FileUploadService::class, 'get_file'])->name('get-file');

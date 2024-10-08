@@ -4,6 +4,8 @@ namespace App\Traits;
 
 use App\Models\EventConfig;
 use App\Models\Image;
+use App\Models\Person;
+use App\Models\PersonPermission;
 use App\Models\Product;
 use App\Models\ProductTranslation;
 use App\Services\FileUploadService;
@@ -21,7 +23,7 @@ trait UpdateTrait
   public function itemUpdate(Request $request, $id)
   {
 
-    $data = $request->except(['translate', 'photo', '_method']);
+    $data = $request->except([ '_method','name', 'surname','email','phone','image']);
 
     $className = $this->model();
 
@@ -34,57 +36,89 @@ trait UpdateTrait
 
       $item = $model::where('id', $id)->first();
 
-      if ($request['translate'] != null && $table_name == 'other_services') {
+      $data['status'] = ($item->status == 0 && $request->has('status')) ? 1 : $data['status'] ?? 0;
 
-          $type = $this->makeOtherServiceType($request['translate']['en']['name']);
-          $data['type'] = $type;
-      }
+
+
+        // if($item->activation == 0  && $request->has('activation')){
+        //     $data['activation'] = 1;
+        // }
+        // if($item->activation == 1  && $request->has('activation')){
+        //     $data['activation'] = 1;
+        // }
+        // if ($item->activation == 1 && !request()->has('activation')) {
+        // $data['activation'] = 0;
+        // }
+
+        $data['activation'] = ($request->has('activation'))
+                                ? (($item->activation == 0 || $item->activation == 1) ? 1 : $data['activation'] ?? null)
+                                : ($item->activation == 1 ? 0 : $data['activation'] ?? null);
+
+
+
 
       $item->update($data);
+      if (isset($request['image'])) {
 
-      if ($item) {
-        if ($request['translate'] != null) {
-          foreach ($request['translate'] as $key => $lang) {
+        if (Storage::exists($item->image)) {
 
-            $item->item_translations()->where([$relation_foreign_key => $id, 'lang' => $key])->update($lang);
-          }
-
+          Storage::delete($item->image);
         }
+        $path = FileUploadService::upload($request['image'], $table_name . '/' . $id);
 
-        if (isset($request['photo'])) {
-
-
-          $image = Image::where(['imageable_id' => $id, 'imageable_type' => $className])->first();
-
-
-          if (Storage::exists($image->path)) {
-
-            Storage::delete($image->path);
-
-            $image->delete();
-          }
-          $path = FileUploadService::upload($request['photo'], $table_name . '/' . $id);
-          $photoData = [
-            'path' => $path,
-            'name' => $request['photo']->getClientOriginalName()
-          ];
-
-          $item->images()->create($photoData);
-
-        }
-
-        if($className=="App\Models\Event"){
-          $item_config=self::update_config($item);
-        }
-
-        
-
-        return true;
+        $item->image = $path;
+        $item->save();
       }
+      if($item) {
+        $person=$this->people($request, $id);
+        if($person){
+            return true;
+        }
+      }
+
+
+
     } else {
 
       return false;
     }
+  }
+     public function people($request, $entryCodeid){
+
+        $personPermmission=PersonPermission::where('entry_code_id',$entryCodeid)->first();
+
+        if($personPermmission==null){
+
+
+            $people = new Person;
+            $people->user_id = Auth::id();
+            $people->name = $request->name;
+            $people->surname = $request->surname;
+            $people->phone = $request->phone;
+            $people->email = $request->email;
+            $people->save();
+
+            $personPermission = PersonPermission::create([
+                'people_id' => $people->id,
+                'entry_code_id' => $entryCodeid
+
+            ]);
+
+        }else{
+
+            $peopleData['name'] = $request->name;
+            $peopleData['surname'] = $request->surname;
+            $peopleData['phone'] = $request->phone;
+            $peopleData['email'] = $request->email;
+
+            $person = Person::where('id',$personPermmission->people->id)->first();
+            $person->update($peopleData);
+
+
+        }
+
+        return true;
+
   }
 
 }
