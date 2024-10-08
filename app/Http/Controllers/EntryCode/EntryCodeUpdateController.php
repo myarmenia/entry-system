@@ -16,7 +16,7 @@ class EntryCodeUpdateController extends Controller
 
         return EntryCode::class;
     }
-    public function update(EntryCodeRequest $request,$id)
+    public function update(Request $request,$id)
     {
         // dd($request->all(), $id);
         $data = $this->itemUpdate($request,$id);
