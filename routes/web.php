@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ActionController;
+use App\Http\Controllers\ChangeStatusController;
 use App\Http\Controllers\EntryCode\EntryCodeUpdateController;
 use App\Http\Controllers\People\PeopleCreateController;
 use App\Http\Controllers\People\PeopleEditController;
@@ -37,7 +38,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/store', [PeopleStoreController::class,'store'])->name('people-store');
     Route::get('/edit/{id}',[PeopleEditController::class,'edit'])->name('people-edit');
     Route::put('/update/{id}',[EntryCodeUpdateController::class,'update'])->name('entry_codes-update');
-
+    Route::post('/change-status', [ChangeStatusController::class, 'change_status'])->name('change_status');
 
 
 });

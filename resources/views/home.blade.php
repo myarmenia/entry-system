@@ -1,27 +1,11 @@
 @extends('layouts.app')
 
+{{-- @section("page-script")
+    <script src="{{ asset('assets/js/change-status.js') }}"></script>
+
+@endsection --}}
+
 @section('content')
-{{-- <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
-
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    {{ __('You are logged in!') }}
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-</div> --}}
 
 
 {{-- commentel em heto karox e petq gal  --}}
@@ -61,32 +45,34 @@
                 <tbody>
 
                     @foreach ($data as $entry_code)
-                    {{-- {{dd($entry_code['person_permissions'])}} --}}
+
                         <tr>
                             <th scope="row">{{ $entry_code->id }}</th>
 
                             <td>
-                                <img src = "{{ route('get-file',['path' => $entry_code->image ]) }}" style="width:100px">
+                                <img src = "{{ route('get-file',['path' => $entry_code->image ]) }}" style="width:80px">
                             </td>
                             <td>
-                                {{-- {{ $entry_code['person_permissions'] != null &&   $entry_code['person_permissions']['people'] !=null ? $data->person_permissions->people->name : null}} --}}
+                                {{ $entry_code->person_permissions->people->name ?? null }}
+
                             </td>
                              <td>
-                                {{-- {{ $entry_code['person_permissions'] != null &&   $entry_code->person_permissions->people !=null ? $data->person_permissions->people->surname : null }} --}}
+                                {{ $entry_code->person_permissions->people->surname ?? null }}
+
                             </td>
                             <td>
-                                {{-- {{ $entry_code['person_permissions'] != null &&   $entry_code->person_permissions->people !=null  ? $data->person_permissions->people->phone : null }} --}}
+                                {{ $entry_code->person_permissions->people->phone ?? null }}
                             </td>
                             <td>
 
                                 <div class="dropdown action"
-                                 {{-- data-id="{{ $entry_code['id'] }}" data-tb-name="entry_codes" --}}
+                                 data-id="{{ $entry_code['id'] }}" data-tb-name="entry_codes"
                                  >
                                     <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
                                         data-bs-toggle="dropdown">
                                         <i class="bx bx-dots-vertical-rounded"></i>
                                     </button>
-                                    <div class="dropdown-menu">
+                                    <div class="dropdown-menu ">
                                       <a class="dropdown-item d-flex" href="javascript:void(0);">
                                         <div class="form-check form-switch">
                                             <input class="form-check-input change_status" type="checkbox"
@@ -124,6 +110,11 @@
     </section>
 
   </main><!-- End #main -->
+<script>
 
+    let actionClass =document.querySelectorAll('.action');
+    console.log(actionClass)
+</script>
 
 @endsection
+

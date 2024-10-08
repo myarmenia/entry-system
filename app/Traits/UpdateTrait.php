@@ -38,21 +38,19 @@ trait UpdateTrait
 
       $data['status'] = ($item->status == 0 && $request->has('status')) ? 1 : $data['status'] ?? 0;
 
+        if($item->activation == 0  && $request->has('activation')){
+            $data['activation'] = 1;
+        }
+        if($item->activation == 1  && $request->has('activation')){
+            $data['activation'] = 1;
+        }
+        if ($item->activation == 1 && !request()->has('activation')) {
+        $data['activation'] = 0;
+        }
 
-
-        // if($item->activation == 0  && $request->has('activation')){
-        //     $data['activation'] = 1;
-        // }
-        // if($item->activation == 1  && $request->has('activation')){
-        //     $data['activation'] = 1;
-        // }
-        // if ($item->activation == 1 && !request()->has('activation')) {
-        // $data['activation'] = 0;
-        // }
-
-        $data['activation'] = ($request->has('activation'))
-                                ? (($item->activation == 0 || $item->activation == 1) ? 1 : $data['activation'] ?? null)
-                                : ($item->activation == 1 ? 0 : $data['activation'] ?? null);
+        // $data['activation'] = ($request->has('activation'))
+        //                         ? (($item->activation == 0 || $item->activation == 1) ? 1 : $data['activation'] ?? null)
+        //                         : ($item->activation == 1 ? 0 : $data['activation'] ?? null);
 
 
 
