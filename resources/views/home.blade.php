@@ -9,7 +9,7 @@
 
 
 {{-- commentel em heto karox e petq gal  --}}
-   @include("navbar")
+   {{-- @include("navbar") --}}
 
 
 
