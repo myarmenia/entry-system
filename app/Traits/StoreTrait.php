@@ -28,31 +28,27 @@ trait StoreTrait
             $relation_foreign_key = $model->getForeignKey();
             $table_name = $model->getTable();
 
-            if (in_array('user_id', Schema::getColumnListing($table_name))) {
-                $data['user_id'] = Auth::id();
-
-            }
 
             $item = $model::create($data);
 
-            if ($photo = $request['image'] ?? null) {
-                $path = FileUploadService::upload($request['image'], $table_name . '/' .$item->id);
+            // if ($photo = $request['image'] ?? null) {
+            //     $path = FileUploadService::upload($request['image'], $table_name . '/' .$item->id);
 
-                    $item->image = $path;
-                    $item->save();
-                    $filePath = 'private/' . $path;
-                    // dd($filePath);
-                    if (Storage::disk('local')->exists($path)) {
-                        // dd(888);
-                        // Serve the file as a response (to display or download it)
-                        return true;
-                    } else {
-                        dd(777);
-                        // Handle the case where the file doesn't exist
-                        return abort(404, 'File not found.');
-                    }
+            //         $item->image = $path;
+            //         $item->save();
+            //         $filePath = 'private/' . $path;
+            //         // dd($filePath);
+            //         if (Storage::disk('local')->exists($path)) {
+            //             // dd(888);
+            //             // Serve the file as a response (to display or download it)
+            //             return true;
+            //         } else {
+            //             dd(777);
+            //             // Handle the case where the file doesn't exist
+            //             return abort(404, 'File not found.');
+            //         }
 
-            }
+            // }
 
         return true;
 

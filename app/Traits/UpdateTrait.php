@@ -48,27 +48,31 @@ trait UpdateTrait
         $data['activation'] = 0;
         }
 
-        // $data['activation'] = ($request->has('activation'))
-        //                         ? (($item->activation == 0 || $item->activation == 1) ? 1 : $data['activation'] ?? null)
-        //                         : ($item->activation == 1 ? 0 : $data['activation'] ?? null);
 
 
 
 
       $item->update($data);
+
       if (isset($request['image'])) {
+        // dd($request->all());
+        // dd($request['image']);
+        if($item->image!=null){
+            if (Storage::exists($item->image)) {
 
-        if (Storage::exists($item->image)) {
-
-          Storage::delete($item->image);
+            Storage::delete($item->image);
+            }
         }
-        $path = FileUploadService::upload($request['image'], $table_name . '/' . $id);
+
+        $path = FileUploadService::upload($request['image'],  $table_name . '/' . $id);
 
         $item->image = $path;
         $item->save();
       }
+
       if($item) {
-        $person=$this->people($request, $id);
+        $clientId=$item->user_id;
+        $person=$this->people($request,$clientId, $id);
         if($person){
             return true;
         }
@@ -81,7 +85,7 @@ trait UpdateTrait
       return false;
     }
   }
-     public function people($request, $entryCodeid){
+     public function people($request, $clientId, $entryCodeid){
 
         $personPermmission=PersonPermission::where('entry_code_id',$entryCodeid)->first();
 
@@ -89,7 +93,7 @@ trait UpdateTrait
 
 
             $people = new Person;
-            $people->user_id = Auth::id();
+            $people->user_id = $clientId;
             $people->name = $request->name;
             $people->surname = $request->surname;
             $people->phone = $request->phone;

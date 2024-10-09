@@ -41,11 +41,38 @@
 
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Ստեղծել աշխատակից</h5>
+              <h5 class="card-title">
+                <nav>
+                    <ol class="breadcrumb">
+                      <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+
+                      <li class="breadcrumb-item active">Ստեղծել գործատուի մուտքի կոդերը</li>
+                    </ol>
+                  </nav>
+              </h5>
 
               <!-- General Form Elements -->
-              <form action="{{ route('people-store')}}" method="post" enctype="multipart/form-data">
-                @csrf
+              <form action="{{ route('entry-codes-store')}}" method="post" enctype="multipart/form-data">
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">Գործատուների ցուցակ </label>
+                    <div class="col-sm-10">
+                      <select class="form-select" aria-label="Default select example" name ="user_id">
+                        <option value='' disabled >Ընտրել գործատուին </option>
+                        @foreach ($clients as  $client)
+                            <option value="{{ $client->id }}">{{ $client->name }}</option>
+                        @endforeach
+
+                      </select>
+                      @error("type")
+                          <div class="mb-3 row justify-content-end">
+                              <div class="col-sm-10 text-danger fts-14">{{ $message }}
+                              </div>
+                          </div>
+                      @enderror
+                    </div>
+
+                  </div>
+
                   <div class="row mb-3">
                         <label for="inputEmail" class="col-sm-2 col-form-label">Թոքեն </label>
                         <div class="col-sm-10">
@@ -58,12 +85,12 @@
                             </div>
                         @enderror
                   </div>
-                <div class="row mb-3">
+                {{-- <div class="row mb-3">
                   <label for="inputNumber" class="col-sm-2 col-form-label">ներբեռնել նկար</label>
                   <div class="col-sm-10">
                     <input class="form-control" type="file" id="formFile" name="image">
                   </div>
-                </div>
+                </div> --}}
                 <div class="row mb-3">
                   <label class="col-sm-2 col-form-label">Տեսակ</label>
                   <div class="col-sm-10">

@@ -8,6 +8,7 @@ use App\Interfaces\FindEntryCodeInterface;
 use App\Repositories\CreateEntryCodeRepository;
 use App\Repositories\FindEntryCodeRepository;
 use App\Repositories\TurnstileRepository;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -29,6 +30,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Paginator::useBootstrapFive();
     }
 }
