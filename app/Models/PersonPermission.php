@@ -16,7 +16,7 @@ class PersonPermission extends Model
         return $this->belongsTo(Person::class,'people_id');
     }
 
-    public function entry_codes(): BelongsTo{
+    public function entry_code(): BelongsTo{
 
         return $this->belongsTo(EntryCode::class,'entry_code_id');
     }
