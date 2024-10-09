@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\Turnstile;
 
-use App\DTO\EntryCodeTdo;
+use App\DTO\EntryCodeDto;
 use App\Http\Controllers\API\BaseController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\EntryCodeRequest;
@@ -17,21 +17,17 @@ class EntryCodeController extends BaseController
 
     }
 
-    public function store(Request $request)
+    public function store(EntryCodeRequest $request): mixed
     {
-       
+
         $entryCode = $this->service->store(
-            EntryCodeTdo::fromApiRequest($request),
+            EntryCodeDto::fromApiRequest($request)
         );
 
         $data = EntryCodeResource::make($entryCode);
-        
+
         return $entryCode ? $this->sendResponse($data, 'success') : $this->sendError('error');
     }
 
-    public function test(Request $request)
-    {
-        dd(12);
-       
-    }
+
 }
