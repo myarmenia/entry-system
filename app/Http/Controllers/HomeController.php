@@ -26,7 +26,7 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-
+        // where('user_id', Auth::id())->
         $data = EntryCode::with('person_permissions.people' )
                             ->orderBy('id', 'DESC')->paginate(3)->withQueryString();
 

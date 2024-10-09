@@ -21,13 +21,13 @@ class EntryCodeRequest extends FormRequest
      */
     public function rules(): array
     {
-        dd('Request');
+ 
 
             return [
 
                 'token' => 'required',
                 'type' => 'required',
             ];
-       
+
     }
 }

@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('people_id')->unsigned()->nullable();
             $table->foreign('people_id')->references('id')->on('people')->onDelete('cascade');
-            $table->timestamp('entry_date')->nullable();
-            $table->timestamp('exit_date')->nullable();
+            $table->timestamp('date')->nullable();
+            $table->string('type')->nullable();
+            $table->string('local_ip')->nullable();
             $table->timestamps();
         });
     }
