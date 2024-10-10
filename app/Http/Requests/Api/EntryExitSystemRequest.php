@@ -5,7 +5,7 @@ namespace App\Http\Requests\Api;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
-class CheckQRRequest extends FormRequest
+class EntryExitSystemRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,16 +22,16 @@ class CheckQRRequest extends FormRequest
      */
     public function rules(): array
     {
-
         return [
-          'mac' => 'required',
-          'qr' => 'required'
+            'entry_code' => 'required',
+            'date_time' => 'required',
+            'mac' => 'required',
+            'type' => 'required'
         ];
-
     }
 
     protected function failedValidation(Validator $validator)
     {
-      throw new HttpResponseException(response()->json(['errors' => $validator->errors()], 422));
+        throw new HttpResponseException(response()->json(['errors' => $validator->errors()], 422));
     }
 }

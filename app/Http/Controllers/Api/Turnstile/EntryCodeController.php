@@ -24,9 +24,9 @@ class EntryCodeController extends BaseController
             EntryCodeDto::fromApiRequest($request)
         );
 
-        $data = EntryCodeResource::make($entryCode);
+        $data = $entryCode->result != null ? EntryCodeResource::make($entryCode->result) : null;
 
-        return $entryCode ? $this->sendResponse($data, 'success') : $this->sendError('error');
+        return $entryCode->result != null ? $this->sendResponse($data, $entryCode->message) : $this->sendError($entryCode->message);
     }
 
 
