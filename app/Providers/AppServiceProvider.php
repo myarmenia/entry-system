@@ -7,7 +7,9 @@ use App\Interfaces\CreateEntryCodeInterface;
 use App\Interfaces\FindEntryCodeInterface;
 use App\Repositories\CreateEntryCodeRepository;
 use App\Repositories\FindEntryCodeRepository;
+use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Repositories\TurnstileRepository;
+use App\Repositories\UserRepository;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
@@ -21,7 +23,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CreateEntryCodeInterface::class, CreateEntryCodeRepository::class);
         $this->app->bind(FindEntryCodeInterface::class, FindEntryCodeRepository::class);
         $this->app->bind(ClientIdFromTurnstileInterface::class, TurnstileRepository::class);
-        
+        $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+
 
     }
 
