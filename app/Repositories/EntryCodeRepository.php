@@ -2,21 +2,15 @@
 
 namespace App\Repositories;
 use App\Interfaces\CreateEntryCodeInterface;
-use App\Interfaces\FindEntryCodeInterface;
 use App\Models\EntryCode;
 
 
-class EntryCodeRepository implements CreateEntryCodeInterface, FindEntryCodeInterface
+class EntryCodeRepository implements CreateEntryCodeInterface
 {
 
-    public function create(array $data)
+    public function create(array $data): EntryCode
     {
         return EntryCode::create($data);
-    }
-
-    public function find($token)
-    {
-        return EntryCode::where('token', $token);
     }
 
 

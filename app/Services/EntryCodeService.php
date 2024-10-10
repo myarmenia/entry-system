@@ -6,18 +6,14 @@ namespace App\Services;
 use App\DTO\EntryCodeDto;
 use App\Interfaces\ClientIdFromTurnstileInterface;
 use App\Interfaces\CreateEntryCodeInterface;
-use App\Interfaces\FindEntryCodeInterface;
-use App\Models\EntryCode;
-use App\Models\Turnstile;
-use App\Repositories\EntryCodeRepository;
 use Illuminate\Http\Request;
 
 class EntryCodeService
 {
 
     public function __construct(
-        protected CreateEntryCodeInterface $createEntryCodeInterface,
-        protected ClientIdFromTurnstileInterface $clientIdFromTurnstileInterface
+        protected CreateEntryCodeInterface $createEntryCodeRepository,
+        protected ClientIdFromTurnstileInterface $clientIdFromTurnstileRepository
 
     ) {
     }
@@ -26,11 +22,25 @@ class EntryCodeService
     public function store(EntryCodeDto $dto)
     {
 
-        $client_id = $this->clientIdFromTurnstileInterface->getId($dto->mac);
+        $result = null;
+        $message = 'success';
 
-        $dto->user_id = $client_id;
+        $client_id = $this->clientIdFromTurnstileRepository->getClientId($dto->mac);
 
-        return $this->createEntryCodeInterface->create($dto->toArray());
+        if(!$client_id){
+            $message = 'invalid mac';
+        }
+
+        else{
+
+            $dto->client_id = $client_id;
+            $result = $this->createEntryCodeRepository->create($dto->toArray());
+        }
+
+        return (object) [
+            'message' => $message,
+            'result' => $result
+        ];
 
     }
 

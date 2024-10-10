@@ -12,7 +12,7 @@ class EntryCodeDto
         public readonly string $token,
         public readonly string $type,
         public readonly string $mac,
-        public int $user_id = 0
+        public ?int $client_id = null
 
     ) {
     }
@@ -39,7 +39,7 @@ class EntryCodeDto
     public function toArray()
     {
         return [
-            'user_id' => $this->user_id,
+            'client_id' => $this->client_id,
             'type' => $this->type,
             'token' => $this->token
         ];

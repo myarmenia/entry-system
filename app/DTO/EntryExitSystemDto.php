@@ -3,21 +3,21 @@
 namespace App\DTO;
 use Illuminate\Http\Request;
 
-class CheckEntryCodeDto
+class EntryExitSystemDto
 {
 
     public function __construct(
         public readonly string $mac,
         public readonly string $entry_code,
-        public readonly string $date_time,
+        public  string $date_time,
         public readonly string $local_ip,
-        public readonly string $type
-
+        public readonly string $type,
+        public ?int $people_id = null
 
     ) {
     }
 
-    public static function fromCheckEntryCode(Request $request): CheckEntryCodeDto
+    public static function fromEntryExitSystemDto(Request $request): EntryExitSystemDto
     {
         return new self(
             mac: $request->mac,
@@ -28,5 +28,15 @@ class CheckEntryCodeDto
         );
     }
 
-    
+    public function toArray()
+    {
+        return [
+            'date' => $this->date_time,
+            'local_ip' => $this->local_ip,
+            'type' => $this->type,
+            'people_id' => $this->people_id
+        ];
+    }
+
+
 }

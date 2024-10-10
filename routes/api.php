@@ -1,8 +1,7 @@
 <?php
 
-use App\Http\Controllers\Api\Turnstile\CheckEntryCodeController;
 use App\Http\Controllers\Api\Turnstile\EntryCodeController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\Turnstile\EntryExitSystemController;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/user', function (Request $request) {
@@ -16,7 +15,7 @@ Route::group(['prefix' => 'turnstile'], function ($router) {
 
     Route::post('entry-code/store', [EntryCodeController::class, 'store']);
 
-    Route::post('check-code', CheckEntryCodeController::class);
+    Route::post('ees', EntryExitSystemController::class);  //  Entry/Exit System
     // Route::post('active-qrs', ActiveQrsController::class);
     // Route::post('qr-black-list', QrBlackListController::class);
 
