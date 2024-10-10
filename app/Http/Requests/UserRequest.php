@@ -21,12 +21,20 @@ class UserRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+// dd(request()->all());
+        $rules = [
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|same:confirm-password',
             'roles' => 'required',
-            'client.name'=> 'required',
         ];
+        if(request()->has('client')){
+
+            $rules['client.name'] = 'required';
+            
+        }
+
+        return $rules;
+
     }
 }

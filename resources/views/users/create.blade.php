@@ -113,7 +113,7 @@
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control" name="name"
                                             placeholder="Աշխատակցի անունը"
-                                            value="">
+                                            value="{{ old('name') }}">
                                         @error('name')
                                             <div class="mb-3 row justify-content-start">
                                                 <div class="col-sm-9 text-danger fts-14">{{ $message }}
@@ -128,7 +128,7 @@
                                     <div class="col-sm-9">
                                         <input type="email" class="form-control" name="email"
                                             placeholder="example@gmail.com"
-                                            value="">
+                                            value="{{ old('email') }}">
                                         @error('email')
                                             <div class="mb-3 row justify-content-start">
                                                 <div class="col-sm-9 text-danger fts-14">{{ $message }}
@@ -144,7 +144,7 @@
                                 <div class="row mb-3">
                                     <label for="inputEmail"  class="col-sm-3 col-form-label">Գաղտնաբառ</label>
                                     <div class="col-sm-9">
-                                        <input type="password" name="password" class="form-control" placeholder="Password">
+                                        <input type="password" name="password" class="form-control" placeholder="Password" value="{{ old('email') }}">
                                         @error('password')
                                         <div class="mb-3 row justify-content-start">
                                             <div class="col-sm-9 text-danger fts-14">{{ $message }}
@@ -157,7 +157,7 @@
                                 <div class="row mb-3">
                                     <label for="inputEmail" class="col-sm-3 col-form-label">Հաստատել գաղտնաբառը</label>
                                     <div class="col-sm-9">
-                                        <input type="password" name="confirm-password" class="form-control" placeholder="Confirm Password">
+                                        <input type="password" name="confirm-password" class="form-control" placeholder="Confirm Password" value="{{ old('email') }}">
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -180,17 +180,19 @@
 
                                 </div>
 
-
-
-
-
-
                         </div>
                     </div>
 
                 </div>
 
-                <div id="componentContainer"></div>
+                <div id="componentContainer">
+                    @if ($errors->has('client.name'))
+                        <x-client/>
+                    @endif
+
+
+
+                </div>
                 <div class="row mb-3">
                     <label class="col-sm-2 col-form-label"></label>
                     <div class="col-sm-10">

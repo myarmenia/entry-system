@@ -13,6 +13,7 @@ use Hash;
 use Illuminate\Support\Arr;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -41,7 +42,13 @@ class UserController extends Controller
      */
     public function create(): View
     {
-        $roles = Role::pluck('name','name')->all();
+   
+        if(Auth::user()->roles[0]->interface == 'client'){
+            $roles = Role::where('position_name','client')->pluck('name', 'name')->all();
+        }else{
+            $roles = Role::where('position_name','admin')->pluck('name', 'name')->all();
+        }
+
 
         return view('users.create',compact('roles'));
     }
@@ -52,34 +59,12 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    // public function store(Request $request): RedirectResponse
-    // {
-    //     $this->validate($request, [
-    //         'name' => 'required',
-    //         'email' => 'required|email|unique:users,email',
-    //         'password' => 'required|same:confirm-password',
-    //         'roles' => 'required'
-    //     ]);
-
-    //     $input = $request->all();
-    //     $input['password'] = Hash::make($input['password']);
-
-    //     $user = User::create($input);
-    //     $user->assignRole($request->input('roles'));
-
-    //     return redirect()->route('users.index')
-    //                     ->with('success','User created successfully');
-    // }
-    public function store(UserRequest $request): RedirectResponse
+       public function store(UserRequest $request): RedirectResponse
     {
+
         $data=$request->all();
+
         $user = $this->userService->createUser($data);
-
-        // $input = $request->all();
-        // $input['password'] = Hash::make($input['password']);
-
-        // $user = User::create($input);
-        // $user->assignRole($request->input('roles'));
 
         return redirect()->route('users.index')
                         ->with('success','User created successfully');

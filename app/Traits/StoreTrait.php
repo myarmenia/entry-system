@@ -1,6 +1,7 @@
 <?php
 namespace App\Traits;
 
+use App\Models\Client;
 use App\Models\EntryCode;
 use App\Models\PersonPermission;
 use App\Services\FileUploadService;
@@ -16,6 +17,7 @@ trait StoreTrait
 
     public function itemStore( $request)
     {
+
 
         $data = $request->except('image');
 
