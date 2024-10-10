@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('turnstiles', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id')->unsigned()->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->bigInteger('client_id')->unsigned()->nullable();
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
             $table->string('mac');
             $table->timestamps();
         });

@@ -11,8 +11,8 @@ class PersonPosition extends Model
     protected $guarded=[];
 
 
-    public  function users(){
-        return $this->belongsToMany(User::class);
+    public  function client(){
+        return $this->belongsToMany(Client::class);
     }
 
 }

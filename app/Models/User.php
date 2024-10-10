@@ -45,11 +45,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function person_position(): BelongsToMany{
-
-        return $this->belongsToMany(PersonPosition::class);
-
-    }
+   
     public function entry_codes(): HasMany{
 
         return $this->hasMany(EntryCode::class);
@@ -61,6 +57,11 @@ class User extends Authenticatable
     public function turnstiles(){
 
         return $this->hasMany(Turnstile::class);
+
+    }
+    public function staff(){
+
+        return $this->hasMany(Staff::class);
 
     }
 

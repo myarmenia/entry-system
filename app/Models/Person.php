@@ -12,9 +12,9 @@ class Person extends Model
     protected $guarded =[];
     protected $table = 'people';
 
-    public function users(): BelongsTo{
+    public function client(): BelongsTo{
 
-        return $this->belongsTo(User::class,'user_id');
+        return $this->belongsTo(Client::class,'client_id');
     }
     public function person_permission(): HasOne{
         return $this->hasOne(PersonPermission::class);
