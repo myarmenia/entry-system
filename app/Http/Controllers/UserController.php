@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserRequest;
 use App\Models\User;
+use App\Services\UserService;
 use Spatie\Permission\Models\Role;
 use DB;
 use Hash;
@@ -14,6 +16,11 @@ use Illuminate\Http\RedirectResponse;
 
 class UserController extends Controller
 {
+    protected $userService;
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -45,24 +52,39 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request): RedirectResponse
+    // public function store(Request $request): RedirectResponse
+    // {
+    //     $this->validate($request, [
+    //         'name' => 'required',
+    //         'email' => 'required|email|unique:users,email',
+    //         'password' => 'required|same:confirm-password',
+    //         'roles' => 'required'
+    //     ]);
+
+    //     $input = $request->all();
+    //     $input['password'] = Hash::make($input['password']);
+
+    //     $user = User::create($input);
+    //     $user->assignRole($request->input('roles'));
+
+    //     return redirect()->route('users.index')
+    //                     ->with('success','User created successfully');
+    // }
+    public function store(UserRequest $request): RedirectResponse
     {
-        $this->validate($request, [
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|same:confirm-password',
-            'roles' => 'required'
-        ]);
+        $data=$request->all();
+        $user = $this->userService->createUser($data);
 
-        $input = $request->all();
-        $input['password'] = Hash::make($input['password']);
+        // $input = $request->all();
+        // $input['password'] = Hash::make($input['password']);
 
-        $user = User::create($input);
-        $user->assignRole($request->input('roles'));
+        // $user = User::create($input);
+        // $user->assignRole($request->input('roles'));
 
         return redirect()->route('users.index')
                         ->with('success','User created successfully');
     }
+
 
     /**
      * Display the specified resource.
