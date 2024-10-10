@@ -2,10 +2,10 @@
 
 use App\Http\Controllers\ActionController;
 use App\Http\Controllers\ChangeStatusController;
+use App\Http\Controllers\EntryCode\EntryCodeCreateController;
+use App\Http\Controllers\EntryCode\EntryCodeEditController;
+use App\Http\Controllers\EntryCode\EntryCodeStoreController;
 use App\Http\Controllers\EntryCode\EntryCodeUpdateController;
-use App\Http\Controllers\People\PeopleCreateController;
-use App\Http\Controllers\People\PeopleEditController;
-use App\Http\Controllers\People\PeopleStoreController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -34,9 +34,10 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('users', UserController::class);
     Route::resource('products', ProductController::class);
 
-    Route::get('/create',PeopleCreateController::class)->name('people-create');
-    Route::post('/store', [PeopleStoreController::class,'store'])->name('people-store');
-    Route::get('/edit/{id}',[PeopleEditController::class,'edit'])->name('people-edit');
+
+    Route::get('/create',EntryCodeCreateController::class)->name('entry-codes-create');
+    Route::post('/store', [EntryCodeStoreController::class,'store'])->name('entry-codes-store');
+    Route::get('/edit/{id}',[EntryCodeEditController::class,'edit'])->name('entry-codes-edit');
     Route::put('/update/{id}',[EntryCodeUpdateController::class,'update'])->name('entry_codes-update');
     Route::post('/change-status', [ChangeStatusController::class, 'change_status'])->name('change_status');
 

@@ -1,9 +1,8 @@
 @extends('layouts.app')
 
-{{-- @section("page-script")
+@section("page-script")
     <script src="{{ asset('assets/js/change-status.js') }}"></script>
-
-@endsection --}}
+@endsection
 
 @section('content')
 
@@ -25,15 +24,24 @@
           <div class="card">
             <div class="card-body">
                 <div class = "d-flex justify-content-between">
-                    <h5 class="card-title">Աշխատակիցների ցուցակ</h5>
-                    <a href="{{ route('people-create') }}">Create</a>
+                    <h5 class="card-title">
+
+                    <nav>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item active">Աշխատակիցների ցուցակ</li>
+                        </ol>
+                    </nav>
+
+                    </h5>
+                    <a href="{{ route('entry-codes-create') }}">Create</a>
                 </div>
               <!-- Bordered Table -->
 
               <table class="table table-bordered">
                 <thead>
                   <tr>
-                    <th scope="col">#</th>
+                    <th scope="col">Հ/Հ</th>
+                    <th scope="col">ID</th>
                     <th scope="col">Նկար</th>
                     <th scope="col">Անուն</th>
                     <th scope="col">Ազգանուն</th>
@@ -47,10 +55,11 @@
                     @foreach ($data as $entry_code)
 
                         <tr>
+                            <td>{{ ++$i }}</td>
                             <th scope="row">{{ $entry_code->id }}</th>
 
                             <td>
-                                <img src = "{{ route('get-file',['path' => $entry_code->image ]) }}" style="width:80px">
+                                <img src = "{{ $entry_code->image ? route('get-file',['path' => $entry_code->image ]) : null }}" style="width:80px">
                             </td>
                             <td>
                                 {{ $entry_code->person_permissions->people->name ?? null }}
@@ -65,9 +74,7 @@
                             </td>
                             <td>
 
-                                <div class="dropdown action"
-                                 data-id="{{ $entry_code['id'] }}" data-tb-name="entry_codes"
-                                 >
+                                <div class="dropdown action"data-id="{{ $entry_code['id'] }}" data-tb-name="entry_codes">
                                     <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
                                         data-bs-toggle="dropdown">
                                         <i class="bx bx-dots-vertical-rounded"></i>
@@ -80,7 +87,7 @@
                                                 {{ $entry_code['status'] ? 'checked' : null }}>
                                         </div>Կարգավիճակ
                                        </a>
-                                        <a class="dropdown-item" href="{{route('people-edit',$entry_code['id'])}}"><i
+                                        <a class="dropdown-item" href="{{route('entry-codes-edit',$entry_code['id'])}}"><i
                                                 class="bx bx-edit-alt me-1"></i>Խմբագրել</a>
                                         <button type="button" class="dropdown-item click_delete_item"
                                             data-bs-toggle="modal" data-bs-target="#smallModal"><i
@@ -101,19 +108,27 @@
 
 
             </div>
+
+
           </div>
+          <div class="demo-inline-spacing">
+            {{ $data->links() }}
+        </div>
+
 
 
 
         </div>
+
       </div>
+
     </section>
 
   </main><!-- End #main -->
 <script>
 
-    let actionClass =document.querySelectorAll('.action');
-    console.log(actionClass)
+    // let actionClass =document.querySelectorAll('.action');
+    // console.log(actionClass)
 </script>
 
 @endsection

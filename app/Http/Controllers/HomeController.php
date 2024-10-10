@@ -24,11 +24,14 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
+        // where('user_id', Auth::id())->
+        $data = EntryCode::with('person_permissions.people' )
+                            ->orderBy('id', 'DESC')->paginate(3)->withQueryString();
 
-        $data = EntryCode::with('person_permissions.people' )->get();
 
-        return view('home', compact('data'));
+        return view("home", compact('data'))
+        ->with('i', ($request->input('page', 1) - 1) * 10);
     }
 }
