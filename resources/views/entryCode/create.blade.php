@@ -56,7 +56,7 @@
                 <div class="row mb-3">
                     <label class="col-sm-2 col-form-label">Գործատուների ցուցակ </label>
                     <div class="col-sm-10">
-                      <select class="form-select" aria-label="Default select example" name ="user_id">
+                      <select class="form-select" aria-label="Default select example" name ="client_id">
                         <option value='' disabled >Ընտրել գործատուին </option>
                         @foreach ($clients as  $client)
                             <option value="{{ $client->id }}">{{ $client->name }}</option>

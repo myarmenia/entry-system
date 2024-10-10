@@ -12,8 +12,7 @@ class ClientComponentController extends Controller
 
 
     public function component(Request $request){
-// dd($request->all());
-       
+
         return response()->json([
             'html' => view('components.client')->render()
         ]);

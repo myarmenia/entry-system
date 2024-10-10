@@ -10,7 +10,7 @@ class EntryCodeCreateController extends Controller
 {
     public function __invoke()
     {
-        $clients = User::role('client')->get();
+        $clients = User::role('client_admin')->get();
 
         return view('entryCode.create',compact('clients'));
     }
