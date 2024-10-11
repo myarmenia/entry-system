@@ -1,4 +1,4 @@
-<div class="col-lg-6">
+
 
     <div class="card">
         <div class="card-body">
@@ -52,5 +52,11 @@
 
         </div>
     </div>
+    <div class="row mb-3 d-flex justify-content-end" >
 
-</div>
+        <div class="col-sm-10 d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary">Ստեղծել</button>
+        </div>
+    </div>
+
+

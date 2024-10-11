@@ -2,14 +2,15 @@
 
     <ul class="sidebar-nav" id="sidebar-nav">
 
-      <li class="nav-item">
-        <a class="nav-link " href="index.html">
+       <li class="nav-item">
+        <a class="nav-link " href="{{ route('home') }}">
           <i class="bi bi-grid"></i>
           <span>Dashboard</span>
         </a>
-      </li><!-- End Dashboard Nav -->
+      </li>
+      <!-- End Dashboard Nav -->
 
-      <li class="nav-item">
+     {{-- <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-menu-button-wide"></i><span>Components</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
@@ -177,16 +178,28 @@
             </a>
           </li>
         </ul>
-      </li><!-- End Icons Nav -->
+      </li><!-- End Icons Nav --> --}}
 
       <li class="nav-heading">Pages</li>
 
-      <li class="nav-item">
+      {{-- <li class="nav-item">
         <a class="nav-link collapsed" href="users-profile.html">
           <i class="bi bi-person"></i>
           <span>Profile</span>
         </a>
-      </li><!-- End Profile Page Nav -->
+      </li> --}}
+      <!-- End Profile Page Nav -->
+
+
+    @if (Auth::user()->hasRole("super_admin"))
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ route('entry-codes-create') }}">
+            <i class="bi bi-person"></i>
+            <span>Entry Code</span>
+            </a>
+        </li>
+    @endif
+
       <li class="nav-item">
         <a class="nav-link collapsed" href=" {{ route('users.index') }}">
           <i class="bi bi-person"></i>
@@ -199,7 +212,8 @@
           <span>Roles</span>
         </a>
       </li>
-      <li class="nav-item">
+
+      {{-- <li class="nav-item">
         <a class="nav-link collapsed" href="{{ route('products.index') }}">
           <i class="bi bi-person"></i>
           <span>Products</span>
@@ -246,7 +260,7 @@
           <i class="bi bi-file-earmark"></i>
           <span>Blank</span>
         </a>
-      </li><!-- End Blank Page Nav -->
+      </li><!-- End Blank Page Nav --> --}}
 
     </ul>
 

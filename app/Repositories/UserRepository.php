@@ -28,12 +28,9 @@ class UserRepository implements UserRepositoryInterface
                 $client->address = $data['client']['address'];
                 $client->save();
 
-
-
-
             }
             if (Auth::user()->hasRole('client_admin')){
-                
+
                 $client_admin_id = Client::where('user_id',Auth::id())->first()->id;
 
                 $staff_user = [

@@ -218,18 +218,8 @@ return [
     'educational_program_id' => 'Ծրագրի տեսակ',
     'time' => 'Ժամ',
     'date' => 'Օր',
-    'visitor_quantity' => 'Այցելուների քանակ',
-    'description' => 'Մանրամասներ',
-    'event_config.*.*.day'=> 'Կարգավորման օրը',
-    'event_config.*.*.end_time'=> 'ժամի ավարտ',
-    'event_config.*.*.start_time'=> 'ժամի սկիզբ',
-    'price_am' => 'Գին',
-    'price_other' => 'Գին',
-    'start_date'=> 'Միջոցառման սկիզբ',
-    'end_date'=> 'Միջոցառման ավարտ',
-    'min_museum_quantity' => 'Թանգարանների նվազագույն քանակ',
-    'percent' => 'Տոկոս',
-    'tin' => 'ՀՎՀՀ'
+    'client.name'=>'Գործատուի անուն',
+    'token'=>'Թոքեն'
 
   ]
 

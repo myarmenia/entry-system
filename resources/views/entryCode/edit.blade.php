@@ -51,7 +51,7 @@
                                     </ol>
                                 </nav>
                             </h5>
-{{-- {{dd($data)}} --}}
+
                             <!-- General Form Elements -->
                             <form action="{{ route('entry_codes-update', $data->id) }}" method="post"
                                 enctype="multipart/form-data">
@@ -62,9 +62,7 @@
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control" name="name"
                                             placeholder="Աշխատակցի անունը"
-                                            value="
-                                            {{ $data->people->name ?? null }}
-                                             ">
+                                            value="{{ $data->person_permission->people->name ?? null }}">
                                     </div>
 
                                 </div>
@@ -74,9 +72,7 @@
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control" name="surname"
                                             placeholder="Աշխատակցի ազգանունը"
-                                            value="
-                                            {{ $data->people->surname ?? null }}
-                                             ">
+                                            value="{{ $data->person_permission->people->surname ?? null }}">
                                     </div>
 
                                 </div>
@@ -96,9 +92,7 @@
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control" name="phone"
                                             placeholder="+374 98-00 00"
-                                            value="
-                                            {{ $data->people->phone ?? null }}
-                                             ">
+                                            value="{{ $data->person_permission->people->phone ?? null }}">
                                     </div>
                                 </div>
 

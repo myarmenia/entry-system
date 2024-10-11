@@ -28,12 +28,12 @@
 
                     <nav>
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Աշխատակիցների ցուցակ</li>
+                            <li class="breadcrumb-item active">Աշխատակիցների ցանկ</li>
                         </ol>
                     </nav>
 
                     </h5>
-                    <a href="{{ route('entry-codes-create') }}">Create</a>
+
                 </div>
               <!-- Bordered Table -->
 
@@ -47,6 +47,8 @@
                     <th scope="col">Ազգանուն</th>
 
                     <th scope="col">Հեռախոսահամար</th>
+                    <th scope="col">Կարգավիճակ</th>
+
                     <th scope="col">Գործողություն</th>
                   </tr>
                 </thead>
@@ -62,15 +64,20 @@
                                 <img src = "{{ $entry_code->image ? route('get-file',['path' => $entry_code->image ]) : null }}" style="width:80px">
                             </td>
                             <td>
-                                {{ $entry_code->person_permissions->people->name ?? null }}
+                                {{ $entry_code->person_permission->people->name ?? null }}
 
                             </td>
                              <td>
-                                {{ $entry_code->person_permissions->people->surname ?? null }}
+                                {{ $entry_code->person_permission->people->surname ?? null }}
 
                             </td>
                             <td>
-                                {{ $entry_code->person_permissions->people->phone ?? null }}
+                                {{ $entry_code->person_permission->people->phone ?? null }}
+                            </td>
+                            <td>
+
+                                <div><span class="badge {{$entry_code->status==1 ? 'bg-success' : 'bg-danger'  }} px-2">{{ $entry_code->status==1 ? "Գործող" : "Կասեցված" }}</span></div>
+                                <div><span class="badge {{$entry_code->activation==1 ? 'bg-success' : 'bg-danger'  }} px-2">{{ $entry_code->activation==1 ? "Ակտիվ" : "Պասիվ" }}</span></div>
                             </td>
                             <td>
 
