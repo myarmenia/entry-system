@@ -1,12 +1,14 @@
 <?php
 
 use App\Http\Controllers\ActionController;
+use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ChangeStatusController;
 use App\Http\Controllers\Component\ClientComponentController;
 use App\Http\Controllers\EntryCode\EntryCodeCreateController;
 use App\Http\Controllers\EntryCode\EntryCodeEditController;
 use App\Http\Controllers\EntryCode\EntryCodeStoreController;
 use App\Http\Controllers\EntryCode\EntryCodeUpdateController;
+use App\Http\Controllers\GetCalendarDataController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -42,8 +44,11 @@ Route::group(['middleware' => ['auth']], function() {
     Route::put('/update/{id}',[EntryCodeUpdateController::class,'update'])->name('entry_codes-update');
     Route::post('/change-status', [ChangeStatusController::class, 'change_status'])->name('change_status');
 
-
     Route::post('/client-component', [ClientComponentController::class, 'component'])->name('client.component');
+
+    Route::get('/calendar/{id}',CalendarController::class)->name('calendar');
+    Route::get('calendar-data/{id}', GetCalendarDataController::class);
+
 
 });
 

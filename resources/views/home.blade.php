@@ -94,6 +94,15 @@
                                                 {{ $entry_code['status'] ? 'checked' : null }}>
                                         </div>Կարգավիճակ
                                        </a>
+
+                                       @if ($entry_code->person_permission !=null  && $entry_code->person_permission->people!=null)
+                                        <a class="dropdown-item" href="{{route('calendar',$entry_code->person_permission->people->id )}}"><i
+                                            class="bx bx-edit-alt me-1"></i>Ժամանակացույց</a>
+
+                                       @endif
+                                       {{-- <a class="dropdown-item" href="{{route('calendar',$entry_code['id'] )}}"><i
+                                        class="bx bx-edit-alt me-1"></i>Ժամանակացույց</a> --}}
+
                                         <a class="dropdown-item" href="{{route('entry-codes-edit',$entry_code['id'])}}"><i
                                                 class="bx bx-edit-alt me-1"></i>Խմբագրել</a>
                                         <button type="button" class="dropdown-item click_delete_item"
