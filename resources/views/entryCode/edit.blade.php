@@ -51,7 +51,7 @@
                                     </ol>
                                 </nav>
                             </h5>
-
+{{-- {{dd($data)}} --}}
                             <!-- General Form Elements -->
                             <form action="{{ route('entry_codes-update', $data->id) }}" method="post"
                                 enctype="multipart/form-data">
@@ -62,7 +62,9 @@
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control" name="name"
                                             placeholder="Աշխատակցի անունը"
-                                            value="{{ $data->person_permissions->people->name ?? null }}">
+                                            value="
+                                            {{ $data->people->name ?? null }}
+                                             ">
                                     </div>
 
                                 </div>
@@ -72,7 +74,9 @@
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control" name="surname"
                                             placeholder="Աշխատակցի ազգանունը"
-                                            value="{{ $data->person_permissions->people->surname ?? null }}">
+                                            value="
+                                            {{ $data->people->surname ?? null }}
+                                             ">
                                     </div>
 
                                 </div>
@@ -82,7 +86,9 @@
                                     <div class="col-sm-9">
                                         <input type="email" class="form-control" name="email"
                                             placeholder="example@gmail.com"
-                                            value="{{ $data->person_permissions->people->email ?? null }}">
+                                            value="
+                                            {{ $data->people->email ?? null }}
+                                             ">
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -90,22 +96,12 @@
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control" name="phone"
                                             placeholder="+374 98-00 00"
-                                            value="{{ $data->person_permissions->people->phone ?? null }}">
+                                            value="
+                                            {{ $data->people->phone ?? null }}
+                                             ">
                                     </div>
                                 </div>
-                                {{-- <div class="row mb-3">
-                    <label for="inputEmail" class="col-sm-3 col-form-label">Թոքեն </label>
-                    <div class="col-sm-9">
-                      <input type="text" class="form-control" name="token" value={{ $data->token}}>
 
-                    </div>
-                    @error('token')
-                        <div class="mb-3 row justify-content-end">
-                            <div class="col-sm-9 text-danger fts-14">{{ $message }}
-                            </div>
-                        </div>
-                    @enderror
-                  </div> --}}
 
                                 <div class="row mb-3">
                                     <label for="inputNumber" class="col-sm-3 col-form-label">ներբեռնել նկար</label>
@@ -126,31 +122,7 @@
                                         </div>
                                     </div>
                                 @endif
-                                {{-- <div class="row mb-3">
-                    <label for="inputNumber" class="col-sm-3 col-form-label"></label>
-                    <div class="col-sm-9">
-                        <div class="uploaded-image-div mx-2">
-                            <img src="{{route('get-file', ['path' => $data->image])}}" class="d-block rounded uploaded-image uploaded-photo-project" style="width:150px">
-                        </div>
-                    </div>
-                </div> --}}
-                                {{-- <div class="row mb-3">
-                  <label class="col-sm-3 col-form-label">Տեսակ</label>
-                  <div class="col-sm-9">
-                    <select class="form-select" aria-label="Default select example" name ="type">
-                      <option value='' disabled >Ընտրել տեսակը</option>
-                      <option value="rfId" {{$data->type=="rfId" ? "selected" : ""}}>rfId</option>
-                      <option value="FaceId" {{$data->type=="FaceId" ? "selected" : ""}}>FaceId</option>
-                    </select>
-                    @error('type')
-                    <div class="mb-3 row justify-content-end">
-                        <div class="col-sm-10 text-danger fts-14">{{ $message }}
-                        </div>
-                    </div>
-                    @enderror
-                  </div>
 
-                </div> --}}
                                 <div class="row mb-3">
                                     <label class="col-sm-3 col-form-label">Կարգավիճակ</label>
                                     <div class="col-sm-9">
@@ -172,8 +144,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-
 
                                 <div class="row mb-3">
                                     <label class="col-sm-3 col-form-label"></label>

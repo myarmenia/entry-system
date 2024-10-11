@@ -19,7 +19,7 @@ trait StoreTrait
     {
 
 
-        $data = $request->except('image');
+        $data = $request->all();
 
         $className = $this->model();
 
@@ -28,29 +28,10 @@ trait StoreTrait
             $model = new $className;
 
             $relation_foreign_key = $model->getForeignKey();
-            $table_name = $model->getTable();
-
 
             $item = $model::create($data);
 
-            // if ($photo = $request['image'] ?? null) {
-            //     $path = FileUploadService::upload($request['image'], $table_name . '/' .$item->id);
 
-            //         $item->image = $path;
-            //         $item->save();
-            //         $filePath = 'private/' . $path;
-            //         // dd($filePath);
-            //         if (Storage::disk('local')->exists($path)) {
-            //             // dd(888);
-            //             // Serve the file as a response (to display or download it)
-            //             return true;
-            //         } else {
-            //             dd(777);
-            //             // Handle the case where the file doesn't exist
-            //             return abort(404, 'File not found.');
-            //         }
-
-            // }
 
         return true;
 
