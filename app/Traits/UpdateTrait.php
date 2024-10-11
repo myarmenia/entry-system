@@ -22,7 +22,7 @@ trait UpdateTrait
 
   public function itemUpdate(Request $request, $id)
   {
-
+// dd($request->all());
     $data = $request->except([ '_method','name', 'surname','email','phone','image']);
 
     $className = $this->model();
@@ -48,10 +48,6 @@ trait UpdateTrait
         $data['activation'] = 0;
         }
 
-
-
-
-
       $item->update($data);
 
       if (isset($request['image'])) {
@@ -71,7 +67,7 @@ trait UpdateTrait
       }
 
       if($item) {
-        $clientId=$item->user_id;
+        $clientId=$item->client_id;
         $person=$this->people($request,$clientId, $id);
         if($person){
             return true;
@@ -93,7 +89,7 @@ trait UpdateTrait
 
 
             $people = new Person;
-            $people->user_id = $clientId;
+            $people->client_id = $clientId;
             $people->name = $request->name;
             $people->surname = $request->surname;
             $people->phone = $request->phone;

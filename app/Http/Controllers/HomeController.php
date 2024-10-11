@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
 use App\Models\EntryCode;
 use App\Models\Person;
 use App\Models\PersonPermission;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -26,9 +28,18 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
+
         // where('user_id', Auth::id())->
-        $data = EntryCode::with('person_permissions.people' )
-                            ->orderBy('id', 'DESC')->paginate(3)->withQueryString();
+        $client = Client::where('user_id',Auth::id())->first();
+
+        if($client){
+            $data = EntryCode::where('client_id',$client->id)->with('people')
+                                ->orderBy('id', 'DESC')->paginate(3)->withQueryString();
+
+        }
+
+// dd($data);
+        // $data = EntryCode::orderBy('id', 'DESC')->paginate(3)->withQueryString();
 
 
         return view("home", compact('data'))
