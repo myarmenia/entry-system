@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Turnstile;
 
 use App\DTO\EntryCodeDto;
-use App\Http\Controllers\API\BaseController;
+use App\Http\Controllers\Api\BaseController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\EntryCodeRequest;
 use App\Http\Resources\Api\EntryCodeResource;

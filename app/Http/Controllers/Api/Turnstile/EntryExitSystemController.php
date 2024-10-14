@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Turnstile;
 
 use App\DTO\EntryExitSystemDto;
-use App\Http\Controllers\API\BaseController;
+use App\Http\Controllers\Api\BaseController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\EntryExitSystemRequest;
 use App\Http\Resources\Api\EntryExitSystemResource;
