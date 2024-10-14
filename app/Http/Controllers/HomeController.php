@@ -29,20 +29,25 @@ class HomeController extends Controller
     public function index(Request $request)
     {
 
-        // where('user_id', Auth::id())->
+
         $client = Client::where('user_id',Auth::id())->first();
 
         if($client){
             $data = EntryCode::where('client_id',$client->id)->with('people')
                                 ->orderBy('id', 'DESC')->paginate(3)->withQueryString();
 
+                                return view("home", compact('data'))
+                                ->with('i', ($request->input('page', 1) - 1) * 10);
+
+        }
+        else{
+
+           return  redirect()->route('users.index');
         }
 
-// dd($data);
-        // $data = EntryCode::orderBy('id', 'DESC')->paginate(3)->withQueryString();
 
 
-        return view("home", compact('data'))
-        ->with('i', ($request->input('page', 1) - 1) * 10);
+
+
     }
 }

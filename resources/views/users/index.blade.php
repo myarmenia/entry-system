@@ -5,11 +5,22 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Users Management</h2>
+              <div class = "d-flex justify-content-between">
+                    <h5 class="card-title">
+
+                    <nav>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item active">Օգտագործողներ </li>
+                            <li class="breadcrumb-item active">Ցանկ</li>
+                        </ol>
+                    </nav>
+                    </h5>
+                    <div class="pull-right d-flex justify-content-end m-3" >
+                        <a class="btn btn-primary  mb-2" href="{{ route('users.create') }}"><i class="fa fa-plus"></i> Ստեղծել նոր Օգտատեր</a>
+                    </div>
+                </div>
             </div>
-            <div class="pull-right">
-                <a class="btn btn-success mb-2" href="{{ route('users.create') }}"><i class="fa fa-plus"></i> Create New User</a>
-            </div>
+
         </div>
     </div>
 
@@ -21,11 +32,11 @@
 
     <table class="table table-bordered">
     <tr>
-        <th>No</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Roles</th>
-        <th width="280px">Action</th>
+        <th>Հ/Հ</th>
+        <th>Անուն</th>
+        <th>Էլ․հասցե</th>
+        <th>Դերեր</th>
+        <th width="280px">Գործողություն</th>
     </tr>
     @foreach ($data as $key => $user)
         <tr>
@@ -35,7 +46,7 @@
             <td>
             @if(!empty($user->getRoleNames()))
                 @foreach($user->getRoleNames() as $v)
-                <label class="badge bg-success">{{ $v }}</label>
+                <label class="badge bg-primary">{{ $v }}</label>
                 @endforeach
             @endif
             </td>

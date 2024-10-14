@@ -7,7 +7,7 @@ $(function () {
             // let userPassword=$('input[name="password"]').val();
             // let userConfirmPassword=$('input[name="confirm-password"]').val();
             let userRole=$('input[name="roles"]').val();
-            // $('#componentContainer').html(<x-client></x-client>);
+      
             $.ajax({
                 url: '/client-component',
                 type: 'POST',
@@ -22,8 +22,11 @@ $(function () {
                 },
                 success: function(response) {
                     console.log(response.html)
-                    // Вставляем HTML компонента в контейнер
+
                     $('#componentContainer').html(response.html);
+                    $('#loginBtn').css({
+                        'display': 'none'
+                    });
                 },
                 error: function(xhr) {
                     console.error('Error:', xhr.responseText);

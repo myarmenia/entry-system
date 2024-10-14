@@ -74,134 +74,142 @@
 
 </main> --}}
 <main id="main" class="main">
-    <section class="section">
 
-        <div class="row">
-            @if (count($errors) > 0)
-            <div class="alert alert-danger">
-            <strong>Whoops!</strong> There were some problems with your input.<br><br>
-            <ul>
-                @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-            </div>
-        @endif
+        <section class="section">
+             <form action="{{ route('users.store') }}" method="post" enctype="multipart/form-data">
 
+                <div class="row">
 
-            <form action="{{ route('users.store') }}" method="post" enctype="multipart/form-data">
-                <div class="col-lg-6">
-
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                <nav>
-                                    <ol class="breadcrumb">
-                                        <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-
-                                        <li class="breadcrumb-item active">Ստեղծել Օգտատեր</li>
-                                    </ol>
-                                </nav>
-                            </h5>
-
-                            <!-- General Form Elements -->
-
-
-                                <div class="row mb-3">
-
-                                    <label for="inputText" class="col-sm-3 col-form-label">Անուն</label>
-                                    <div class="col-sm-9">
-                                        <input type="text" class="form-control" name="name"
-                                            placeholder="Աշխատակցի անունը"
-                                            value="{{ old('name') }}">
-                                        @error('name')
-                                            <div class="mb-3 row justify-content-start">
-                                                <div class="col-sm-9 text-danger fts-14">{{ $message }}
-                                                </div>
-                                            </div>
-                                        @enderror
-                                    </div>
-
-                                </div>
-                                <div class="row mb-3">
-                                    <label for="inputEmail" class="col-sm-3 col-form-label">Էլ.հասցե</label>
-                                    <div class="col-sm-9">
-                                        <input type="email" class="form-control" name="email"
-                                            placeholder="example@gmail.com"
-                                            value="{{ old('email') }}">
-                                        @error('email')
-                                            <div class="mb-3 row justify-content-start">
-                                                <div class="col-sm-9 text-danger fts-14">{{ $message }}
-                                                </div>
-                                            </div>
-                                        @enderror
-                                    </div>
-
-
-
-                                </div>
-
-                                <div class="row mb-3">
-                                    <label for="inputEmail"  class="col-sm-3 col-form-label">Գաղտնաբառ</label>
-                                    <div class="col-sm-9">
-                                        <input type="password" name="password" class="form-control" placeholder="Password" value="{{ old('email') }}">
-                                        @error('password')
-                                        <div class="mb-3 row justify-content-start">
-                                            <div class="col-sm-9 text-danger fts-14">{{ $message }}
-                                            </div>
-                                        </div>
-                                    @enderror
-
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label for="inputEmail" class="col-sm-3 col-form-label">Հաստատել գաղտնաբառը</label>
-                                    <div class="col-sm-9">
-                                        <input type="password" name="confirm-password" class="form-control" placeholder="Confirm Password" value="{{ old('email') }}">
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label for="inputEmail" class="col-sm-3 col-form-label">Դերեր</label>
-                                    <div class="col-sm-9">
-                                        <select name="roles[]" class="form-control" id="selectedRole" multiple="multiple">
-                                            @foreach ($roles as $value => $label)
-                                                <option value="{{ $value }}">
-                                                    {{ $label }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        @error('roles')
-                                        <div class="mb-3 row justify-content-start">
-                                            <div class="col-sm-9 text-danger fts-14">{{ $message }}
-                                            </div>
-                                        </div>
-                                    @enderror
-                                    </div>
-
-                                </div>
-
+                    {{-- @if (count($errors) > 0)
+                        <div class="alert alert-danger">
+                        <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
                         </div>
-                    </div>
+                    @endif --}}
+
+
+
+                            <div class="col-lg-6">
+
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <nav>
+                                                <ol class="breadcrumb">
+                                                    <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+
+                                                    <li class="breadcrumb-item active">Ստեղծել Օգտատեր</li>
+                                                </ol>
+                                            </nav>
+                                        </h5>
+
+                                        <!-- General Form Elements -->
+
+
+                                            <div class="row mb-3">
+
+                                                <label for="inputText" class="col-sm-3 col-form-label">Անուն</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" class="form-control" name="name"
+                                                        placeholder="Աշխատակցի անունը"
+                                                        value="{{ old('name') }}">
+                                                    @error('name')
+                                                        <div class="mb-3 row justify-content-start">
+                                                            <div class="col-sm-9 text-danger fts-14">{{ $message }}
+                                                            </div>
+                                                        </div>
+                                                    @enderror
+                                                </div>
+
+                                            </div>
+                                            <div class="row mb-3">
+                                                <label for="inputEmail" class="col-sm-3 col-form-label">Էլ.հասցե</label>
+                                                <div class="col-sm-9">
+                                                    <input type="email" class="form-control" name="email"
+                                                        placeholder="example@gmail.com"
+                                                        value="{{ old('email') }}">
+                                                    @error('email')
+                                                        <div class="mb-3 row justify-content-start">
+                                                            <div class="col-sm-9 text-danger fts-14">{{ $message }}
+                                                            </div>
+                                                        </div>
+                                                    @enderror
+                                                </div>
+
+
+
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <label for="inputEmail"  class="col-sm-3 col-form-label">Գաղտնաբառ</label>
+                                                <div class="col-sm-9">
+                                                    <input type="password" name="password" class="form-control" placeholder="Password" value="">
+                                                    @error('password')
+                                                    <div class="mb-3 row justify-content-start">
+                                                        <div class="col-sm-9 text-danger fts-14">{{ $message }}
+                                                        </div>
+                                                    </div>
+                                                @enderror
+
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <label for="inputEmail" class="col-sm-3 col-form-label">Հաստատել գաղտնաբառը</label>
+                                                <div class="col-sm-9">
+                                                    <input type="password" name="confirm-password" class="form-control" placeholder="Confirm Password" value="">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <label for="inputEmail" class="col-sm-3 col-form-label">Դերեր</label>
+                                                <div class="col-sm-9">
+                                                    <select name = "roles[]" class="form-control" id="selectedRole" multiple="multiple">
+                                                        @foreach ($roles as $value => $label)
+                                                            <option value = "{{ $value }}" {{ in_array($value, old('roles', [])) ? 'selected' : '' }} >
+                                                                {{ $label }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    @error('roles')
+                                                    <div class="mb-3 row justify-content-start">
+                                                        <div class="col-sm-9 text-danger fts-14">{{ $message }}
+                                                        </div>
+                                                    </div>
+                                                @enderror
+                                                </div>
+
+                                            </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-lg-6" id="componentContainer">
+
+
+                                    @if ($errors->has('client.name'))
+                                        <x-client/>
+                                    @endif
+
+                            </div>
+
+                        <div class="row mb-3" id="loginBtn">
+                            <label class="col-sm-2 col-form-label"></label>
+                            <div class="col-sm-10">
+                            <button type="submit" class="btn btn-primary">Ստեղծել</button>
+                            </div>
+                        </div>
+
+
 
                 </div>
+                </form>
 
-                <div id="componentContainer">
-                    @if ($errors->has('client.name'))
-                        <x-client/>
-                    @endif
+        </section>
 
-
-
-                </div>
-                <div class="row mb-3">
-                    <label class="col-sm-2 col-form-label"></label>
-                    <div class="col-sm-10">
-                    <button type="submit" class="btn btn-primary">Ստեղծել</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </section>
 </main>
 
 

@@ -31,11 +31,7 @@ trait StoreTrait
 
             $item = $model::create($data);
 
-
-
         return true;
-
-
 
     }
 

@@ -10,7 +10,7 @@ class EntryCodeEditController extends Controller
 {
     public function edit($id){
 
-        $data = EntryCode::where('id',$id)->first();
+        $data = EntryCode::where('id',$id)->with('person_permission.people')->first();
 
        return view('entryCode.edit', compact('data'));
    }

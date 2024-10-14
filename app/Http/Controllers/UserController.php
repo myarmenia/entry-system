@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
+use App\Models\Client;
+use App\Models\Staff;
 use App\Models\User;
 use App\Services\UserService;
 use Spatie\Permission\Models\Role;
@@ -29,7 +31,17 @@ class UserController extends Controller
      */
     public function index(Request $request): View
     {
-        $data = User::latest()->paginate(5);
+        $client = Client::where('user_id',Auth::id())->first();
+        if($client){
+            $staff = Staff::where('client_admin_id',$client->id)->pluck('user_id');
+            // dd($staff);
+            $data = User::whereIn('id',$staff)->latest()->paginate(5);
+
+        }else{
+            $data = User::latest()->paginate(5);
+        }
+
+
 
         return view('users.index',compact('data'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
@@ -42,7 +54,7 @@ class UserController extends Controller
      */
     public function create(): View
     {
-   
+
         if(Auth::user()->roles[0]->interface == 'client'){
             $roles = Role::where('position_name','client')->pluck('name', 'name')->all();
         }else{
@@ -62,7 +74,7 @@ class UserController extends Controller
        public function store(UserRequest $request): RedirectResponse
     {
 
-        $data=$request->all();
+        $data = $request->all();
 
         $user = $this->userService->createUser($data);
 
