@@ -43,6 +43,11 @@
         </div>
     </section>
 
+    <div class="your-component">
+
+        <x-offcanvas :reservetions=" isset($reservetions) ? $reservetions : [] " ></x-offcanvas>
+    </div>
+
   </main><!-- End #main -->
 
 

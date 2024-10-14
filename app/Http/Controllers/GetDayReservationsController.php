@@ -2,19 +2,37 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AttendanceSheet;
+use DateTime;
 use Illuminate\Http\Request;
 
 class GetDayReservationsController extends Controller
 {
-    // public function __invoke($data){
-        // dd($data);
+    public function __invoke($people_id,$data){
+// dd($data);
 
-//         $data=AttendanceSheet::where('people_id',$id)->get();
+        $datas = AttendanceSheet::where(['people_id'=>$people_id])->get();
 
-//         $result = GetCalendarResource::collection($data);
-// // dd($result);
-//         if ($result) {
-//           return response()->json($result);
-//         }
-    // }
+        $day_array=[];
+        foreach($datas as $attend){
+// dd($data,$attend->date);
+        $date_string = $attend->date;
+        $date = new DateTime($date_string);
+        $formatted_date = $date->format('Y-m-d');
+            // dd($formatted_date);
+            if ($data==$formatted_date){
+                $day_array[] = $attend->id;
+
+            }
+        }
+       $reservetions = AttendanceSheet::whereIn('id', $day_array)->get();
+
+        if ($reservetions) {
+
+            // return response()->json($reservetions);
+            return view('components.offcanvas', ['reservetions' => $day_array]);
+          }
+
+
+    }
 }

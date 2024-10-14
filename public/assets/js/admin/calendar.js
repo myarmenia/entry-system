@@ -42,11 +42,17 @@ function calendar() {
   // ==================  Click calendar td and get reservations ============================
 
   $('body').on('click', '.fc-daygrid-day', function () {
+    const path = window.location.pathname;
 
+    // Разбиваем путь на сегменты
+    const segments = path.split('/');
+
+    // Получаем нужный сегмент, в данном случае "2"
+    const person_id = segments[segments.length - 1];
 
     var reserved_date = $(this).attr('data-date')
     $.ajax({
-      url: '/get-day-reservations/' + reserved_date,
+      url: `/get-day-reservations/${person_id}/` + reserved_date,
       processData: false,
       contentType: false,
       type: 'get',
