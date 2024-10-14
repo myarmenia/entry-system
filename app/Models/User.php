@@ -2,19 +2,20 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var array
      */
     protected $fillable = [
         'name',
@@ -25,7 +26,7 @@ class User extends Authenticatable
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var array<int, string>
+     * @var array
      */
     protected $hidden = [
         'password',
@@ -35,7 +36,7 @@ class User extends Authenticatable
     /**
      * Get the attributes that should be cast.
      *
-     * @return array<string, string>
+     * @return array
      */
     protected function casts(): array
     {
@@ -44,4 +45,29 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    // public function role()
+    // {
+    //     return $this->belongsTo(Role::class);
+    // }
+
+
+    public function entry_codes(): HasMany{
+
+        return $this->hasMany(EntryCode::class);
+    }
+    public function people(): HasMany{
+
+        return $this->hasMany(Person::class);
+    }
+    public function turnstiles(){
+
+        return $this->hasMany(Turnstile::class);
+
+    }
+    public function staff(){
+
+        return $this->hasMany(Staff::class);
+
+    }
+
 }

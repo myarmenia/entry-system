@@ -1,16 +1,50 @@
 <?php
 
 use App\Http\Controllers\ActionController;
+use App\Http\Controllers\ChangeStatusController;
+use App\Http\Controllers\Component\ClientComponentController;
+use App\Http\Controllers\EntryCode\EntryCodeCreateController;
+use App\Http\Controllers\EntryCode\EntryCodeEditController;
+use App\Http\Controllers\EntryCode\EntryCodeStoreController;
+use App\Http\Controllers\EntryCode\EntryCodeUpdateController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
+use App\Services\FileUploadService;
 use Illuminate\Support\Facades\Route;
 
+
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
-Route::controller(ActionController::class)->group(function () {
-    // Route::get('/', 'index')->name('reaction.index');
-    Route::post('/action', 'action')->name('reaction.action');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+// Route::controller(ActionController::class)->group(function () {
+//     // Route::get('/', 'index')->name('reaction.index');
+//     Route::post('/action', 'action')->name('reaction.action');
+// });
 
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::group(['middleware' => ['auth']], function() {
+    Route::resource('roles', RoleController::class);
+    Route::resource('users', UserController::class);
+    Route::resource('products', ProductController::class);
+
+
+    Route::get('/create',EntryCodeCreateController::class)->name('entry-codes-create');
+    Route::post('/store', [EntryCodeStoreController::class,'store'])->name('entry-codes-store');
+    Route::get('/edit/{id}',[EntryCodeEditController::class,'edit'])->name('entry-codes-edit');
+    Route::put('/update/{id}',[EntryCodeUpdateController::class,'update'])->name('entry_codes-update');
+    Route::post('/change-status', [ChangeStatusController::class, 'change_status'])->name('change_status');
+
+
+    Route::post('/client-component', [ClientComponentController::class, 'component'])->name('client.component');
+
+});
+
+Route::get('get-file', [FileUploadService::class, 'get_file'])->name('get-file');
