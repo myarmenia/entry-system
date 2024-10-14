@@ -9,6 +9,7 @@ use App\Http\Controllers\EntryCode\EntryCodeEditController;
 use App\Http\Controllers\EntryCode\EntryCodeStoreController;
 use App\Http\Controllers\EntryCode\EntryCodeUpdateController;
 use App\Http\Controllers\GetCalendarDataController;
+use App\Http\Controllers\GetDayReservationsController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -48,6 +49,9 @@ Route::group(['middleware' => ['auth']], function() {
 
     Route::get('/calendar/{id}',CalendarController::class)->name('calendar');
     Route::get('calendar-data/{id}', GetCalendarDataController::class);
+    // Route::get('get-day-reservations/{person}/{date}', GetDayReservationsController::class);
+
+
 
 
 });

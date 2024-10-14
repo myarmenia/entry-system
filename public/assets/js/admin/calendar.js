@@ -46,7 +46,7 @@ function calendar() {
 
     var reserved_date = $(this).attr('data-date')
     $.ajax({
-      url: '/educational-programs/get-day-reservations/' + reserved_date,
+      url: '/get-day-reservations/' + reserved_date,
       processData: false,
       contentType: false,
       type: 'get',
