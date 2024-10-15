@@ -46,8 +46,8 @@ class EntryExitSystemService
                 $message = $checkEntryCode->message;
             } else {
                 $data->date_time = date('Y-m-d H:i:s', $date_time);
-
-                $person_permission = $checkEntryCode->result->person_permission;
+// dd($checkEntryCode->result->person_active_permission);
+                $person_permission = $checkEntryCode->result->active_person;
                 $peopleId = $person_permission ? $person_permission->people_id : null;
                 $data->people_id = $peopleId;
 
