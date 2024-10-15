@@ -26,11 +26,12 @@ class GetDayReservationsController extends Controller
             }
         }
        $reservetions = AttendanceSheet::whereIn('id', $day_array)->get();
-
+// dd($reservetions);
         if ($reservetions) {
+            // dd($reservetions);
 
             // return response()->json($reservetions);
-            return view('components.offcanvas', ['reservetions' => $day_array]);
+            return view('components.offcanvas', ['reservetions' => $reservetions]);
           }
 
 

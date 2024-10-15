@@ -45,6 +45,10 @@
 
     <div class="your-component">
 
+        {{-- @if (isset($reservetions))
+            {{dd($reservetions)}}
+        @endif --}}
+
         <x-offcanvas :reservetions=" isset($reservetions) ? $reservetions : [] " ></x-offcanvas>
     </div>
 
