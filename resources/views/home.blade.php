@@ -55,6 +55,7 @@
                 <tbody>
 
                     @foreach ($data as $entry_code)
+                    {{-- {{ dump($entry_code->active_person->people->name) }} --}}
 
                         <tr>
                             <td>{{ ++$i }}</td>
@@ -64,26 +65,26 @@
                                 <img src = "{{ $entry_code->image ? route('get-file',['path' => $entry_code->image ]) : null }}" style="width:80px">
                             </td>
                             <td>
-                                {{ $entry_code->person_permission->people->name ?? null }}
+                                {{ $entry_code->active_person->people->name ?? null }}
 
                             </td>
                              <td>
-                                {{ $entry_code->person_permission->people->surname ?? null }}
+                                {{ $entry_code->active_person->people->surname ?? null }}
 
                             </td>
                             <td>
-                                {{ $entry_code->person_permission->people->phone ?? null }}
+                                {{ $entry_code->active_person->people->phone ?? null }}
                             </td>
                             <td class="{{ auth()->user()->hasRole('super_admin') ? 'status' : 'activation' }}" >
 
 
-                                    {{-- @if (auth()->user()->hasRole('super_admin')) --}}
+
                                         <div><span class="badge {{$entry_code->status==1 ? 'bg-success' : 'bg-danger'  }} px-2">{{ $entry_code->status==1 ? "Գործող" : "Կասեցված" }}</span></div>
 
-                                    {{-- @else --}}
+
                                        <div ><span class="badge {{$entry_code->activation==1 ? 'bg-success' : 'bg-danger'  }} px-2">{{ $entry_code->activation==1 ? "Ակտիվ" : "Պասիվ" }}</span></div>
 
-                                    {{-- @endif --}}
+
                             </td>
                             <td>
 
@@ -113,8 +114,8 @@
                                             </a>
                                         @endif
 
-                                       @if ($entry_code->person_permission !=null  && $entry_code->person_permission->people!=null)
-                                        <a class="dropdown-item" href="{{route('calendar',$entry_code->person_permission->people->id )}}"><i
+                                       @if ($entry_code->active_person !=null  && $entry_code->active_person->people!=null)
+                                        <a class="dropdown-item" href="{{route('calendar',$entry_code->active_person->people->id )}}"><i
                                             class="bx bx-edit-alt me-1"></i>Ժամանակացույց</a>
 
                                        @endif
