@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreign('people_id')->references('id')->on('people')->onDelete('cascade');
 
             $table->bigInteger('entry_code_id')->unsigned()->nullable();
+            $table->foreign('entry_code_id')->references('id')->on('entry_codes')->onDelete('cascade');
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }

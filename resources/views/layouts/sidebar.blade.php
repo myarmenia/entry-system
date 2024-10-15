@@ -191,14 +191,14 @@
       <!-- End Profile Page Nav -->
 
 
-    @if (Auth::user()->hasRole("super_admin"))
+    {{-- @if (Auth::user()->hasRole("super_admin")) --}}
         <li class="nav-item">
             <a class="nav-link collapsed" href="{{ route('entry-codes-create') }}">
             <i class="bi bi-person"></i>
             <span>Entry Code</span>
             </a>
         </li>
-    @endif
+    {{-- @endif --}}
 
       <li class="nav-item">
         <a class="nav-link collapsed" href=" {{ route('users.index') }}">
