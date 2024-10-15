@@ -74,10 +74,16 @@
                             <td>
                                 {{ $entry_code->person_permission->people->phone ?? null }}
                             </td>
-                            <td>
+                            <td class="{{ auth()->user()->hasRole('super_admin') ? 'status' : 'activation' }}" >
 
-                                <div><span class="badge {{$entry_code->status==1 ? 'bg-success' : 'bg-danger'  }} px-2">{{ $entry_code->status==1 ? "Գործող" : "Կասեցված" }}</span></div>
-                                <div><span class="badge {{$entry_code->activation==1 ? 'bg-success' : 'bg-danger'  }} px-2">{{ $entry_code->activation==1 ? "Ակտիվ" : "Պասիվ" }}</span></div>
+
+                                    {{-- @if (auth()->user()->hasRole('super_admin')) --}}
+                                        <div><span class="badge {{$entry_code->status==1 ? 'bg-success' : 'bg-danger'  }} px-2">{{ $entry_code->status==1 ? "Գործող" : "Կասեցված" }}</span></div>
+
+                                    {{-- @else --}}
+                                       <div ><span class="badge {{$entry_code->activation==1 ? 'bg-success' : 'bg-danger'  }} px-2">{{ $entry_code->activation==1 ? "Ակտիվ" : "Պասիվ" }}</span></div>
+
+                                    {{-- @endif --}}
                             </td>
                             <td>
 
@@ -86,14 +92,26 @@
                                         data-bs-toggle="dropdown">
                                         <i class="bx bx-dots-vertical-rounded"></i>
                                     </button>
+
                                     <div class="dropdown-menu ">
-                                      <a class="dropdown-item d-flex" href="javascript:void(0);">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input change_status" type="checkbox"
-                                                role="switch" data-field-name="status"
-                                                {{ $entry_code['status'] ? 'checked' : null }}>
-                                        </div>Կարգավիճակ
-                                       </a>
+                                        @if(auth()->user()->hasRole('super_admin'))
+                                            <a class="dropdown-item d-flex" href="javascript:void(0);">
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input change_status" type="checkbox"
+                                                        role="switch" data-field-name="status"
+                                                        {{ $entry_code['status'] ? 'checked' : null }}>
+                                                </div>Կարգավիճակ
+                                            </a>
+                                        @endif
+                                        @if(auth()->user()->hasRole('client_admin'))
+                                            <a class="dropdown-item d-flex" href="javascript:void(0);">
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input change_status" type="checkbox"
+                                                        role="switch" data-field-name="activation"
+                                                        {{ $entry_code['activation'] ? 'checked' : null }}>
+                                                </div>Ակտիվացում
+                                            </a>
+                                        @endif
 
                                        @if ($entry_code->person_permission !=null  && $entry_code->person_permission->people!=null)
                                         <a class="dropdown-item" href="{{route('calendar',$entry_code->person_permission->people->id )}}"><i

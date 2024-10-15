@@ -18,7 +18,9 @@ trait StoreTrait
     public function itemStore( $request)
     {
 
-
+        if(auth()->user()->hasRole('client_admin')){
+            $request['type']="faceId";
+        }
         $data = $request->all();
 
         $className = $this->model();

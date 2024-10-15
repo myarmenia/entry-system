@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class PersonPermission extends Model
 {
@@ -16,9 +17,9 @@ class PersonPermission extends Model
         return $this->belongsTo(Person::class,'people_id');
     }
 
-    public function entry_code(): BelongsTo{
+    public function entry_code(): BelongsToMany{
 
-        return $this->belongsTo(EntryCode::class,'entry_code_id');
+        return $this->belongsToMany(EntryCode::class,'entry_code_id');
     }
 
 

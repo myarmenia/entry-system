@@ -18,16 +18,27 @@ console.log(id, tb_name, status, field_name)
           console.log(data.result)
           let status_word = ''
           let status_class = ''
+          console.log(field_name)
+        //   console.log(changeElemen.closest('tr').find('td.status').html())
           console.log(changeElemen.closest('tr').children('.' + field_name))
-          if (data.result == 1) {
+        //   if (data.result == 1) {
 
-              status ? (status_word = 'Ակտիվ', status_class = 'success') : (status_word = 'Ապաակտիվ', status_class = 'danger')
+        //       status ? (status_word = 'Ակտիվ', status_class = 'success') : (status_word = 'Ապաակտիվ', status_class = 'danger')
 
-              console.log(status_word + '--status_word--', status_class + '--status_class --')
+        //       console.log(status_word + '--status_word--', status_class + '--status_class --')
 
-              changeElemen.closest('tr').children('.' + field_name).html(`
-                <span class="badge bg-label-${status_class} me-1">${status_word}</span>`)
-          }
+        //       changeElemen.closest('tr').children('.' + field_name).html(`
+        //         <span class="badge bg-label-${status_class} me-1">${status_word}</span>`)
+        //   }
+            if (data.result == 1) {
+                if(field_name=="activation"){
+                    status ? (status_word = 'Ակտիվ', status_class = 'success') : (status_word = 'Ապաակտիվ', status_class = 'danger')
+                    changeElemen.closest('tr').find('td.activation').html(`<div><span class="badge bg-${status_class} me-1">${status_word}</span></div>`)
+
+                }
+
+            }
+
 
         }
 

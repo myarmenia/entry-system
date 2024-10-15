@@ -58,7 +58,7 @@
                                 @method('put')
                                 <div class="row mb-3">
 
-                                    <label for="inputText" class="col-sm-3 col-form-label">Անուն</label>
+                                    <label for="inputText" class="col-sm-3 col-form-label">Անուն </label>
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control" name="name"
                                             placeholder="Աշխատակցի անունը"
@@ -116,28 +116,31 @@
                                         </div>
                                     </div>
                                 @endif
+                                @if(auth()->user()->hasRole('super_admin'))
+                                    <div class="row mb-3">
+                                        <label class="col-sm-3 col-form-label">Կարգավիճակ</label>
+                                        <div class="col-sm-9">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
+                                                    {{ $data->status == 1 ? 'checked' : '' }} name="status"
+                                                    value="{{ $data->status }}">
 
-                                <div class="row mb-3">
-                                    <label class="col-sm-3 col-form-label">Կարգավիճակ</label>
-                                    <div class="col-sm-9">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
-                                                {{ $data->status == 1 ? 'checked' : '' }} name="status"
-                                                value="{{ $data->status }}">
-
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label class="col-sm-3 col-form-label">Ակտիվացում </label>
-                                    <div class="col-sm-9">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
-                                                {{ $data->activation == 1 ? 'checked' : '' }} name="activation">
+                                @endif
+                                @if(auth()->user()->hasRole('client_admin'))
+                                    <div class="row mb-3">
+                                        <label class="col-sm-3 col-form-label">Ակտիվացում </label>
+                                        <div class="col-sm-9">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
+                                                    {{ $data->activation == 1 ? 'checked' : '' }} name="activation">
 
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                @endif
 
                                 <div class="row mb-3">
                                     <label class="col-sm-3 col-form-label"></label>

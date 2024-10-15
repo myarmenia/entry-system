@@ -46,7 +46,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/change-status', [ChangeStatusController::class, 'change_status'])->name('change_status');
 
     Route::post('/client-component', [ClientComponentController::class, 'component'])->name('client.component');
-
+// ============calendar=======================
     Route::get('/calendar/{id}',CalendarController::class)->name('calendar');
     Route::get('calendar-data/{id}', GetCalendarDataController::class);
     Route::get('get-day-reservations/{person}/{date}', GetDayReservationsController::class);
