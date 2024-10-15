@@ -33,6 +33,7 @@ class EntryCodeRequest extends FormRequest
             if(Auth::user()->hasRole('super_admin')){
                 $rules['type']='required';
             }
+            
             return  $rules;
 
     }

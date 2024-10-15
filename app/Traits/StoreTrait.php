@@ -21,6 +21,7 @@ trait StoreTrait
         if(auth()->user()->hasRole('client_admin')){
             $request['type']="faceId";
         }
+
         $data = $request->all();
 
         $className = $this->model();
@@ -29,7 +30,7 @@ trait StoreTrait
 
             $model = new $className;
 
-            $relation_foreign_key = $model->getForeignKey();
+
 
             $item = $model::create($data);
 
