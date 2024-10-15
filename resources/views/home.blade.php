@@ -79,10 +79,10 @@
 
 
 
-                                        <div><span class="badge {{$entry_code->status==1 ? 'bg-success' : 'bg-danger'  }} px-2">{{ $entry_code->status==1 ? "Գործող" : "Կասեցված" }}</span></div>
+                                        <div class="statusSection" ><span class="badge {{$entry_code->status==1 ? 'bg-success' : 'bg-danger'  }} px-2">{{ $entry_code->status==1 ? "Գործող" : "Կասեցված" }}</span></div>
 
 
-                                       <div ><span class="badge {{$entry_code->activation==1 ? 'bg-success' : 'bg-danger'  }} px-2">{{ $entry_code->activation==1 ? "Ակտիվ" : "Պասիվ" }}</span></div>
+                                       <div class="activationSection" ><span class="badge {{$entry_code->activation==1 ? 'bg-success' : 'bg-danger'  }} px-2">{{ $entry_code->activation==1 ? "Ակտիվ" : "Պասիվ" }}</span></div>
 
 
                             </td>
@@ -94,7 +94,7 @@
                                         <i class="bx bx-dots-vertical-rounded"></i>
                                     </button>
 
-                                    <div class="dropdown-menu ">
+                                    <div class="dropdown-menu">
                                         @if(auth()->user()->hasRole('super_admin'))
                                             <a class="dropdown-item d-flex" href="javascript:void(0);">
                                                 <div class="form-check form-switch">
@@ -119,8 +119,7 @@
                                             class="bx bx-edit-alt me-1"></i>Ժամանակացույց</a>
 
                                        @endif
-                                       {{-- <a class="dropdown-item" href="{{route('calendar',$entry_code['id'] )}}"><i
-                                        class="bx bx-edit-alt me-1"></i>Ժամանակացույց</a> --}}
+
 
                                         <a class="dropdown-item" href="{{route('entry-codes-edit',$entry_code['id'])}}"><i
                                                 class="bx bx-edit-alt me-1"></i>Խմբագրել</a>

@@ -53,6 +53,7 @@
                             </h5>
 
                             <!-- General Form Elements -->
+                            {{-- {{ dd($data->active_person->people) }} --}}
                             <form action="{{ route('entry_codes-update', $data->id) }}" method="post"
                                 enctype="multipart/form-data">
                                 @method('put')
@@ -62,7 +63,7 @@
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control" name="name"
                                             placeholder="Աշխատակցի անունը"
-                                            value="{{ $data->person_permission->people->name ?? null }}">
+                                            value="{{ $data->active_person->people->name ?? null }}">
                                     </div>
 
                                 </div>
@@ -72,7 +73,7 @@
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control" name="surname"
                                             placeholder="Աշխատակցի ազգանունը"
-                                            value="{{ $data->person_permission->people->surname ?? null }}">
+                                            value="{{ $data->active_person->people->surname ?? null }}">
                                     </div>
 
                                 </div>
@@ -83,7 +84,7 @@
                                         <input type="email" class="form-control" name="email"
                                             placeholder="example@gmail.com"
                                             value="
-                                            {{ $data->people->email ?? null }}
+                                            {{ $data->active_person->people->email ?? null }}
                                              ">
                                     </div>
                                 </div>
@@ -92,7 +93,7 @@
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control" name="phone"
                                             placeholder="+374 98-00 00"
-                                            value="{{ $data->person_permission->people->phone ?? null }}">
+                                            value="{{ $data->active_person->people->phone ?? null }}">
                                     </div>
                                 </div>
 
