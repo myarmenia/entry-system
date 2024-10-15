@@ -17,7 +17,7 @@
 
                                 <ul class="list-group">
                                     @foreach ($reservetions as $key => $item)
-                                        <li class="list-group-item list-group-item-{{$item->type=="enter" ? "primary" :"secondary"}}">{{date('H:i', strtotime($item->date))}}-{{$item->type=="enter" ? "Մուտք" :"Ելք"}}</li>
+                                        <li class="list-group-item list-group-item-{{$item->direction=="enter" ? "primary" :"secondary"}}">{{date('H:i', strtotime($item->date))}}-{{$item->direction=="enter" ? "Մուտք" :"Ելք"}}</li>
                                     @endforeach
                                 </ul>
 
