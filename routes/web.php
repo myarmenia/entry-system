@@ -49,7 +49,7 @@ Route::group(['middleware' => ['auth']], function() {
 
     Route::get('/calendar/{id}',CalendarController::class)->name('calendar');
     Route::get('calendar-data/{id}', GetCalendarDataController::class);
-    // Route::get('get-day-reservations/{person}/{date}', GetDayReservationsController::class);
+    Route::get('get-day-reservations/{person}/{date}', GetDayReservationsController::class);
 
 
 
