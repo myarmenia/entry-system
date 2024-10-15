@@ -24,9 +24,9 @@ class EntryExitSystemController extends BaseController
             EntryExitSystemDto::fromEntryExitSystemDto($request)
         );
 
-        $data = $ees->result != null ? EntryExitSystemResource::make($ees->result) : null;
+        // $data = $ees->result != null ? EntryExitSystemResource::make($ees->result) : null;
 
-        return $data ? $this->sendResponse($data, $ees->message) : $this->sendError($ees->message);
+        return $ees->result != null ? $this->sendResponse(null, $ees->message) : $this->sendError($ees->message);
 
     }
 }

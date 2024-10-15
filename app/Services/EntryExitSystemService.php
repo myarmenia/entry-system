@@ -3,6 +3,7 @@
 namespace App\Services;
 
 
+use App\Helpers\MyHelper;
 use App\Interfaces\AttendanceSheetInterface;
 use App\Interfaces\CheckEntryCodeInterface;
 use App\Interfaces\ClientIdFromTurnstileInterface;
@@ -32,12 +33,19 @@ class EntryExitSystemService
         }
         else{
 
-            $checkEntryCode = $this->checkEntryCodeRepository->checkEntryCode($data->entry_code, $client_id);
+            $token = explode('#', $data->entry_code);
+
+            $entry_code = count($token) > 1 ? $token[0] : null;
+            $date_time = count($token) > 1 ? $token[1] : null;
+
+            $entry_code = $data->type == 'faceid' ? MyHelper::binaryToDecimal($entry_code) : $entry_code;
+
+            $checkEntryCode = $this->checkEntryCodeRepository->checkEntryCode($entry_code, $client_id);
 
             if (!$checkEntryCode->result) {
                 $message = $checkEntryCode->message;
             } else {
-                $data->date_time = date('Y-m-d H:i:s', $data->date_time);
+                $data->date_time = date('Y-m-d H:i:s', $date_time);
 
                 $person_permission = $checkEntryCode->result->person_permission;
                 $peopleId = $person_permission ? $person_permission->people_id : null;
