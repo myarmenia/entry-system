@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('direction')->nullable(); // exit, enter
             $table->boolean('online')->nullable(); // exit, enter
             $table->string('local_ip')->nullable();
+            $table->string('mac')->nullable();
             $table->timestamps();
         });
     }
