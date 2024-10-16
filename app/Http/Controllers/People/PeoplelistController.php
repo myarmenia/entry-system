@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 
 class PeoplelistController extends Controller
 {
-    // public function __invoke(){
+    public function __invoke(){
 
 
-    // }
+    }
 }
