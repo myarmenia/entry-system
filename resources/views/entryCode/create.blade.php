@@ -88,8 +88,8 @@
                   </div>
                @if (Auth::user()->hasRole("super_admin"))
                 <div class="row mb-3">
-                  <label class="col-sm-2 col-form-label">Տեսակ</label>
-                  <div class="col-sm-10">
+                  <label class="col-sm-3 col-form-label">Տեսակ</label>
+                  <div class="col-sm-9">
                     <select class="form-select" aria-label="Default select example" name ="type">
                       <option value='' disabled >Ընտրել տեսակը</option>
                       <option value="rfId">rfId</option>
