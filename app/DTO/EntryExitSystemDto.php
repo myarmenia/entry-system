@@ -27,7 +27,8 @@ class EntryExitSystemDto
             entry_code: $request->entry_code,
             direction: $request->direction,
             local_ip: $request->local_ip,
-            type: $request->type
+            type: $request->type,
+            online: $request->online,
         );
     }
 
