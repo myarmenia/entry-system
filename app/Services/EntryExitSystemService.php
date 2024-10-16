@@ -38,7 +38,7 @@ class EntryExitSystemService
             $entry_code = count($token) > 1 ? $token[0] : null;
             $date_time = count($token) > 1 ? $token[1] : null;
 
-            $entry_code = $data->type == 'faceid' ? MyHelper::binaryToDecimal($entry_code) : $entry_code;
+            $entry_code = $data->type == 'faceID' ? MyHelper::binaryToDecimal($entry_code) : $entry_code;
 
             $checkEntryCode = $this->checkEntryCodeRepository->checkEntryCode($entry_code, $client_id);
 
