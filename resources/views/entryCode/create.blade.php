@@ -93,7 +93,7 @@
                     <select class="form-select" aria-label="Default select example" name ="type">
                       <option value='' disabled >Ընտրել տեսակը</option>
                       <option value="rfId">rfId</option>
-                      <option value="FaceId">FaceId</option>
+                      <option value="FaceId">FaceID</option>
                     </select>
                     @error("type")
                         <div class="mb-3 row justify-content-end">

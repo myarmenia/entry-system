@@ -19,7 +19,7 @@ trait StoreTrait
     {
 
         if(auth()->user()->hasRole('client_admin')){
-            $request['type']="faceId";
+            $request['type']="faceID";
         }
 
         $data = $request->all();
