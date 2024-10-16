@@ -212,6 +212,12 @@
           <span>Roles</span>
         </a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{{ route('roles.index') }}">
+          <i class="bi bi-person"></i>
+          <span>People</span>
+        </a>
+      </li>
 
       {{-- <li class="nav-item">
         <a class="nav-link collapsed" href="{{ route('products.index') }}">
