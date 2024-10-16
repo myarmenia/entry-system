@@ -56,7 +56,7 @@ Route::group(['middleware' => ['auth']], function() {
         Route::get('list',PeoplelistController::class)->name('people.list');
 
 
-    })
+    });
 
 
 
