@@ -10,6 +10,7 @@ use App\Http\Controllers\EntryCode\EntryCodeStoreController;
 use App\Http\Controllers\EntryCode\EntryCodeUpdateController;
 use App\Http\Controllers\GetCalendarDataController;
 use App\Http\Controllers\GetDayReservationsController;
+use App\Http\Controllers\People\PeopleController;
 use App\Http\Controllers\People\PeoplelistController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
@@ -57,6 +58,7 @@ Route::group(['middleware' => ['auth']], function() {
 
 
     });
+    Route::resource('people', PeopleController::class);
 
 
 

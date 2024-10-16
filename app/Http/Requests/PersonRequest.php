@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PeopleRequest extends FormRequest
+class PersonRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,9 @@ class PeopleRequest extends FormRequest
 
         return [
 
-            'token' => 'required',
-            'type' => 'required',
+            'name' => 'required',
+            'surname' => 'required',
+
         ];
     }
 }

@@ -19,7 +19,14 @@ trait StoreTrait
     {
 
         if(auth()->user()->hasRole('client_admin')){
+            $client=Client::where('user_id',Auth::id())->first();
             $request['type']="faceID";
+            $request['client_id'] =$client->id;
+
+            if( $request->has('activation')){
+                $request['activation'] = 1;
+            }
+
         }
 
         $data = $request->all();
