@@ -24,9 +24,10 @@ class EntryExitSystemRequest extends FormRequest
     {
         return [
             'entry_code' => 'required',
-            'date_time' => 'required',
             'mac' => 'required',
-            'type' => 'required'
+            'type' => 'required',
+            'direction' => 'required'
+
         ];
     }
 

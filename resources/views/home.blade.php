@@ -55,6 +55,7 @@
                 <tbody>
 
                     @foreach ($data as $entry_code)
+                    {{-- {{ dump($entry_code->active_person->people->name) }} --}}
 
                         <tr>
                             <td>{{ ++$i }}</td>
@@ -64,20 +65,26 @@
                                 <img src = "{{ $entry_code->image ? route('get-file',['path' => $entry_code->image ]) : null }}" style="width:80px">
                             </td>
                             <td>
-                                {{ $entry_code->person_permission->people->name ?? null }}
+                                {{ $entry_code->active_person->people->name ?? null }}
 
                             </td>
                              <td>
-                                {{ $entry_code->person_permission->people->surname ?? null }}
+                                {{ $entry_code->active_person->people->surname ?? null }}
 
                             </td>
                             <td>
-                                {{ $entry_code->person_permission->people->phone ?? null }}
+                                {{ $entry_code->active_person->people->phone ?? null }}
                             </td>
-                            <td>
+                            <td class="{{ auth()->user()->hasRole('super_admin') ? 'status' : 'activation' }}" >
 
-                                <div><span class="badge {{$entry_code->status==1 ? 'bg-success' : 'bg-danger'  }} px-2">{{ $entry_code->status==1 ? "Գործող" : "Կասեցված" }}</span></div>
-                                <div><span class="badge {{$entry_code->activation==1 ? 'bg-success' : 'bg-danger'  }} px-2">{{ $entry_code->activation==1 ? "Ակտիվ" : "Պասիվ" }}</span></div>
+
+
+                                        <div class="statusSection" ><span class="badge {{$entry_code->status==1 ? 'bg-success' : 'bg-danger'  }} px-2">{{ $entry_code->status==1 ? "Գործող" : "Կասեցված" }}</span></div>
+
+
+                                       <div class="activationSection" ><span class="badge {{$entry_code->activation==1 ? 'bg-success' : 'bg-danger'  }} px-2">{{ $entry_code->activation==1 ? "Ակտիվ" : "Պասիվ" }}</span></div>
+
+
                             </td>
                             <td>
 
@@ -86,22 +93,33 @@
                                         data-bs-toggle="dropdown">
                                         <i class="bx bx-dots-vertical-rounded"></i>
                                     </button>
-                                    <div class="dropdown-menu ">
-                                      <a class="dropdown-item d-flex" href="javascript:void(0);">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input change_status" type="checkbox"
-                                                role="switch" data-field-name="status"
-                                                {{ $entry_code['status'] ? 'checked' : null }}>
-                                        </div>Կարգավիճակ
-                                       </a>
 
-                                       @if ($entry_code->person_permission !=null  && $entry_code->person_permission->people!=null)
-                                        <a class="dropdown-item" href="{{route('calendar',$entry_code->person_permission->people->id )}}"><i
+                                    <div class="dropdown-menu">
+                                        @if(auth()->user()->hasRole('super_admin'))
+                                            <a class="dropdown-item d-flex" href="javascript:void(0);">
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input change_status" type="checkbox"
+                                                        role="switch" data-field-name="status"
+                                                        {{ $entry_code['status'] ? 'checked' : null }}>
+                                                </div>Կարգավիճակ
+                                            </a>
+                                        @endif
+                                        @if(auth()->user()->hasRole('client_admin'))
+                                            <a class="dropdown-item d-flex" href="javascript:void(0);">
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input change_status" type="checkbox"
+                                                        role="switch" data-field-name="activation"
+                                                        {{ $entry_code['activation'] ? 'checked' : null }}>
+                                                </div>Ակտիվացում
+                                            </a>
+                                        @endif
+
+                                       @if ($entry_code->active_person !=null  && $entry_code->active_person->people!=null)
+                                        <a class="dropdown-item" href="{{route('calendar',$entry_code->active_person->people->id )}}"><i
                                             class="bx bx-edit-alt me-1"></i>Ժամանակացույց</a>
 
                                        @endif
-                                       {{-- <a class="dropdown-item" href="{{route('calendar',$entry_code['id'] )}}"><i
-                                        class="bx bx-edit-alt me-1"></i>Ժամանակացույց</a> --}}
+
 
                                         <a class="dropdown-item" href="{{route('entry-codes-edit',$entry_code['id'])}}"><i
                                                 class="bx bx-edit-alt me-1"></i>Խմբագրել</a>

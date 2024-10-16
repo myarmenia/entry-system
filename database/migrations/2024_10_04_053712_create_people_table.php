@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('surname')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
+            $table->enum('type', ['worker', 'visitor']);
             $table->timestamps();
         });
     }

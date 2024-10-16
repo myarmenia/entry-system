@@ -9,10 +9,13 @@ class EntryExitSystemDto
     public function __construct(
         public readonly string $mac,
         public readonly string $entry_code,
-        public  string $date_time,
+        public string $direction,
         public readonly string $local_ip,
         public readonly string $type,
-        public ?int $people_id = null
+        public ?int $people_id = null,
+        public ?bool $online = null,
+        public ?string $date = null,
+
 
     ) {
     }
@@ -22,7 +25,7 @@ class EntryExitSystemDto
         return new self(
             mac: $request->mac,
             entry_code: $request->entry_code,
-            date_time: $request->date_time,
+            direction: $request->direction,
             local_ip: $request->local_ip,
             type: $request->type
         );
@@ -31,10 +34,14 @@ class EntryExitSystemDto
     public function toArray()
     {
         return [
-            'date' => $this->date_time,
+            'direction' => $this->direction,
             'local_ip' => $this->local_ip,
             'type' => $this->type,
-            'people_id' => $this->people_id
+            'people_id' => $this->people_id,
+            'online' => $this->online,
+            'date' => $this->date,
+            'mac' => $this->mac
+
         ];
     }
 

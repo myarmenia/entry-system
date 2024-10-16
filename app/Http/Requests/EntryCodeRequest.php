@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+// use Illuminate\Container\Attributes\Auth;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class EntryCodeRequest extends FormRequest
 {
@@ -21,13 +23,18 @@ class EntryCodeRequest extends FormRequest
      */
     public function rules(): array
     {
- 
 
-            return [
+
+            $rules =[
 
                 'token' => 'required',
-                'type' => 'required',
+
             ];
+            if(Auth::user()->hasRole('super_admin')){
+                $rules['type']='required';
+            }
+            
+            return  $rules;
 
     }
 }

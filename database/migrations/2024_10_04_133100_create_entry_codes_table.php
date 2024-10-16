@@ -15,11 +15,13 @@ return new class extends Migration
             $table->id()->from(1000);
             $table->bigInteger('client_id')->unsigned();
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
-            $table->string('token')->unique();
+            $table->string('token');
             $table->string('image')->nullable();
             $table->boolean('status')->default(1);
             $table->boolean('activation')->default(0);
             $table->string('type');
+
+            $table->unique(['token', 'client_id']);
             $table->timestamps();
         });
     }

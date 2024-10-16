@@ -53,16 +53,17 @@
                             </h5>
 
                             <!-- General Form Elements -->
+                            {{-- {{ dd($data->active_person->people) }} --}}
                             <form action="{{ route('entry_codes-update', $data->id) }}" method="post"
                                 enctype="multipart/form-data">
                                 @method('put')
                                 <div class="row mb-3">
 
-                                    <label for="inputText" class="col-sm-3 col-form-label">Անուն</label>
+                                    <label for="inputText" class="col-sm-3 col-form-label">Անուն </label>
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control" name="name"
                                             placeholder="Աշխատակցի անունը"
-                                            value="{{ $data->person_permission->people->name ?? null }}">
+                                            value="{{ $data->active_person->people->name ?? null }}">
                                     </div>
 
                                 </div>
@@ -72,7 +73,7 @@
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control" name="surname"
                                             placeholder="Աշխատակցի ազգանունը"
-                                            value="{{ $data->person_permission->people->surname ?? null }}">
+                                            value="{{ $data->active_person->people->surname ?? null }}">
                                     </div>
 
                                 </div>
@@ -83,7 +84,7 @@
                                         <input type="email" class="form-control" name="email"
                                             placeholder="example@gmail.com"
                                             value="
-                                            {{ $data->people->email ?? null }}
+                                            {{ $data->active_person->people->email ?? null }}
                                              ">
                                     </div>
                                 </div>
@@ -92,7 +93,7 @@
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control" name="phone"
                                             placeholder="+374 98-00 00"
-                                            value="{{ $data->person_permission->people->phone ?? null }}">
+                                            value="{{ $data->active_person->people->phone ?? null }}">
                                     </div>
                                 </div>
 
@@ -116,28 +117,31 @@
                                         </div>
                                     </div>
                                 @endif
+                                @if(auth()->user()->hasRole('super_admin'))
+                                    <div class="row mb-3">
+                                        <label class="col-sm-3 col-form-label">Կարգավիճակ</label>
+                                        <div class="col-sm-9">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
+                                                    {{ $data->status == 1 ? 'checked' : '' }} name="status"
+                                                    value="{{ $data->status }}">
 
-                                <div class="row mb-3">
-                                    <label class="col-sm-3 col-form-label">Կարգավիճակ</label>
-                                    <div class="col-sm-9">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
-                                                {{ $data->status == 1 ? 'checked' : '' }} name="status"
-                                                value="{{ $data->status }}">
-
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label class="col-sm-3 col-form-label">Ակտիվացում </label>
-                                    <div class="col-sm-9">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
-                                                {{ $data->activation == 1 ? 'checked' : '' }} name="activation">
+                                @endif
+                                @if(auth()->user()->hasRole('client_admin'))
+                                    <div class="row mb-3">
+                                        <label class="col-sm-3 col-form-label">Ակտիվացում </label>
+                                        <div class="col-sm-9">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
+                                                    {{ $data->activation == 1 ? 'checked' : '' }} name="activation">
 
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                @endif
 
                                 <div class="row mb-3">
                                     <label class="col-sm-3 col-form-label"></label>
