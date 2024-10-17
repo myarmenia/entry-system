@@ -15,19 +15,21 @@ class PersonRepository implements PersonRepositoryInterface
 {
     public function getAllPeople()
     {
-        return Person::latest()->paginate(10)->withQueryString();
+        $client=Client::where('user_id',Auth::id())->first();
+
+        return Person::where('client_id',$client->id)->latest()->paginate(10)->withQueryString();
     }
     public function createPerson()
     {
         $client = Client::where('user_id',Auth::id())->first();
-        
+
         return EntryCode::where(['client_id'=>$client->id,'activation'=>0])->get();
     }
 
     public function storePerson(PersonDTO $personDTO)
     {
 
-        $entry_code=EntryCode::find($personDTO->entry_code_id);
+        $entry_code = EntryCode::where('id',$personDTO->entry_code_id)->first();
 
         $person = new Person();
         $person->client_id = $entry_code->client_id;
@@ -46,10 +48,25 @@ class PersonRepository implements PersonRepositoryInterface
                $person->save();
             }
 
+            $person_permission_entry_code = PersonPermission::where(['entry_code_id' => $personDTO->entry_code_id,'status' => 1])->first();
+
+            if($person_permission_entry_code){
+
+                $person_permission_entry_code->status = 0;
+                $person_permission_entry_code->save();
+            }
+
             $person_permission = new PersonPermission();
-            $person_permission->people_id  = $person->id;
+            $person_permission->person->id = $person->id;
             $person_permission->entry_code_id = $personDTO->entry_code_id;
             $person_permission->save();
+
+            if($person_permission){
+
+                $entry_code->activation = 1;
+                $entry_code->save();
+
+            }
 
         }
 
@@ -63,8 +80,9 @@ class PersonRepository implements PersonRepositoryInterface
     }
     public function editPerson($personId){
 
-        return Person::find($personId);
+        $person = Person::find($personId);
 
+        return $person;
 
     }
 

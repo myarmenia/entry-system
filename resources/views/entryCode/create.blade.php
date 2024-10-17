@@ -44,9 +44,9 @@
               <h5 class="card-title">
                 <nav>
                     <ol class="breadcrumb">
-                      <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                      <li class="breadcrumb-item"><a href="{{ route('entry-codes-list') }}">Նույնականացման կոդերի ցանկ</a></li>
 
-                      <li class="breadcrumb-item active">Ստեղծել գործատուի մուտքի կոդերը</li>
+                      <li class="breadcrumb-item active">Ստեղծել</li>
                     </ol>
                   </nav>
               </h5>

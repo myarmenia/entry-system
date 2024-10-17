@@ -40,7 +40,6 @@ class PeopleController extends Controller
     public function create()
     {
         $entry_codes = $this->personService->create();
-
         return view('people.create',compact('entry_codes'));
     }
 
@@ -73,11 +72,15 @@ class PeopleController extends Controller
      */
     public function edit(string $id)
     {
-        // $data=Person::find($id);
+
         $data = $this->personService->edit($id);
-        if($data['person'] !=null && $data['non_active_entry_code'] != null ){
-            // dd($data);
-            return view('people.edit',compact('data'));
+
+        if($data['non_active_entry_code'] == false){
+            return view('people.edit')->with('message', 'Բազայում նույնականացման կոդերը բացակայում են');
+        }
+
+        if($data['person'] != null && $data['non_active_entry_code'] != null){
+            return view('people.edit', compact('data'));
         }
 
     }

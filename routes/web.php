@@ -6,12 +6,14 @@ use App\Http\Controllers\ChangeStatusController;
 use App\Http\Controllers\Component\ClientComponentController;
 use App\Http\Controllers\EntryCode\EntryCodeCreateController;
 use App\Http\Controllers\EntryCode\EntryCodeEditController;
+use App\Http\Controllers\EntryCode\EntryCodeListController;
 use App\Http\Controllers\EntryCode\EntryCodeStoreController;
 use App\Http\Controllers\EntryCode\EntryCodeUpdateController;
 use App\Http\Controllers\GetCalendarDataController;
 use App\Http\Controllers\GetDayReservationsController;
 use App\Http\Controllers\People\PeopleController;
 use App\Http\Controllers\People\PeoplelistController;
+use App\Http\Controllers\PersonPermission\PersonPermissionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -40,24 +42,25 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('users', UserController::class);
     Route::resource('products', ProductController::class);
 
+    Route::group(['prefix'=>'entry-code'],function(){
 
-    Route::get('/create',EntryCodeCreateController::class)->name('entry-codes-create');
-    Route::post('/store', [EntryCodeStoreController::class,'store'])->name('entry-codes-store');
-    Route::get('/edit/{id}',[EntryCodeEditController::class,'edit'])->name('entry-codes-edit');
-    Route::put('/update/{id}',[EntryCodeUpdateController::class,'update'])->name('entry_codes-update');
+        Route::get('/list', [EntryCodeListController::class,'index'])->name('entry-codes-list');
+        Route::get('/create',EntryCodeCreateController::class)->name('entry-codes-create');
+        Route::post('/store', [EntryCodeStoreController::class,'store'])->name('entry-codes-store');
+        Route::get('/edit/{id}',[EntryCodeEditController::class,'edit'])->name('entry-codes-edit');
+        Route::put('/update/{id}',[EntryCodeUpdateController::class,'update'])->name('entry_codes-update');
+
+    });
     Route::post('/change-status', [ChangeStatusController::class, 'change_status'])->name('change_status');
+    Route::post('/change-person-permission-entry-code',[PersonPermissionController::class,'changeEntryCode']);
 
     Route::post('/client-component', [ClientComponentController::class, 'component'])->name('client.component');
-// ============calendar=======================
+    // =======Calendar=======================
     Route::get('/calendar/{id}',CalendarController::class)->name('calendar');
     Route::get('calendar-data/{id}', GetCalendarDataController::class);
     Route::get('get-day-reservations/{person}/{date}', GetDayReservationsController::class);
 
-    Route::group(['prefix'=>'people'],function(){
-        Route::get('list',PeoplelistController::class)->name('people.list');
-
-
-    });
+    // ========People==========================
     Route::resource('people', PeopleController::class);
 
 

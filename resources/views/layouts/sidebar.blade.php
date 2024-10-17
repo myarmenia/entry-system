@@ -193,12 +193,12 @@
 
     {{-- @if (Auth::user()->hasRole("super_admin")) --}}
         <li class="nav-item">
-            <a class="nav-link collapsed" href="{{ route('entry-codes-create') }}">
+            <a class="nav-link collapsed" href="{{ route('entry-codes-list') }}">
             <i class="bi bi-person"></i>
             <span>Entry Code</span>
             </a>
         </li>
-    {{-- @endif --}}
+
 
       <li class="nav-item">
         <a class="nav-link collapsed" href=" {{ route('users.index') }}">
@@ -206,12 +206,14 @@
           <span>Users</span>
         </a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="{{ route('roles.index') }}">
-          <i class="bi bi-person"></i>
-          <span>Roles</span>
-        </a>
-      </li>
+      @if (Auth::user()->hasRole("super_admin"))
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{{ route('roles.index') }}">
+            <i class="bi bi-person"></i>
+            <span>Roles</span>
+            </a>
+        </li>
+       @endif
       <li class="nav-item">
         <a class="nav-link collapsed" href="{{ route('people.index') }}">
           <i class="bi bi-person"></i>

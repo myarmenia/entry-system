@@ -1,38 +1,11 @@
 @extends('layouts.app')
+@section("page-script")
+    <script src="{{ asset('assets/js/change-person-permission-entry-code.js') }}"></script>
+@endsection
 
 @section('content')
-    {{-- <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
-
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    {{ __('You are logged in!') }}
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-</div> --}}
-
-
-    {{-- commentel em heto karox e petq gal  --}}
-    {{-- @include("navbar") --}}
-
-
-
 
     <main id="main" class="main">
-
-
 
         <section class="section">
 
@@ -41,11 +14,21 @@
 
                     <div class="card">
                         <div class="card-body">
+                            {{-- {{dd(session('message'))}} --}}
+                            @if (session('message'))
+                                <div class="alert alert-success" role="alert">
+                                    {{ session('message') }}
+                                </div>
+                            @endif
+
+
+                        </div>
+                        <div class="card-body">
 
                             <h5 class="card-title">
                                 <nav>
                                     <ol class="breadcrumb">
-                                        <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                                        <li class="breadcrumb-item"><a href="{{ route('people.index') }}">Աշխատակիցների ցանկ</a></li>
 
                                         <li class="breadcrumb-item active">Խմբագրել</li>
                                     </ol>
@@ -53,7 +36,7 @@
                             </h5>
 
                             <!-- General Form Elements -->
-                            {{-- {{ dd($data->active_person->people) }} --}}
+                            {{-- {{ dd($data['person']->activated_code_connected_person->entry_code_id ) }} --}}
                             <form action="{{ route('people.update', $data['person']->id) }}" method="post"
                                 enctype="multipart/form-data">
                                 @method('put')
@@ -61,10 +44,18 @@
                                 <div class="row mb-3">
                                     <label class="col-sm-3 col-form-label">Նույնականացման կոդ</label>
                                     <div class="col-sm-9">
-                                      <select class="form-select" aria-label="Default select example" name ="entry_code_id">
+
+                                      <select class="form-select" aria-label="Default select example" name ="entry_code_id" id="entryCodeNumber"
+                                                    data-person-id="{{$data['person']->id}}"
+                                       >
                                         <option value='' disabled >Ընտրել նույնականացման կոդը</option>
                                         @foreach ($data['non_active_entry_code'] as $code )
-                                        <option value="{{ $code->id }}">{{ $code->id }}</option>
+                                        <option
+                                            value="{{ $code->id }}"
+                                            {{ $data['person']->activated_code_connected_person->entry_code_id==$code->id ? 'selected' : null }} --}}
+                                             >
+                                            {{ $code->id }}
+                                            </option>
                                         @endforeach
 
                                       </select>

@@ -21,7 +21,7 @@
 
 
 
-        <div class="col-lg-12">
+        <div class="col-lg-8">
 
 
                 <div class="card">
@@ -32,14 +32,15 @@
                         <div class="card-body">
                             <div class = "d-flex justify-content-between">
                                 <h5 class="card-title">
-
-                                <nav>
-                                    <ol class="breadcrumb">
-                                        <li class="breadcrumb-item active">Աշխատակիցների ցանկ</li>
-                                    </ol>
-                                </nav>
-
+                                    <nav>
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item active">Նույնականացման կոդերի ցանկ</li>
+                                        </ol>
+                                    </nav>
                                 </h5>
+                                <div class="pull-right d-flex justify-content-end m-3" >
+                                    <a class="btn btn-primary  mb-2" href="{{ route('entry-codes-create') }}"><i class="fa fa-plus"></i> Ստեղծել նույնականացման կոդ</a>
+                                </div>
 
                             </div>
                             <!-- Bordered Table -->
@@ -49,13 +50,11 @@
                                 <tr>
                                     <th scope="col">Հ/Հ</th>
                                     <th scope="col">ID</th>
-                                    <th scope="col">Նկար</th>
-                                    <th scope="col">Անուն</th>
-                                    <th scope="col">Ազգանուն</th>
-
-                                    <th scope="col">Հեռախոսահամար</th>
+                                    <th scope="col">Գործատու</th>
+                                    <th scope="col">Թոքեն</th>
+                                    {{-- <th scope="col">Էլ. հասցեն</th>
+                                    <th scope="col">Հասցե</th> --}}
                                     <th scope="col">Կարգավիճակ</th>
-
                                     <th scope="col">Գործողություն</th>
                                 </tr>
                                 </thead>
@@ -68,20 +67,24 @@
                                             <td>{{ ++$i }}</td>
                                             <th scope="row">{{ $entry_code->id }}</th>
 
-                                            <td>
+                                            {{-- <td>
                                                 <img src = "{{ $entry_code->image ? route('get-file',['path' => $entry_code->image ]) : null }}" style="width:80px">
-                                            </td>
+                                            </td> --}}
                                             <td>
-                                                {{ $entry_code->active_person->people->name ?? null }}
+                                                {{ $entry_code->client->name ?? null }}
 
                                             </td>
                                             <td>
-                                                {{ $entry_code->active_person->people->surname ?? null }}
+                                                {{ $entry_code->token ?? null }}
+
+                                            </td>
+                                            {{-- <td>
+                                                {{ $entry_code->client->email ?? null }}
 
                                             </td>
                                             <td>
-                                                {{ $entry_code->active_person->people->phone ?? null }}
-                                            </td>
+                                                {{ $entry_code->client->address ?? null }}
+                                            </td> --}}
                                             <td class="{{ auth()->user()->hasRole('super_admin') ? 'status' : 'activation' }}" >
 
 
@@ -150,7 +153,7 @@
                         <div class="demo-inline-spacing">
                             {{ $data->links() }}
                         </div>
-             
+
                 </div>
 
 
