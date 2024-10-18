@@ -48,20 +48,27 @@ class PersonService
         ];
 
     }
+    public function update(PersonDTO $personDTO, array $data)
+    {
+        return $this->personRepository->updatePerson($personDTO, $data);
+    }
 
     public function getAllNonActivatedEntryCode()
     {
         $client = Client::where('user_id',Auth::id())->first();
 
         $entry_code = EntryCode::where(['client_id'=>$client->id,'activation'=>0,'status'=>1])->get();
-  
+
         if(count($entry_code)>0)
         {
             return $entry_code;
         }else{
             return false;
-            // response()->json(['message' => 'Բազայում նույնականացման կոդերը բացակայում են'], 404);
+
         }
+
     }
+
+
 
 }

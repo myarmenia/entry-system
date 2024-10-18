@@ -41,6 +41,11 @@
 
           <div class="card">
             <div class="card-body">
+                @if (session('repeating_token'))
+                    <div class="alert alert-danger" role="alert">
+                        {{ session('repeating_token') }}
+                    </div>
+                @endif
               <h5 class="card-title">
                 <nav>
                     <ol class="breadcrumb">
@@ -52,24 +57,13 @@
               </h5>
 
               <!-- General Form Elements -->
-              <form action="{{ route('entry-codes-store')}}" method="post" enctype="multipart/form-data">
+              <form action="{{ route('entry_codes-update',$data->id)}}" method="post" enctype="multipart/form-data">
+                   @method('put')
                 @if (Auth::user()->hasRole("super_admin"))
                     <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label">Գործատուների ցանկ </label>
+                        <label class="col-sm-3 col-form-label">Գործատուի անվանում </label>
                         <div class="col-sm-9">
-                        <select class="form-select" aria-label="Default select example" name ="client_id">
-                            <option value='' disabled >Ընտրել գործատուին </option>
-                            @foreach ($clients as  $client)
-                                <option value="{{ $client->id }}" {{$data->client_id==$client->id ?'selected' : null }}>{{ $client->name }}</option>
-                            @endforeach
-
-                        </select>
-                        @error("client_id")
-                            <div class="mb-3 row">
-                                <p class="col-sm-10 text-danger fs-6">{{ $message }}
-                                </p>
-                            </div>
-                        @enderror
+                            <input type="text" class="form-control" name="client_id" value = {{$data->client->name}} disabled>
                         </div>
 
                     </div>
@@ -114,7 +108,7 @@
                             <div class="col-sm-9">
                                 <div class="form-check form-switch">
                                     <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
-                                        name="status"value="{{$data->status}}">
+                                        name="status"value="{{$data->status}}" {{ $data->status == 1 ? 'checked' : '' }}>
 
                                 </div>
                             </div>

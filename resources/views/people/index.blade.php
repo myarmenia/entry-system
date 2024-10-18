@@ -45,15 +45,13 @@
                 <thead>
                   <tr>
                     <th scope="col">Հ/Հ</th>
-                    <th scope="col">ID</th>
+                    {{-- <th scope="col">ID</th> --}}
                     <th scope="col">Նկար</th>
                     <th scope="col">Անուն</th>
                     <th scope="col">Ազգանուն</th>
 
                     <th scope="col">Հեռախոսահամար</th>
                     <th scope="col">Տեսակ</th>
-                    {{-- <th scope="col">Կարգավիճակ</th> --}}
-
                     <th scope="col">Գործողություն</th>
                   </tr>
                 </thead>
@@ -65,7 +63,7 @@
 
                         <tr>
                             <td>{{ ++$i }}</td>
-                            <th scope="row">{{ $person->id }}</th>
+                            {{-- <th scope="row">{{ $person->id }}</th> --}}
 
                             <td>
                                 <img src = "{{ $person->image ? route('get-file',['path' => $person->image ]) : null }}" style="width:80px">
@@ -146,17 +144,18 @@
 
                 </tbody>
               </table>
+
               <!-- End Bordered Table -->
 
 
-
+              <div class="demo-inline-spacing">
+                {{ $data->links() }}
+            </div>
             </div>
 
 
           </div>
-          <div class="demo-inline-spacing">
-            {{ $data->links() }}
-        </div>
+
 
 
 

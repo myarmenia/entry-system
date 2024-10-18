@@ -11,6 +11,8 @@ interface PersonRepositoryInterface
     public function createPerson();
 
     public function storePerson(PersonDTO $personDTO);
-    
+
     public function editPerson($personId);
+
+    public function updatePerson(PersonDTO $personDTO, array $data);
 }

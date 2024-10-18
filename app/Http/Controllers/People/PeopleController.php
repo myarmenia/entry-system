@@ -51,7 +51,9 @@ class PeopleController extends Controller
 
         $personDTO = PersonDTO::fromModel($request);
         $data = $this->personService->store($personDTO);
+
         if($data){
+
             return redirect()->route('people.index');
         }
 
@@ -75,11 +77,8 @@ class PeopleController extends Controller
 
         $data = $this->personService->edit($id);
 
-        if($data['non_active_entry_code'] == false){
-            return view('people.edit')->with('message', 'Բազայում նույնականացման կոդերը բացակայում են');
-        }
 
-        if($data['person'] != null && $data['non_active_entry_code'] != null){
+        if($data['person'] != null ){
             return view('people.edit', compact('data'));
         }
 
@@ -90,7 +89,20 @@ class PeopleController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+
+        $person = Person::findOrFail($id);
+
+        $person['entry_code_id'] = $request->entry_code_id;
+
+        $personDTO = PersonDTO::fromModel($person);
+
+        $data = $this->personService->update($personDTO, $request->all());
+
+        if ($data) {
+            return redirect()->route('people.index')->with('success', 'Person updated successfully.');
+        }
+
+        return redirect()->back()->withErrors('Failed to update the person.');
     }
 
     /**

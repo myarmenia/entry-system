@@ -7,11 +7,6 @@
 @section('content')
 
 
-{{-- commentel em heto karox e petq gal  --}}
-   {{-- @include("navbar") --}}
-
-
-
 
    <main id="main" class="main">
 
@@ -21,13 +16,9 @@
 
 
 
-        <div class="col-lg-8">
-
+        <div class="col-lg-12">
 
                 <div class="card">
-
-
-
 
                         <div class="card-body">
                             <div class = "d-flex justify-content-between">
@@ -49,11 +40,12 @@
                                 <thead>
                                 <tr>
                                     <th scope="col">Հ/Հ</th>
-                                    <th scope="col">ID</th>
+                                    {{-- <th scope="col">ID</th> --}}
                                     <th scope="col">Գործատու</th>
                                     <th scope="col">Թոքեն</th>
-                                    {{-- <th scope="col">Էլ. հասցեն</th>
-                                    <th scope="col">Հասցե</th> --}}
+                                    <th scope="col">Անուն</th>
+                                    <th scope="col">Ազգանուն</th>
+                                    <th scope="col">Հեռախոսահամար</th>
                                     <th scope="col">Կարգավիճակ</th>
                                     <th scope="col">Գործողություն</th>
                                 </tr>
@@ -65,11 +57,9 @@
 
                                         <tr>
                                             <td>{{ ++$i }}</td>
-                                            <th scope="row">{{ $entry_code->id }}</th>
+                                            {{-- <th scope="row">{{ $entry_code->id }}</th> --}}
 
-                                            {{-- <td>
-                                                <img src = "{{ $entry_code->image ? route('get-file',['path' => $entry_code->image ]) : null }}" style="width:80px">
-                                            </td> --}}
+
                                             <td>
                                                 {{ $entry_code->client->name ?? null }}
 
@@ -78,13 +68,17 @@
                                                 {{ $entry_code->token ?? null }}
 
                                             </td>
-                                            {{-- <td>
-                                                {{ $entry_code->client->email ?? null }}
+                                            <td>
+                                                {{ $entry_code->active_person->people->name ?? null }}
 
                                             </td>
                                             <td>
-                                                {{ $entry_code->client->address ?? null }}
-                                            </td> --}}
+                                                {{ $entry_code->active_person->people->surname ?? null }}
+
+                                            </td>
+                                            <td>
+                                                {{ $entry_code->active_person->people->phone ?? null }}
+                                            </td>
                                             <td class="{{ auth()->user()->hasRole('super_admin') ? 'status' : 'activation' }}" >
 
 
@@ -148,11 +142,12 @@
                                 </tbody>
                             </table>
                             <!-- End Bordered Table -->
+                            <div class="demo-inline-spacing">
+                                {{ $data->links() }}
+                            </div>
                         </div>
 
-                        <div class="demo-inline-spacing">
-                            {{ $data->links() }}
-                        </div>
+
 
                 </div>
 
@@ -164,13 +159,7 @@
 
     </section>
 
-
   </main><!-- End #main -->
-<script>
-
-    // let actionClass =document.querySelectorAll('.action');
-    // console.log(actionClass)
-</script>
 
 @endsection
 

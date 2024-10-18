@@ -40,19 +40,18 @@
                 <div class="col-lg-8">
 
                     <div class="card">
-                        @if (count($entry_codes)==0)
-                           <div class="d-flex justify-content-center   vh-100 fw-bold">
-                            <h2 class="mt-5">Նույնականացման կոդերը բացակայում են</h2></div>
-
+                        @if (count($entry_codes) == 0)
+                            <div class="d-flex justify-content-center   vh-100 fw-bold">
+                                <h2 class="mt-5">Նույնականացման կոդերը բացակայում են</h2>
+                            </div>
                         @else
-
-
                             <div class="card-body">
 
                                 <h5 class="card-title">
                                     <nav>
                                         <ol class="breadcrumb">
-                                            <li class="breadcrumb-item"><a href="{{ route('people.index') }}">Աշխատակիցների ցանկ</a></li>
+                                            <li class="breadcrumb-item"><a href="{{ route('people.index') }}">Աշխատակիցների
+                                                    ցանկ</a></li>
 
                                             <li class="breadcrumb-item active">Ստեղծել</li>
                                         </ol>
@@ -61,25 +60,23 @@
 
                                 <!-- General Form Elements -->
                                 {{-- {{ dd($data->active_person->people) }} --}}
-                                <form action="{{ route('people.store') }}"
-                                    method="post"
-                                    enctype="multipart/form-data">
+                                <form action="{{ route('people.store') }}" method="post" enctype="multipart/form-data">
                                     <div class="row mb-3">
                                         <label class="col-sm-3 col-form-label">Նույնականացման կոդ</label>
                                         <div class="col-sm-9">
-                                        <select class="form-select" aria-label="Default select example" name ="entry_code_id">
-                                            <option value='' disabled >Ընտրել նույնականացման կոդը</option>
-                                            @foreach ($entry_codes as $code )
-                                            <option value="{{ $code->id }}">{{ $code->id }}</option>
-                                            @endforeach
-
-                                        </select>
-                                        @error("type")
-                                            <div class="mb-3 row justify-content-end">
-                                                <div class="col-sm-10 text-danger fts-14">{{ $message }}
+                                            <select class="form-select" aria-label="Default select example"
+                                                name ="entry_code_id">
+                                                <option value='' disabled>Ընտրել նույնականացման կոդը</option>
+                                                @foreach ($entry_codes as $code)
+                                                    <option value="{{ $code->id }}">{{ $code->id }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('type')
+                                                <div class="mb-3 row justify-content-end">
+                                                    <div class="col-sm-10 text-danger fts-14">{{ $message }}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        @enderror
+                                            @enderror
                                         </div>
                                     </div>
 
@@ -88,14 +85,13 @@
                                         <label for="inputText" class="col-sm-3 col-form-label">Անուն </label>
                                         <div class="col-sm-9">
                                             <input type="text" class="form-control" name="name"
-                                                placeholder="Աշխատակցի անունը"
-                                                value="">
-                                                @error("name")
-                                                    <div class="mb-3 row ">
-                                                        <p class="col-sm-10 text-danger fs-6">{{ $message }}
-                                                        </p>
-                                                    </div>
-                                                @enderror
+                                                placeholder="Աշխատակցի անունը" value="{{ old('name') }}">
+                                            @error('name')
+                                                <div class="mb-3 row ">
+                                                    <p class="col-sm-10 text-danger fs-6">{{ $message }}
+                                                    </p>
+                                                </div>
+                                            @enderror
                                         </div>
 
                                     </div>
@@ -104,14 +100,13 @@
                                         <label for="inputText1" class="col-sm-3 col-form-label">Ազգանուն </label>
                                         <div class="col-sm-9">
                                             <input type="text" class="form-control" name="surname"
-                                                placeholder="Աշխատակցի ազգանունը"
-                                                value="">
-                                                @error("surname")
-                                                    <div class="mb-3 row">
-                                                        <p class="col-sm-9 mb-3 text-danger fs-6 ">{{ $message }}
-                                                        </p>
-                                                    </div>
-                                                @enderror
+                                                placeholder="Աշխատակցի ազգանունը" value="">
+                                            @error('surname')
+                                                <div class="mb-3 row">
+                                                    <p class="col-sm-9 mb-3 text-danger fs-6 ">{{ $message }}
+                                                    </p>
+                                                </div>
+                                            @enderror
                                         </div>
 
                                     </div>
@@ -120,16 +115,14 @@
                                         <label for="inputEmail" class="col-sm-3 col-form-label">Էլ.հասցե</label>
                                         <div class="col-sm-9">
                                             <input type="email" class="form-control" name="email"
-                                                placeholder="example@gmail.com"
-                                                value="">
+                                                placeholder="example@gmail.com" value="">
                                         </div>
                                     </div>
                                     <div class="row mb-3">
                                         <label for="inputEmail" class="col-sm-3 col-form-label">Հեռախոսահամար</label>
                                         <div class="col-sm-9">
                                             <input type="text" class="form-control" name="phone"
-                                                placeholder="+374 98-00 00"
-                                                value="">
+                                                placeholder="+374 98-00 00" value="">
                                         </div>
                                     </div>
 
@@ -153,7 +146,7 @@
                                             </div>
                                         </div>
                                     @endif --}}
-                                    {{-- @if(auth()->user()->hasRole('super_admin'))
+                                    {{-- @if (auth()->user()->hasRole('super_admin'))
                                         <div class="row mb-3">
                                             <label class="col-sm-3 col-form-label">Կարգավիճակ</label>
                                             <div class="col-sm-9">
@@ -166,7 +159,7 @@
                                             </div>
                                         </div>
                                     @endif --}}
-                                    {{-- @if(auth()->user()->hasRole('client_admin'))
+                                    {{-- @if (auth()->user()->hasRole('client_admin'))
                                         <div class="row mb-3">
                                             <label class="col-sm-3 col-form-label">Ակտիվացում </label>
                                             <div class="col-sm-9">
@@ -183,20 +176,20 @@
                                     <div class="row mb-3">
                                         <label class="col-sm-3 col-form-label">Աշխատակցի կարգավիճակ</label>
                                         <div class="col-sm-9">
-                                        <select class="form-select" aria-label="Default select example" name ="type">
+                                            <select class="form-select" aria-label="Default select example" name ="type">
                                                 <option value='' disabled>Աշխատակցի կարգավիճակը</option>
 
                                                 <option value="worker">Աշխատող</option>
                                                 <option value="visitor">Այցելու</option>
 
 
-                                        </select>
-                                        @error("type")
-                                            <div class="mb-3 row justify-content-end">
-                                                <div class="col-sm-10 text-danger fts-14">{{ $message }}
+                                            </select>
+                                            @error('type')
+                                                <div class="mb-3 row justify-content-end">
+                                                    <div class="col-sm-10 text-danger fts-14">{{ $message }}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        @enderror
+                                            @enderror
                                         </div>
                                     </div>
                                     <div class="row mb-3">
@@ -209,7 +202,7 @@
                                 </form>
 
                             </div>
-                            @endif
+                        @endif
                     </div>
 
                 </div>

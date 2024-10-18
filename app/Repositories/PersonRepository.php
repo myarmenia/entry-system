@@ -57,7 +57,8 @@ class PersonRepository implements PersonRepositoryInterface
             }
 
             $person_permission = new PersonPermission();
-            $person_permission->person->id = $person->id;
+
+            $person_permission->person_id = $person->id;
             $person_permission->entry_code_id = $personDTO->entry_code_id;
             $person_permission->save();
 
@@ -85,5 +86,54 @@ class PersonRepository implements PersonRepositoryInterface
         return $person;
 
     }
+    public function updatePerson(PersonDTO $personDTO,array $data)
+    {
+        // dd($personDTO, $data);
+            $person = Person::findOrFail($personDTO->id);
+
+            // Update fields based on data from DTO or request
+            $person->name = $data['name'] ?? $personDTO->name;
+            $person->surname = $data['surname'] ?? $personDTO->surname;
+            $person->email = $data['email'] ?? $personDTO->email;
+            $person->phone = $data['phone'] ?? $personDTO->phone;
+            $person->type = $data['type'] ?? $personDTO->type;
+
+            // Update image if a new one is provided
+            if (isset($data['image'])) {
+                $path = FileUploadService::upload($data['image'], 'people/' . $person->id);
+                $person->image = $path;
+            }
+
+            $person->save();
+
+            if ($person) {
+
+                if($personDTO->entry_code_id!=null){
+
+                        $person_permission_old = PersonPermission::where('person_id', $person->id)->first();
+                        $person_permission_old ->status=0;
+                        $person_permission_old->save();
+                        // Update old entry code activation
+                        $old_entry_code = EntryCode::findOrFail($person_permission_old->entry_code_id);
+                        $old_entry_code->activation = 0;
+                        $old_entry_code->save();
+
+                            // creating new personPermission
+                            $person_permission = new PersonPermission();
+                            $person_permission->person_id=$personDTO->id;
+                            $person_permission->entry_code_id = $personDTO->entry_code_id;
+                            $person_permission->status = 1;
+                            $person_permission->save();
+                            // Update new entry code activation
+                            $entry_code = EntryCode::findOrFail($personDTO->entry_code_id);
+                            $entry_code->activation = 1;
+                            $entry_code->save();
+
+                }
+            }
+            return $person;
+    }
+
+
 
 }

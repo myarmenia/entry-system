@@ -193,7 +193,9 @@
 
     {{-- @if (Auth::user()->hasRole("super_admin")) --}}
         <li class="nav-item">
-            <a class="nav-link collapsed" href="{{ route('entry-codes-list') }}">
+            <a class="nav-link collapsed {{ Route::is(['entry-codes-list', 'entry-codes-create', 'entry-codes-edit']) ? 'active' : '' }}" href="{{ route('entry-codes-list') }}"
+
+            >
             <i class="bi bi-person"></i>
             <span>Entry Code</span>
             </a>

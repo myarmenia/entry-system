@@ -10,7 +10,7 @@
         <section class="section">
 
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-8">
 
                     <div class="card">
                         <div class="card-body">
@@ -37,34 +37,44 @@
 
                             <!-- General Form Elements -->
                             {{-- {{ dd($data['person']->activated_code_connected_person->entry_code_id ) }} --}}
-                            <form action="{{ route('people.update', $data['person']->id) }}" method="post"
-                                enctype="multipart/form-data">
+                            <form action="{{ route('people.update', $data['person']->id) }}"
+                                  method="post"
+                                  enctype="multipart/form-data">
                                 @method('put')
 
                                 <div class="row mb-3">
                                     <label class="col-sm-3 col-form-label">Նույնականացման կոդ</label>
                                     <div class="col-sm-9">
+                                        {{-- {{ dd($data['non_active_entry_code']) }} --}}
+                                        @if ($data['non_active_entry_code']==false)
+                                            <input type="text" class="form-control" name="entry_code_id" disabled
 
-                                      <select class="form-select" aria-label="Default select example" name ="entry_code_id" id="entryCodeNumber"
-                                                    data-person-id="{{$data['person']->id}}"
-                                       >
-                                        <option value='' disabled >Ընտրել նույնականացման կոդը</option>
-                                        @foreach ($data['non_active_entry_code'] as $code )
-                                        <option
-                                            value="{{ $code->id }}"
-                                            {{ $data['person']->activated_code_connected_person->entry_code_id==$code->id ? 'selected' : null }} --}}
-                                             >
-                                            {{ $code->id }}
-                                            </option>
-                                        @endforeach
+                                            value="{{$data['person']->activated_code_connected_person->entry_code_id  }}">
 
-                                      </select>
-                                      @error("type")
-                                          <div class="mb-3 row justify-content-end">
-                                              <div class="col-sm-10 text-danger fts-14">{{ $message }}
-                                              </div>
-                                          </div>
-                                      @enderror
+                                        @else
+                                        @endif
+                                        @if ($data['non_active_entry_code']!=false)
+                                            <select class="form-select" aria-label="Default select example" name ="entry_code_id" id="entryCodeNumber"
+                                            data-person-id="{{$data['person']->id}}">
+                                                    <option value='' disabled >Ընտրել նույնականացման կոդը</option>
+                                                    @foreach ($data['non_active_entry_code'] as $code )
+                                                        <option class="{{ $data['person']->activated_code_connected_person->entry_code_id==$code->id ? 'active' : null }}"
+                                                            value="{{ $code->id }}"
+                                                            {{ $data['person']->activated_code_connected_person->entry_code_id==$code->id ? 'selected' : null }}
+                                                            >
+                                                            {{ $code->id }}
+                                                        </option>
+                                                    @endforeach
+                                                        <option class="active"
+                                                            value="{{ $data['person']->activated_code_connected_person->entry_code_id  }}" selected
+
+                                                            >
+                                                            {{$data['person']->activated_code_connected_person->entry_code_id }}
+                                                            </option>
+
+
+                                            </select>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -115,7 +125,7 @@
                                     </div>
                                 </div>
 
-                                @if ($data['person'] !== null)
+                                @if ($data['person']->image !== null)
                                     <div class="row mb-3">
                                         <label for="inputNumber" class="col-sm-3 col-form-label"></label>
                                         <div class="col-sm-9">

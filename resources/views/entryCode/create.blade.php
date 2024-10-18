@@ -41,6 +41,16 @@
 
           <div class="card">
             <div class="card-body">
+                @if (session('repeating_token'))
+                    <div class="alert alert-danger" role="alert">
+                        {{ session('repeating_token') }}
+                    </div>
+                @endif
+                @if (session('success'))
+                    <div class="alert alert-success" role="alert">
+                        {{ session('success') }}
+                    </div>
+                @endif
               <h5 class="card-title">
                 <nav>
                     <ol class="breadcrumb">

@@ -26,6 +26,9 @@ trait StoreTrait
             if( $request->has('activation')){
                 $request['activation'] = 1;
             }
+            if( !$request->has('activation')){
+                $request['activation'] = 0;
+            }
 
         }
 
@@ -36,11 +39,17 @@ trait StoreTrait
         if (class_exists($className)) {
 
             $model = new $className;
+            $entry_code = EntryCode::where(['token'=>$request->token,'client_id'=>$request->client_id])->first();
+            if($entry_code){
 
+                session()->flash('repeating_token', 'Թոքենը կրկնվում է');
+
+                return redirect()->back();
+            }
 
 
             $item = $model::create($data);
-
+            session()->flash('success', 'Թոքենը ստեղծվել է');
         return true;
 
     }
