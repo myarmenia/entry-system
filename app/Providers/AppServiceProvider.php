@@ -9,7 +9,9 @@ use App\Interfaces\ClientIdFromTurnstileInterface;
 use App\Interfaces\CreateEntryCodeInterface;
 use App\Repositories\AttendanceSheetRepository;
 use App\Repositories\EntryCodeRepository;
+use App\Repositories\Interfaces\PersonRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
+use App\Repositories\PersonRepository;
 use App\Repositories\TurnstileRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Pagination\Paginator;
@@ -27,6 +29,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CheckEntryCodeInterface::class, TurnstileRepository::class);
         $this->app->bind(AttendanceSheetInterface::class, AttendanceSheetRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+
+        $this->app->bind(PersonRepositoryInterface::class, PersonRepository::class);
 
     }
 

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -26,6 +27,10 @@ class Person extends Model
     {
         return $this->hasMany(AttendanceSheet::class);
     }
+    public function activated_code_connected_person(): HasOne{
+        return $this->hasOne(PersonPermission::class)->where('status',1);
+    }
+
 
 
 

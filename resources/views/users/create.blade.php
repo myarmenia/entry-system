@@ -73,24 +73,16 @@
     </form>
 
 </main> --}}
+<?php
+    $callComponent=false;
+
+?>
 <main id="main" class="main">
 
         <section class="section">
              <form action="{{ route('users.store') }}" method="post" enctype="multipart/form-data">
 
                 <div class="row">
-
-                    {{-- @if (count($errors) > 0)
-                        <div class="alert alert-danger">
-                        <strong>Whoops!</strong> There were some problems with your input.<br><br>
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                        </div>
-                    @endif --}}
-
 
 
                             <div class="col-lg-6">
@@ -168,6 +160,7 @@
                                                 <div class="col-sm-9">
                                                     <select name = "roles[]" class="form-control" id="selectedRole" multiple="multiple">
                                                         @foreach ($roles as $value => $label)
+                                                        
                                                             <option value = "{{ $value }}" {{ in_array($value, old('roles', [])) ? 'selected' : '' }} >
                                                                 {{ $label }}
                                                             </option>

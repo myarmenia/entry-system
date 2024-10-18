@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
             $table->string('name')->nullable();
             $table->string('surname')->nullable();
+            $table->string('image')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->enum('type', ['worker', 'visitor']);

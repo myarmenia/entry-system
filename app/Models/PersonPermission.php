@@ -14,7 +14,7 @@ class PersonPermission extends Model
     protected $guarded =[];
     public function people(): BelongsTo{
 
-        return $this->belongsTo(Person::class,'people_id');
+        return $this->belongsTo(Person::class,'person_id');
     }
 
     public function entry_code(): BelongsToMany{
