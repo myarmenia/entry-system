@@ -21,6 +21,12 @@
                 <div class="card">
 
                         <div class="card-body">
+                            @if (session('create_client'))
+                                <div class="alert alert-danger" role="alert">
+                                    {{ session('create_client') }}
+                                </div>
+                            @endif
+
                             <div class = "d-flex justify-content-between">
                                 <h5 class="card-title">
                                     <nav>

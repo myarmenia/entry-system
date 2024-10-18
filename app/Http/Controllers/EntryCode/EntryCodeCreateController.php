@@ -13,6 +13,9 @@ class EntryCodeCreateController extends Controller
     {
 
         $clients = Client::with('user')->get();
+        if(count($clients)==0){
+            return redirect()->back()->with('create_client','Դուք չունեք ստեղծված գործատու');
+        }
 
         return view('entry-code.create',compact('clients'));
     }
