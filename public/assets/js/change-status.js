@@ -16,18 +16,20 @@ console.log(id, tb_name, status, field_name)
         cache: false,
         success: function (data) {
           console.log(data.result)
-          console.log(status)
+
           let status_word = ''
           let status_class = ''
-          console.log(field_name)
-        //   console.log(changeElemen.closest('tr').find('td.status').html())
-          console.log(changeElemen.closest('tr').children('.' + field_name))
+
+
 
             if (data.result == 1) {
                 if(field_name=="activation"){
-                    status ? (status_word = 'Ակտիվ', status_class = 'success') : (status_word = 'Ապաակտիվ', status_class = 'danger')
+                    window.location.reload
+
+                    status ? (status_word = 'Ակտիվ', status_class = 'success') : (status_word = 'Պասիվ', status_class = 'danger')
 
                     changeElemen.closest('tr').find('td.activation .activationSection').html(`<div><span class="badge bg-${status_class} me-1">${status_word}</span></div>`)
+                    changeElemen.closest('tr').find( 'td.personName, .personSurname, .personPhone').empty()
                 }
                 if(field_name=="status"){
                     status ? (status_word = 'Գործող', status_class = 'success') : (status_word = 'Կասեցված', status_class = 'danger')

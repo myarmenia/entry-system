@@ -8,25 +8,28 @@ class ChangeStatusService
     public static function change_status($request){
         // dd($request->all());
         $status = filter_var($request->status, FILTER_VALIDATE_BOOLEAN);
-
+// dd($status);
         $data = ['status' => $status];
 
         $update = DB::table($request->tb_name)
         ->where('id', $request->id)
         ->update([$request->field_name => $status]);
 
-        if($request->field_name=="activation" && $request->status=="false"){
+        if($request->field_name=="activation" && !$status){
 
 
-            $change_person_permission = self::updatePersonPermission($request->id,$request->status,$request->field_name);
+            $change_person_permission = self::updatePersonPermission($request->id);
         }
 
          return $update ? $update : false;
     }
-    public static function updatePersonPermission($id, $status, $field_name){
+    public static function updatePersonPermission($id){
 
             $person_permission = PersonPermission::where(['entry_code_id'=>$id,'status'=>1])->first();
-            $person_permission->status = 0;
-            $person_permission->save();
+            if($person_permission){
+                $person_permission->status = 0;
+                $person_permission->save();
+            }
+
     }
 }
