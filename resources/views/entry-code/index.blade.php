@@ -59,9 +59,9 @@
                                 <tbody>
 
                                     @foreach ($data as $entry_code)
-                                    {{-- {{ dump($entry_code->active_person->people->name) }} --}}
+                                    {{-- {{ dump($entry_code->active_person->person->id) }} --}}
 
-                                        <tr>
+                                        <tr class="parent">
                                             <td>{{ ++$i }}</td>
                                             <th scope="row">{{ $entry_code->id }}</th>
 
@@ -70,19 +70,19 @@
                                                 {{ $entry_code->client->name ?? null }}
 
                                             </td> --}}
-                                            <td>
+                                            <td >
                                                 {{ $entry_code->token ?? null }}
 
                                             </td>
-                                            <td>
+                                            <td class="personName">
                                                 {{ $entry_code->active_person->people->name ?? null }}
 
                                             </td>
-                                            <td>
+                                            <td class="personSurname" >
                                                 {{ $entry_code->active_person->people->surname ?? null }}
 
-                                            </td>
-                                            <td>
+                                            </td >
+                                            <td class="personPhone">
                                                 {{ $entry_code->active_person->people->phone ?? null }}
                                             </td>
                                             <td class="{{ auth()->user()->hasRole('super_admin') ? 'status' : 'activation' }}" >
@@ -98,7 +98,7 @@
                                             </td>
                                             <td>
 
-                                                <div class="dropdown action"data-id="{{ $entry_code['id'] }}" data-tb-name="entry_codes">
+                                                <div class="dropdown action"data-id="{{ $entry_code['id'] }}" data-tb-name="entry_codes" >
                                                     <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
                                                         data-bs-toggle="dropdown">
                                                         <i class="bx bx-dots-vertical-rounded"></i>

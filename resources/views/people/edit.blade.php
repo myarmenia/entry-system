@@ -56,9 +56,7 @@
                                             data-person-id="{{$data['person']->id}}">
                                                     <option value='' disabled >Ընտրել նույնականացման կոդը</option>
                                                     @foreach ($data['non_active_entry_code'] as $code )
-                                                        <option
-                                                            value="{{ $code->id }}"
-                                                            >
+                                                        <option value="{{ $code->id }}">
                                                             {{ $code->id }}
                                                         </option>
                                                     @endforeach
