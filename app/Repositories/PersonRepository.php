@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\DTO\PersonDTO;
+use App\Http\Controllers\People\PeopleController;
 use App\Models\Client;
 use App\Models\EntryCode;
 use App\Models\Person;
@@ -15,15 +16,40 @@ class PersonRepository implements PersonRepositoryInterface
 {
     public function getAllPeople()
     {
-        $client=Client::where('user_id',Auth::id())->first();
+        if(auth()->user()->hasRole('client_admin')){
 
-        return Person::where('client_id',$client->id)->latest()->paginate(10)->withQueryString();
+            $client=Client::where('user_id',Auth::id())->first();
+            // dd($client);
+            if($client!=null){
+              return $people= Person::where('client_id',$client->id)->latest()->paginate(10)->withQueryString();
+
+            }
+        }else{
+            return  $people=Person::latest()->paginate(10)->withQueryString();
+        }
+
+
+
+
+
     }
     public function createPerson()
     {
-        $client = Client::where('user_id',Auth::id())->first();
+        if(auth()->user()->hasRole('client_admin')){
 
-        return EntryCode::where(['client_id'=>$client->id,'activation'=>0])->get();
+            $client = Client::where('user_id',Auth::id())->first();
+            if($client!=null){
+
+                $query = EntryCode::where(['client_id'=>$client->id,'activation'=>0])->get();
+
+            }
+
+        }else{
+            $query = EntryCode::all();
+        }
+// dd($query);
+        return $query;
+
     }
 
     public function storePerson(PersonDTO $personDTO)
