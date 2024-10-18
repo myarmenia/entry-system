@@ -45,7 +45,7 @@ class PersonRepository implements PersonRepositoryInterface
             }
 
         }
-        
+
 // dd($query);
         return $query;
 
@@ -135,13 +135,17 @@ class PersonRepository implements PersonRepositoryInterface
 
                 if($personDTO->entry_code_id!=null){
 
-                        $person_permission_old = PersonPermission::where('person_id', $person->id)->first();
-                        $person_permission_old ->status=0;
-                        $person_permission_old->save();
-                        // Update old entry code activation
-                        $old_entry_code = EntryCode::findOrFail($person_permission_old->entry_code_id);
-                        $old_entry_code->activation = 0;
-                        $old_entry_code->save();
+                        $person_permission_old = PersonPermission::where(['person_id'=> $person->id,'status'=>1])->first();
+                        if($person_permission_old){
+                            $person_permission_old ->status=0;
+                            $person_permission_old->save();
+                            // Update old entry code activation
+                            $old_entry_code = EntryCode::findOrFail($person_permission_old->entry_code_id);
+                            $old_entry_code->activation = 0;
+                            $old_entry_code->save();
+
+                        }
+
 
                             // creating new personPermission
                             $person_permission = new PersonPermission();
