@@ -25,8 +25,9 @@ class EntryExitSystemController extends BaseController
         );
 
         // $data = $ees->result != null ? EntryExitSystemResource::make($ees->result) : null;
-
-        return $ees->result != null ? $this->sendResponse(null, $ees->message) : $this->sendError($ees->message);
+        $additionals = ['online' => $request->online];
+        
+        return $ees->result != null ? $this->sendResponse(null, $ees->message, $additionals) : $this->sendError($ees->message, $additionals);
 
     }
 }
