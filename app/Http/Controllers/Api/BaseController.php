@@ -9,16 +9,22 @@ use lluminate\Http\JsonResponse;
 
 class BaseController extends Controller
 {
-    public function sendResponse($result = null, $message, $params = null)
+    public function sendResponse($result = null, $message, $additionals = null, $params = null)
     {
         $response = [
             'success' => true,
-            'data'    => $result,
+            'data' => $result,
             'message' => $message,
         ];
 
         if ($params != null) {
-          $response['params'] = $params;
+            $response['params'] = $params;
+        }
+
+        if ($additionals != null) {
+            foreach ($additionals as $key => $value) {
+                $response[$key] = $value;
+            }
         }
 
         return response()->json($response, 200);
@@ -30,13 +36,18 @@ class BaseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function sendError($error, $errorMessages = [], $code = 404)
+    public function sendError($error,  $additionals = null, $errorMessages = [], $code = 404)
     {
         $response = [
             'success' => false,
             'message' => $error,
         ];
 
+        if ($additionals != null) {
+            foreach ($additionals as $key => $value) {
+                $response[$key] = $value;
+            }
+        }
 
         if (!empty($errorMessages)) {
             $response['data'] = $errorMessages;
