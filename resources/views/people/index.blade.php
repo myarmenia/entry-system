@@ -28,7 +28,7 @@
 
                     <nav>
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Աշխատակիցների ցանկ</li>
+                            <li class="breadcrumb-item active">Աշխատակիցների/Այցելուների ցանկ</li>
 
                         </ol>
                     </nav>
@@ -45,7 +45,7 @@
                 <thead>
                   <tr>
                     <th scope="col">Հ/Հ</th>
-                    {{-- <th scope="col">ID</th> --}}
+                    <th scope="col">ID</th>
                     <th scope="col">Նկար</th>
                     <th scope="col">Անուն</th>
                     <th scope="col">Ազգանուն</th>
@@ -63,7 +63,7 @@
 
                         <tr>
                             <td>{{ ++$i }}</td>
-                            {{-- <th scope="row">{{ $person->id }}</th> --}}
+                            <th scope="row">{{ $person->id }}</th>
 
                             <td>
                                 <img src = "{{ $person->image ? route('get-file',['path' => $person->image ]) : null }}" style="width:80px">
@@ -80,7 +80,7 @@
                                 {{ $person->phone ?? null }}
                             </td>
                             <td>
-                                {{ $person->type ?? null }}
+                                {{ $person->type=="worker"? "Աշխատակից" : "Այցելու"}}
                             </td>
                             {{-- <td class="{{ auth()->user()->hasRole('super_admin') ? 'status' : 'activation' }}" >
 
