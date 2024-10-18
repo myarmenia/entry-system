@@ -18,7 +18,7 @@ class EntryCodeListController extends Controller
         $query = EntryCode::latest();
 
         if ($user->hasRole('client_admin')) {
-           
+
             $client = Client::where('user_id', $user->id)->first();
 
             if ($client) {
