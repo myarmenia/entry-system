@@ -28,7 +28,7 @@ class EntryCodeListController extends Controller
         $data = $query->paginate(10)->withQueryString();
 
 
-          return view('entrycode.index', compact('data'))
+          return view('entry-code.index', compact('data'))
                 ->with('i', ($request->input('page', 1) - 1) * 10);
 
     }

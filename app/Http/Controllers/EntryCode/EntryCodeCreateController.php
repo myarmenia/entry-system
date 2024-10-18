@@ -14,6 +14,6 @@ class EntryCodeCreateController extends Controller
 
         $clients = Client::with('user')->get();
 
-        return view('entryCode.create',compact('clients'));
+        return view('entry-code.create',compact('clients'));
     }
 }
