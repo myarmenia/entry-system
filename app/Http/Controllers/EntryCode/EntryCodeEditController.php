@@ -14,6 +14,6 @@ class EntryCodeEditController extends Controller
         $data = EntryCode::where('id',$id)->with('active_person')->first();
         $clients = Client::all();
 
-       return view('entrycode.edit', compact('data','clients'));
+       return view('entry-code.edit', compact('data','clients'));
    }
 }
