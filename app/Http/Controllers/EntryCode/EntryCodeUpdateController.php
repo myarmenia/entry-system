@@ -18,7 +18,7 @@ class EntryCodeUpdateController extends Controller
     }
     public function update(Request $request,$id)
     {
-        // dd($request->all(), $id);
+       
         $data = $this->itemUpdate($request,$id);
         return redirect()->back();
     }

@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('person_permissions', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('people_id')->unsigned()->nullable();
-            $table->foreign('people_id')->references('id')->on('people')->onDelete('cascade');
+            $table->bigInteger('person_id')->unsigned()->nullable();
+            $table->foreign('person_id')->references('id')->on('people')->onDelete('cascade');
 
             $table->bigInteger('entry_code_id')->unsigned()->nullable();
             $table->foreign('entry_code_id')->references('id')->on('entry_codes')->onDelete('cascade');

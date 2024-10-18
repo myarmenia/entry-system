@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\EntryCode;
 use App\Models\EventConfig;
 use App\Models\Image;
 use App\Models\Person;
@@ -22,65 +23,49 @@ trait UpdateTrait
 
   public function itemUpdate(Request $request, $id)
   {
-// dd($request->all());
-    $data = $request->except([ '_method','name', 'surname','email','phone','image']);
+
+
+    $data = $request->except([ '_method' ]);
 
     $className = $this->model();
 
     if (class_exists($className)) {
 
       $model = new $className;
-      $relation_foreign_key = $model->getForeignKey();
-
-      $table_name = $model->getTable();
 
       $item = $model::where('id', $id)->first();
 
-      $data['status'] = ($item->status == 0 && $request->has('status')) ? 1 : $data['status'] ?? 0;
+      $find_matched = EntryCode::where(['client_id'=>$item->client->id,'token'=>$request->token])->first();
 
-        if($item->activation == 0  && $request->has('activation')){
-            $data['activation'] = 1;
-        }
-        if($item->activation == 1  && $request->has('activation')){
-            $data['activation'] = 1;
-        }
-        if ($item->activation == 1 && !request()->has('activation')) {
-        $data['activation'] = 0;
+      if($find_matched){
+        
+        session()->flash('repeating_token', 'Թոքենը կրկնվում է');
+        return redirect()->back();
+      }
+
+      $data['status'] = ($item->status == 0 && $request->has('status')) ? 1 : $data['status'] ?? 0;
+// dd($data);
+        if(auth()->user()->hasRole('client_admin')){
+
+            if($item->activation == 0  && $request->has('activation')){
+                $data['activation'] = 1;
+            }
+            if($item->activation == 1  && $request->has('activation')){
+                $data['activation'] = 1;
+            }
+            if ($item->activation == 1 && !request()->has('activation')) {
+            $data['activation'] = 0;
+            }
         }
 
       $item->update($data);
 
-      if (isset($request['image'])) {
-        // dd($request->all());
-        // dd($request['image']);
-        if($item->image!=null){
-            if (Storage::exists($item->image)) {
-
-            Storage::delete($item->image);
-            }
-        }
-
-        $path = FileUploadService::upload($request['image'],  $table_name . '/' . $id);
-
-        $item->image = $path;
-        $item->save();
-      }
-
-      if($item) {
-        $clientId=$item->client_id;
-        $person=$this->people($request,$clientId, $id);
-        if($person){
-            return true;
-        }
-      }
 
 
-
-    } else {
-
-      return false;
     }
   }
+//   =======hin koderic e
+
      public function people($request, $clientId, $entryCodeid){
 
         $personPermmission=PersonPermission::where('entry_code_id',$entryCodeid)->first();

@@ -24,7 +24,7 @@ class EntryCodeStoreController extends Controller
           $data = $this->itemStore($request);
 
           if($data){
-             return redirect()->route('home');
+             return redirect()->route('entry-codes-create');
            }
 
      }

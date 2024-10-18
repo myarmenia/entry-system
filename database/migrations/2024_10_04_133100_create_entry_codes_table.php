@@ -16,7 +16,6 @@ return new class extends Migration
             $table->bigInteger('client_id')->unsigned();
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
             $table->string('token');
-            $table->string('image')->nullable();
             $table->boolean('status')->default(1);
             $table->boolean('activation')->default(0);
             $table->string('type');
