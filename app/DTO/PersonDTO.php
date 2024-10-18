@@ -34,8 +34,8 @@ class PersonDTO
  $person->client_id,
       $person->name,
    $person->surname,
-     $person->phone,
      $person->email,
+     $person->phone,
       $person->type,
      $person->image,
         );

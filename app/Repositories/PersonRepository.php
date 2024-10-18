@@ -44,9 +44,8 @@ class PersonRepository implements PersonRepositoryInterface
 
             }
 
-        }else{
-            $query = EntryCode::all();
         }
+        
 // dd($query);
         return $query;
 

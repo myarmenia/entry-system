@@ -95,17 +95,15 @@
 
                                 </div>
 
-                                <div class="row mb-3">
+                                 <div class="row mb-3">
                                     <label for="inputEmail" class="col-sm-3 col-form-label">Էլ.հասցե</label>
                                     <div class="col-sm-9">
                                         <input type="email" class="form-control" name="email"
                                             placeholder="example@gmail.com"
-                                            value="
-                                            {{ $data['person']->email ?? null }}
-                                             ">
+                                            value="{{ $data['person']->email ?? null }}">
                                     </div>
                                 </div>
-                                <div class="row mb-3">
+                               <div class="row mb-3">
                                     <label for="inputEmail" class="col-sm-3 col-form-label">Հեռախոսահամար</label>
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control" name="phone"
