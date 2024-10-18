@@ -40,8 +40,8 @@
                                 <thead>
                                 <tr>
                                     <th scope="col">Հ/Հ</th>
-                                    {{-- <th scope="col">ID</th> --}}
-                                    <th scope="col">Գործատու</th>
+                                    <th scope="col">ID</th>
+                                    {{-- <th scope="col">Գործատու</th> --}}
                                     <th scope="col">Թոքեն</th>
                                     <th scope="col">Անուն</th>
                                     <th scope="col">Ազգանուն</th>
@@ -57,13 +57,13 @@
 
                                         <tr>
                                             <td>{{ ++$i }}</td>
-                                            {{-- <th scope="row">{{ $entry_code->id }}</th> --}}
+                                            <th scope="row">{{ $entry_code->id }}</th>
 
 
-                                            <td>
+                                            {{-- <td>
                                                 {{ $entry_code->client->name ?? null }}
 
-                                            </td>
+                                            </td> --}}
                                             <td>
                                                 {{ $entry_code->token ?? null }}
 
