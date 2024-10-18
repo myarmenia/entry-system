@@ -19,10 +19,10 @@ class PersonDTO
         $this->client_id = $client_id;
         $this->name = $name;
         $this->surname = $surname;
-        $this->image = $image;
         $this->email = $email;
         $this->phone = $phone;
         $this->type = $type;
+        $this->image = $image;
     }
 
     public static function fromModel($person)
