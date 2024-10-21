@@ -48,7 +48,7 @@ class EntryExitSystemService
                 $data->date = date('Y-m-d H:i:s', $date_time);
 
                 $person_permission = $checkEntryCode->result->active_person;
-                $peopleId = $person_permission ? $person_permission->people_id : null;
+                $peopleId = $person_permission ? $person_permission->person_id : null;
                 $data->people_id = $peopleId;
 
                 $result = $this->attendanceSheetRepository->create($data->toArray());
