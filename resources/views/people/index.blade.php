@@ -2,6 +2,7 @@
 
 @section("page-script")
     <script src="{{ asset('assets/js/change-status.js') }}"></script>
+    <script src="{{ asset('assets/js/delete-item.js') }}"></script>
 @endsection
 
 @section('content')
@@ -85,17 +86,7 @@
                                 <td>
                                     {{ $person->type=="worker"? "Աշխատակից" : "Այցելու"}}
                                 </td>
-                                {{-- <td class="{{ auth()->user()->hasRole('super_admin') ? 'status' : 'activation' }}" >
 
-
-
-                                            <div class="statusSection" ><span class="badge {{$entry_code->status==1 ? 'bg-success' : 'bg-danger'  }} px-2">{{ $entry_code->status==1 ? "Գործող" : "Կասեցված" }}</span></div>
-
-
-                                        <div class="activationSection" ><span class="badge {{$entry_code->activation==1 ? 'bg-success' : 'bg-danger'  }} px-2">{{ $entry_code->activation==1 ? "Ակտիվ" : "Պասիվ" }}</span></div>
-
-
-                                </td> --}}
                                 <td>
 
                                     <div class="dropdown action"data-id="{{ $person->id }}" data-tb-name="people">
@@ -178,4 +169,5 @@
 </script>
 
 @endsection
+<x-modal-delete></x-modal-delete>
 
