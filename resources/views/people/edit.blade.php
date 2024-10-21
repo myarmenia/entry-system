@@ -41,16 +41,17 @@
                                   method="post"
                                   enctype="multipart/form-data">
                                 @method('put')
-
+                                
                                 <div class="row mb-3">
-                                    <label class="col-sm-3 col-form-label">Նույնականացման կոդ</label>
-                                    <div class="col-sm-9">
-                                        {{-- {{ dd($data['non_active_entry_code']) }} --}}
-                                        @if ($data['non_active_entry_code']==false)
-                                            <input type="text" class="form-control" name="entry_code_id" disabled
 
-                                            value="{{$data['person']->activated_code_connected_person->entry_code_id  }}">
-                                        @endif
+                                        <label class="col-sm-3 col-form-label">{{ $data['non_active_entry_code']==false &&  $data['person']->activated_code_connected_person!=null ? "Նույնականացման կոդ" : null }}</label>
+                                        <div class="col-sm-9">
+                                            @if ($data['non_active_entry_code']==false &&  $data['person']->activated_code_connected_person!=null)
+
+                                                <input type="text" class="form-control" name="entry_code_id" disabled
+
+                                                value="{{$data['person']->activated_code_connected_person->entry_code_id  }}">
+                                            @endif
                                         @if ($data['non_active_entry_code']!=false)
                                             <select class="form-select" aria-label="Default select example" name ="entry_code_id" id="entryCodeNumber"
                                             data-person-id="{{$data['person']->id}}">
