@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('people_id')->unsigned()->nullable();
             $table->foreign('people_id')->references('id')->on('people')->onDelete('cascade');
+            $table->string('entry_code')->nullable();
             $table->timestamp('date')->nullable();
             $table->string('type')->nullable();    // rfID, faceID
             $table->string('direction')->nullable(); // exit, enter

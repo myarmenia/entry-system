@@ -8,7 +8,7 @@ class EntryExitSystemDto
 
     public function __construct(
         public readonly string $mac,
-        public readonly string $entry_code,
+        public string $entry_code,
         public string $direction,
         public readonly string $local_ip,
         public readonly string $type,
@@ -37,6 +37,7 @@ class EntryExitSystemDto
         return [
             'direction' => $this->direction,
             'local_ip' => $this->local_ip,
+            'entry_code' => $this->entry_code,
             'type' => $this->type,
             'people_id' => $this->people_id,
             'online' => $this->online,
