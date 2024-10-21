@@ -47,6 +47,7 @@
                   <tr>
                     <th scope="col">Հ/Հ</th>
                     <th scope="col">ID</th>
+                    <th scope="col">Նույնականացման կոդ</th>
                     <th scope="col">Նկար</th>
                     <th scope="col">Անուն</th>
                     <th scope="col">Ազգանուն</th>
@@ -57,7 +58,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                 
+
                     @if( $data !=null && count($data)>0)
                         @foreach ($data as $person)
 
@@ -66,7 +67,7 @@
                             <tr>
                                 <td>{{ ++$i }}</td>
                                 <th scope="row">{{ $person->id }}</th>
-
+                                <th scope="row">{{ $person->activated_code_connected_person->entry_code_id ?? null }}</th>
                                 <td>
                                     <img src = "{{ $person->image ? route('get-file',['path' => $person->image ]) : null }}" style="width:80px">
                                 </td>
