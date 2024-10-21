@@ -4,6 +4,7 @@ use App\Http\Controllers\ActionController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ChangeStatusController;
 use App\Http\Controllers\Component\ClientComponentController;
+use App\Http\Controllers\DeleteItemController;
 use App\Http\Controllers\EntryCode\EntryCodeCreateController;
 use App\Http\Controllers\EntryCode\EntryCodeEditController;
 use App\Http\Controllers\EntryCode\EntryCodeListController;
@@ -62,9 +63,14 @@ Route::group(['middleware' => ['auth']], function() {
 
     // ========People==========================
     Route::resource('people', PeopleController::class);
+    Route::get('delete-item/{tb_name}/{id}', [DeleteItemController::class, 'index'])->name('delete_item');
+
 
 
 
 });
 
 Route::get('get-file', [FileUploadService::class, 'get_file'])->name('get-file');
+// =====================coment=====================================
+// ========================================================
+// ==========================

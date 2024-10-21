@@ -41,38 +41,34 @@
                                   method="post"
                                   enctype="multipart/form-data">
                                 @method('put')
-
+                                
                                 <div class="row mb-3">
-                                    <label class="col-sm-3 col-form-label">Նույնականացման կոդ</label>
-                                    <div class="col-sm-9">
-                                        {{-- {{ dd($data['non_active_entry_code']) }} --}}
-                                        @if ($data['non_active_entry_code']==false)
-                                            <input type="text" class="form-control" name="entry_code_id" disabled
 
-                                            value="{{$data['person']->activated_code_connected_person->entry_code_id  }}">
+                                        <label class="col-sm-3 col-form-label">{{ $data['non_active_entry_code']==false &&  $data['person']->activated_code_connected_person!=null ? "Նույնականացման կոդ" : null }}</label>
+                                        <div class="col-sm-9">
+                                            @if ($data['non_active_entry_code']==false &&  $data['person']->activated_code_connected_person!=null)
 
-                                        @else
-                                        @endif
+                                                <input type="text" class="form-control" name="entry_code_id" disabled
+
+                                                value="{{$data['person']->activated_code_connected_person->entry_code_id  }}">
+                                            @endif
                                         @if ($data['non_active_entry_code']!=false)
                                             <select class="form-select" aria-label="Default select example" name ="entry_code_id" id="entryCodeNumber"
                                             data-person-id="{{$data['person']->id}}">
                                                     <option value='' disabled >Ընտրել նույնականացման կոդը</option>
                                                     @foreach ($data['non_active_entry_code'] as $code )
-                                                        <option class="{{ $data['person']->activated_code_connected_person->entry_code_id==$code->id ? 'active' : null }}"
-                                                            value="{{ $code->id }}"
-                                                            {{ $data['person']->activated_code_connected_person->entry_code_id==$code->id ? 'selected' : null }}
-                                                            >
+                                                        <option value="{{ $code->id }}">
                                                             {{ $code->id }}
                                                         </option>
                                                     @endforeach
+                                                    @if ($data['person']->activated_code_connected_person != null)
                                                         <option class="active"
-                                                            value="{{ $data['person']->activated_code_connected_person->entry_code_id  }}" selected
+                                                               value="{{ $data['person']->activated_code_connected_person->entry_code_id  }}" selected
 
-                                                            >
+                                                              >
                                                             {{$data['person']->activated_code_connected_person->entry_code_id }}
                                                             </option>
-
-
+                                                    @endif
                                             </select>
                                         @endif
                                     </div>
@@ -98,17 +94,15 @@
 
                                 </div>
 
-                                <div class="row mb-3">
+                                 <div class="row mb-3">
                                     <label for="inputEmail" class="col-sm-3 col-form-label">Էլ.հասցե</label>
                                     <div class="col-sm-9">
                                         <input type="email" class="form-control" name="email"
                                             placeholder="example@gmail.com"
-                                            value="
-                                            {{ $data['person']->email ?? null }}
-                                             ">
+                                            value="{{ $data['person']->email ?? null }}">
                                     </div>
                                 </div>
-                                <div class="row mb-3">
+                               <div class="row mb-3">
                                     <label for="inputEmail" class="col-sm-3 col-form-label">Հեռախոսահամար</label>
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control" name="phone"

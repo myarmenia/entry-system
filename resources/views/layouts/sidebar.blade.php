@@ -3,7 +3,7 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
        <li class="nav-item">
-        <a class="nav-link " href="{{ route('home') }}">
+        <a class="nav-link {{ Route::is(['home']) ? '' : 'collapsed' }} " href="{{ route('home') }}">
           <i class="bi bi-grid"></i>
           <span>Dashboard</span>
         </a>
@@ -193,7 +193,7 @@
 
     {{-- @if (Auth::user()->hasRole("super_admin")) --}}
         <li class="nav-item">
-            <a class="nav-link collapsed {{ Route::is(['entry-codes-list', 'entry-codes-create', 'entry-codes-edit']) ? 'active' : '' }}" href="{{ route('entry-codes-list') }}"
+            <a class="nav-link {{ Route::is(['entry-codes-list', 'entry-codes-create', 'entry-codes-edit']) ? '' : 'collapsed' }}" href="{{ route('entry-codes-list') }} "
 
             >
             <i class="bi bi-person"></i>
@@ -203,25 +203,27 @@
 
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href=" {{ route('users.index') }}">
+        <a class="nav-link {{ Route::is(['users.index', 'users.create', 'users.edit']) ? '' : 'collapsed' }}"  href=" {{ route('users.index') }}">
           <i class="bi bi-person"></i>
           <span>Users</span>
         </a>
       </li>
       @if (Auth::user()->hasRole("super_admin"))
         <li class="nav-item">
-            <a class="nav-link collapsed" href="{{ route('roles.index') }}">
+            <a class="nav-link {{ Route::is(['roles.index', 'roles.create', 'roles.edit']) ? '' : 'collapsed' }}" href="{{ route('roles.index') }}">
             <i class="bi bi-person"></i>
             <span>Roles</span>
             </a>
         </li>
        @endif
+       @if (Auth::user()->hasRole("client_admin"))
       <li class="nav-item">
-        <a class="nav-link collapsed" href="{{ route('people.index') }}">
+        <a class="nav-link {{ Route::is(['people.index', 'people.create', 'people.edit']) ? '' : 'collapsed' }}" href="{{ route('people.index') }}">
           <i class="bi bi-person"></i>
           <span>People</span>
         </a>
       </li>
+      @endif
 
       {{-- <li class="nav-item">
         <a class="nav-link collapsed" href="{{ route('products.index') }}">

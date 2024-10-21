@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\DTO\PersonDTO;
+use App\Http\Controllers\People\PeopleController;
 use App\Models\Client;
 use App\Models\EntryCode;
 use App\Models\Person;
@@ -15,15 +16,39 @@ class PersonRepository implements PersonRepositoryInterface
 {
     public function getAllPeople()
     {
-        $client=Client::where('user_id',Auth::id())->first();
+        if(auth()->user()->hasRole('client_admin')){
 
-        return Person::where('client_id',$client->id)->latest()->paginate(10)->withQueryString();
+            $client=Client::where('user_id',Auth::id())->first();
+            // dd($client);
+            if($client!=null){
+              return $people= Person::where('client_id',$client->id)->latest()->paginate(10)->withQueryString();
+
+            }
+        }else{
+            return  $people=Person::latest()->paginate(10)->withQueryString();
+        }
+
+
+
+
+
     }
     public function createPerson()
     {
-        $client = Client::where('user_id',Auth::id())->first();
+        if(auth()->user()->hasRole('client_admin')){
 
-        return EntryCode::where(['client_id'=>$client->id,'activation'=>0])->get();
+            $client = Client::where('user_id',Auth::id())->first();
+            if($client!=null){
+
+                $query = EntryCode::where(['client_id'=>$client->id,'activation'=>0])->get();
+
+            }
+
+        }
+
+// dd($query);
+        return $query;
+
     }
 
     public function storePerson(PersonDTO $personDTO)
@@ -110,13 +135,17 @@ class PersonRepository implements PersonRepositoryInterface
 
                 if($personDTO->entry_code_id!=null){
 
-                        $person_permission_old = PersonPermission::where('person_id', $person->id)->first();
-                        $person_permission_old ->status=0;
-                        $person_permission_old->save();
-                        // Update old entry code activation
-                        $old_entry_code = EntryCode::findOrFail($person_permission_old->entry_code_id);
-                        $old_entry_code->activation = 0;
-                        $old_entry_code->save();
+                        $person_permission_old = PersonPermission::where(['person_id'=> $person->id,'status'=>1])->first();
+                        if($person_permission_old){
+                            $person_permission_old ->status=0;
+                            $person_permission_old->save();
+                            // Update old entry code activation
+                            $old_entry_code = EntryCode::findOrFail($person_permission_old->entry_code_id);
+                            $old_entry_code->activation = 0;
+                            $old_entry_code->save();
+
+                        }
+
 
                             // creating new personPermission
                             $person_permission = new PersonPermission();
