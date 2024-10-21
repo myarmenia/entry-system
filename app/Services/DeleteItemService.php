@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-
+use App\Models\EntryCode;
 use App\Services\Log\LogService;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -13,6 +13,7 @@ class DeleteItemService
   {
 
       $className = 'App\Models\\' . Str::studly(Str::singular($tb_name));
+
       $model = '';
 
       if(class_exists($className)) {
@@ -29,7 +30,7 @@ class DeleteItemService
           $item_db = $item->first();
 
 
-          if(isset($item_db->images)){
+          if(isset($item_db->image)){
             Storage::disk('public')->deleteDirectory("$tb_name/$id");
 
           }
@@ -49,9 +50,16 @@ class DeleteItemService
                 Storage::delete($file_path);
           }
 
-          if($tb_name == 'events'){
-              $item_db->notifications()->delete();
-          }
+
+        if($tb_name == 'people'){
+                  $item_db->activated_code_connected_person();
+                  if($item_db->activated_code_connected_person !=null){
+                    $item_db->activated_code_connected_person->status = 0;
+                    $item_db->activated_code_connected_person->save();
+
+                    $entry_code = self::entryCodeChangeStatus($item_db->activated_code_connected_person->entry_code_id);
+                  }
+              }
 
           $delete = $item ? $item->delete() : false;
 
@@ -60,6 +68,13 @@ class DeleteItemService
 
       return $delete;
       }
+
+  }
+  public static function entryCodeChangeStatus($entryCodeId){
+
+    $entry_code = EntryCode::where('id',$entryCodeId)->first();
+    $entry_code->activation = 0;
+    $entry_code->save();
 
   }
 }
