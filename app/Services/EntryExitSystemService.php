@@ -50,6 +50,7 @@ class EntryExitSystemService
                 $person_permission = $checkEntryCode->result->active_person;
                 $peopleId = $person_permission ? $person_permission->person_id : null;
                 $data->people_id = $peopleId;
+                $data->entry_code = $entry_code;
 
                 $result = $this->attendanceSheetRepository->create($data->toArray());
             }
