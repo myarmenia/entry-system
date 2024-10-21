@@ -80,7 +80,14 @@
 <main id="main" class="main">
 
         <section class="section">
-             <form action="{{ route('users.store') }}" method="post" enctype="multipart/form-data">
+             <form
+
+                action="{{ route('users.store') }}"
+                method="post"
+                enctype="multipart/form-data"
+             >
+
+
 
                 <div class="row">
 
@@ -92,7 +99,7 @@
                                         <h5 class="card-title">
                                             <nav>
                                                 <ol class="breadcrumb">
-                                                    <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                                                    <li class="breadcrumb-item"><a href="{{ route('users.index') }}">Օգտատերերի ցանկ</a></li>
 
                                                     <li class="breadcrumb-item active">Ստեղծել Օգտատեր</li>
                                                 </ol>
@@ -160,7 +167,7 @@
                                                 <div class="col-sm-9">
                                                     <select name = "roles[]" class="form-control" id="selectedRole" multiple="multiple">
                                                         @foreach ($roles as $value => $label)
-                                                        
+
                                                             <option value = "{{ $value }}" {{ in_array($value, old('roles', [])) ? 'selected' : '' }} >
                                                                 {{ $label }}
                                                             </option>
@@ -188,13 +195,14 @@
                                     @endif
 
                             </div>
-
-                        <div class="row mb-3" id="loginBtn">
+                    {{-- @if ($errors->has('client.name')) --}}
+                        <div class="row mb-3 {{$errors->has('client.name') ?'d-none' :null  }}" id="loginBtn">
                             <label class="col-sm-2 col-form-label"></label>
                             <div class="col-sm-10">
                             <button type="submit" class="btn btn-primary">Ստեղծել</button>
                             </div>
                         </div>
+                    {{-- @endif --}}
 
 
 

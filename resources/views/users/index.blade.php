@@ -2,7 +2,7 @@
 
 @section('content')
 <main id="main" class="main">
-    
+
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
@@ -11,7 +11,7 @@
 
                     <nav>
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Օգտագործողներ </li>
+                            <li class="breadcrumb-item active">Օգտատերեր </li>
                             <li class="breadcrumb-item active">Ցանկ</li>
                         </ol>
                     </nav>

@@ -25,13 +25,13 @@ class UserRequest extends FormRequest
         $rules = [
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|same:confirm-password',
+            'password' => 'required|min:8|same:confirm-password',
             'roles' => 'required',
         ];
         if(request()->has('client')){
 
             $rules['client.name'] = 'required';
-            
+
         }
 
         return $rules;

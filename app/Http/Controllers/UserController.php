@@ -74,6 +74,7 @@ class UserController extends Controller
        public function store(UserRequest $request): RedirectResponse
     {
 
+
         $data = $request->all();
 
         $user = $this->userService->createUser($data);
@@ -104,7 +105,8 @@ class UserController extends Controller
      */
     public function edit($id): View
     {
-        $user = User::find($id);
+        // $user = User::find($id);
+        $user = User::where('id',$id)->with('client')->first();
         $roles = Role::pluck('name','name')->all();
         $userRole = $user->roles->pluck('name','name')->all();
 
