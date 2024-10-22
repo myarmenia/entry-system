@@ -35,9 +35,13 @@
                                         </ol>
                                     </nav>
                                 </h5>
-                                <div class="pull-right d-flex justify-content-end m-3" >
-                                    <a class="btn btn-primary  mb-2" href="{{ route('entry-codes-create') }}"><i class="fa fa-plus"></i> Ստեղծել նույնականացման կոդ</a>
-                                </div>
+                                @if (auth()->user()->hasAnyRole(['client_admin','super_admin']))
+                                    <div class="pull-right d-flex justify-content-end m-3" >
+                                        <a class="btn btn-primary  mb-2" href="{{ route('entry-codes-create') }}"><i class="fa fa-plus"></i> Ստեղծել նույնականացման կոդ</a>
+                                    </div>
+
+                                @endif
+
 
                             </div>
                             <!-- Bordered Table -->

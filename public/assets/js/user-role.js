@@ -1,11 +1,8 @@
 $(function () {
     $('#selectedRole').on("change", function () {
 
-        if($(this).val()=="client_admin"){
-            // let userName=$('input[name="name"]').val();
-            // let userEmail=$('input[name="email"]').val();
-            // let userPassword=$('input[name="password"]').val();
-            // let userConfirmPassword=$('input[name="confirm-password"]').val();
+        if($(this).val()=="client_admin" ||"client_admin_rfID"){
+
             let userRole=$('input[name="roles"]').val();
 
             $.ajax({

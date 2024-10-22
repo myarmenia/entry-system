@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\DTO\UserDto;
 use App\Repositories\Interfaces\UserRepositoryInterface;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 class UserService
 {
@@ -26,5 +28,19 @@ class UserService
     {
         // Используем репозиторий для поиска пользователя по email
         return $this->userRepository->findByEmail($email);
+    }
+    public function updateUser($id,  $data){
+
+
+        if(!empty($data['password'])){
+            $$data['password'] = Hash::make($data['password']);
+        }else{
+
+            $data = Arr::except($data,['password','confirm-password']);
+        }
+      
+
+        return $this->userRepository->update( $id, $data);
+
     }
 }

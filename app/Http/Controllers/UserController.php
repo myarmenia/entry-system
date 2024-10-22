@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DTO\UserDto;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
@@ -120,30 +121,44 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id): RedirectResponse
-    {
-        $this->validate($request, [
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email,'.$id,
-            'password' => 'same:confirm-password',
-            'roles' => 'required'
-        ]);
+    // public function update(Request $request, $id): RedirectResponse
+    // {
+    //     $this->validate($request, [
+    //         'name' => 'required',
+    //         'email' => 'required|email|unique:users,email,'.$id,
+    //         'password' => 'same:confirm-password',
+    //         'roles' => 'required'
+    //     ]);
 
-        $input = $request->all();
-        if(!empty($input['password'])){
-            $input['password'] = Hash::make($input['password']);
-        }else{
-            $input = Arr::except($input,array('password'));
+    //     $input = $request->all();
+    //     if(!empty($input['password'])){
+    //         $input['password'] = Hash::make($input['password']);
+    //     }else{
+    //         $input = Arr::except($input,array('password'));
+    //     }
+
+    //     $user = User::find($id);
+    //     $user->update($input);
+    //     DB::table('model_has_roles')->where('model_id',$id)->delete();
+
+    //     $user->assignRole($request->input('roles'));
+
+    //     return redirect()->route('users.index')
+    //                     ->with('success','User updated successfully');
+    // }
+    public function update(UserRequest $request, string $id)
+    {
+
+       
+
+        $data = $this->userService->updateUser( $id,$request->all());
+
+        if ($data) {
+
+            return redirect()->route('users.index')->with('success', "User updated successfully");
         }
 
-        $user = User::find($id);
-        $user->update($input);
-        DB::table('model_has_roles')->where('model_id',$id)->delete();
-
-        $user->assignRole($request->input('roles'));
-
-        return redirect()->route('users.index')
-                        ->with('success','User updated successfully');
+        return redirect()->back()->withErrors('Failed to update the user.');
     }
 
     /**

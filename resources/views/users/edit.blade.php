@@ -179,16 +179,16 @@
                             <div class="col-lg-6" id="componentContainer">
 
 
-                                    @if (in_array('client_admin', $userRole))
+                                    @if (in_array('client_admin', $userRole) || in_array('client_admin_rfID', $userRole))
 
                                         <x-client-edit :user="$user"/>
                                     @endif
 
                             </div>
-                        <div class="row mb-3 {{ in_array('client_admin', $userRole) ?'d-none' : null  }}" id="loginBtn">
+                        <div class="row mb-3 {{ in_array('client_admin', $userRole) || in_array('client_admin_rfID', $userRole) ? 'd-none' : null  }}" id="loginBtn">
                             <label class="col-sm-2 col-form-label"></label>
                             <div class="col-sm-10">
-                            <button type="submit" class="btn btn-primary">Ստեղծել</button>
+                            <button type="submit" class="btn btn-primary">Պահպանել</button>
                             </div>
                         </div>
 
