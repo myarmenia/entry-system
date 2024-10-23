@@ -17,7 +17,8 @@ class EntryCodeListController extends Controller
 
         $query = EntryCode::latest();
 
-        if ($user->hasRole('client_admin')) {
+        if ($user->hasRole('client_admin') || $user->hasRole('client_admin_rfID')) {
+
 
             $client = Client::where('user_id', $user->id)->first();
 
@@ -25,6 +26,7 @@ class EntryCodeListController extends Controller
                 $query->where('client_id', $client->id);
             }
         }
+
         $data = $query->paginate(10)->withQueryString();
 
 
