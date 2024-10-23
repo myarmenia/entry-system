@@ -37,9 +37,7 @@ class UserRequest extends FormRequest
             $rules['password'] = 'required|min:8|same:confirm-password';
             $rules['roles'] ='required';
 
-            if($this->client['email']!=null){
-                $rules['client.email'] = 'required|email';
-            }
+          
 
         }
         if($currentRoute == 'users.update'){
@@ -50,7 +48,7 @@ class UserRequest extends FormRequest
             if($this->password !=null){
 
                 $rules['password'] = 'required|min:8|same:confirm-password';
-                
+
             }
 
 
