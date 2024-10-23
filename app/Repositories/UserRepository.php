@@ -2,11 +2,13 @@
 
 namespace App\Repositories;
 
+use App\DTO\UserDto;
 use App\Models\Client;
 use App\Models\Staff;
 use App\Models\User;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use Auth;
+use DB;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -19,7 +21,7 @@ class UserRepository implements UserRepositoryInterface
 
 
 
-            if(isset($data['client']['name']) && $data['client']['name']!=null){
+            if( $data['client']['name']!=null){
                 $client=new Client();
 
                 $client->user_id = $user->id;
@@ -53,6 +55,29 @@ class UserRepository implements UserRepositoryInterface
     {
         // Поиск пользователя по email
         return User::where('email', $email)->first();
+    }
+
+    public function update($id, $data){
+
+        $user=User::findOrFail($id);
+
+        $user->update($data);
+
+        // DB::table('model_has_roles')->where('model_id',$id)->delete();
+// dd($data);
+        // $user->assignRole($data['roles']);
+        if(isset($data['client']['name']) && $data['client']['name']!=null){
+
+            $user->client->update($data['client']);
+            $user->client->save();
+
+        }
+
+
+        return $user;
+
+
+
     }
 }
 

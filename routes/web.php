@@ -41,6 +41,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::group(['middleware' => ['auth']], function() {
     Route::resource('roles', RoleController::class);
     Route::resource('users', UserController::class);
+    // Route::post('store-user', [UserController::class,'store']);
     Route::resource('products', ProductController::class);
 
     Route::group(['prefix'=>'entry-code'],function(){

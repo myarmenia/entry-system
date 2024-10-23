@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DTO\UserDto;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
@@ -74,6 +75,7 @@ class UserController extends Controller
        public function store(UserRequest $request): RedirectResponse
     {
 
+
         $data = $request->all();
 
         $user = $this->userService->createUser($data);
@@ -104,11 +106,13 @@ class UserController extends Controller
      */
     public function edit($id): View
     {
-        $user = User::find($id);
+        // $user = User::find($id);
+        $user = User::where('id',$id)->with('client')->first();
         $roles = Role::pluck('name','name')->all();
         $userRole = $user->roles->pluck('name','name')->all();
+        $isEditMode = true;
 
-        return view('users.edit',compact('user','roles','userRole'));
+        return view('users.edit',compact('user','roles','userRole','isEditMode'));
     }
 
     /**
@@ -118,30 +122,43 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id): RedirectResponse
-    {
-        $this->validate($request, [
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email,'.$id,
-            'password' => 'same:confirm-password',
-            'roles' => 'required'
-        ]);
+    // public function update(Request $request, $id): RedirectResponse
+    // {
+    //     $this->validate($request, [
+    //         'name' => 'required',
+    //         'email' => 'required|email|unique:users,email,'.$id,
+    //         'password' => 'same:confirm-password',
+    //         'roles' => 'required'
+    //     ]);
 
-        $input = $request->all();
-        if(!empty($input['password'])){
-            $input['password'] = Hash::make($input['password']);
-        }else{
-            $input = Arr::except($input,array('password'));
+    //     $input = $request->all();
+    //     if(!empty($input['password'])){
+    //         $input['password'] = Hash::make($input['password']);
+    //     }else{
+    //         $input = Arr::except($input,array('password'));
+    //     }
+
+    //     $user = User::find($id);
+    //     $user->update($input);
+    //     DB::table('model_has_roles')->where('model_id',$id)->delete();
+
+    //     $user->assignRole($request->input('roles'));
+
+    //     return redirect()->route('users.index')
+    //                     ->with('success','User updated successfully');
+    // }
+    public function update(UserRequest $request, string $id)
+    {
+
+
+
+        $data = $this->userService->updateUser( $id,$request->all());
+
+        if ($data) {
+            return redirect()->route('users.index')->with('success', "User updated successfully");
         }
 
-        $user = User::find($id);
-        $user->update($input);
-        DB::table('model_has_roles')->where('model_id',$id)->delete();
-
-        $user->assignRole($request->input('roles'));
-
-        return redirect()->route('users.index')
-                        ->with('success','User updated successfully');
+        return redirect()->back()->withErrors('Failed to update the user.');
     }
 
     /**

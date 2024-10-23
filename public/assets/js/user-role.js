@@ -1,13 +1,15 @@
 $(function () {
     $('#selectedRole').on("change", function () {
+        console.log($('#selectedRole'))
+        var selectedValues = $(this).val();
+        console.log()
+            // if ($.inArray('client_admin', selectedValues) !== -1 || $.inArray('client_admin_rfID', selectedValues) !== -1) {
+        if( $(this).val()=="client_admin" || $(this).val()=="client_admin_rfID" ){
+            console.log("inner")
+            console.log($(this).val())
 
-        if($(this).val()=="client_admin"){
-            // let userName=$('input[name="name"]').val();
-            // let userEmail=$('input[name="email"]').val();
-            // let userPassword=$('input[name="password"]').val();
-            // let userConfirmPassword=$('input[name="confirm-password"]').val();
-            let userRole=$('input[name="roles"]').val();
-      
+         
+
             $.ajax({
                 url: '/client-component',
                 type: 'POST',
@@ -34,7 +36,11 @@ $(function () {
             });
 
 
+        }else{
+            $('#componentContainer').html('');
         }
 
+
     })
+
 })

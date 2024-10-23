@@ -46,6 +46,12 @@
                         <input type="text" class="form-control" name="client[address]"
                             placeholder="Գործատուի հասցե"
                             value="">
+                            @error('client.address')
+                                <div class="mb-3 row justify-content-start">
+                                    <div class="col-sm-9 text-danger fts-14">{{ $message }}
+                                    </div>
+                                </div>
+                            @enderror
                     </div>
                 </div>
             </form>
