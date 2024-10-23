@@ -155,7 +155,7 @@ class UserController extends Controller
         $data = $this->userService->updateUser( $id,$request->all());
 
         if ($data) {
-            return redirect()->route('users.index')->with('success', "User updated successfully");
+            return redirect()->route('users.index')->with('success', "Օգտատերը ստեղծվել է հաջողությամբ");
         }
 
         return redirect()->back()->withErrors('Failed to update the user.');

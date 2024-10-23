@@ -197,7 +197,7 @@
 
             >
             <i class="bi bi-person"></i>
-            <span>Entry Code</span>
+            <span>Նույնականացման կոդեր</span>
             </a>
         </li>
 
@@ -205,14 +205,14 @@
       <li class="nav-item">
         <a class="nav-link {{ Route::is(['users.index', 'users.create', 'users.edit']) ? '' : 'collapsed' }}"  href=" {{ route('users.index') }}">
           <i class="bi bi-person"></i>
-          <span>Users</span>
+          <span>Օգտատերեր</span>
         </a>
       </li>
       @if (Auth::user()->hasRole("super_admin"))
         <li class="nav-item">
             <a class="nav-link {{ Route::is(['roles.index', 'roles.create', 'roles.edit']) ? '' : 'collapsed' }}" href="{{ route('roles.index') }}">
             <i class="bi bi-person"></i>
-            <span>Roles</span>
+            <span>Դերեր</span>
             </a>
         </li>
        @endif
@@ -220,7 +220,7 @@
       <li class="nav-item">
         <a class="nav-link {{ Route::is(['people.index', 'people.create', 'people.edit']) ? '' : 'collapsed' }}" href="{{ route('people.index') }}">
           <i class="bi bi-person"></i>
-          <span>People</span>
+          <span>Անձնակազմ</span>
         </a>
       </li>
       @endif
