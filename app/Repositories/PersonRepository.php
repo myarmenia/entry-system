@@ -16,7 +16,7 @@ class PersonRepository implements PersonRepositoryInterface
 {
     public function getAllPeople()
     {
-        if(auth()->user()->hasRole('client_admin')){
+        if(auth()->user()->hasRole(['client_admin','client_admin_rfID'])){
 
             $client=Client::where('user_id',Auth::id())->first();
             // dd($client);
@@ -35,7 +35,7 @@ class PersonRepository implements PersonRepositoryInterface
     }
     public function createPerson()
     {
-        if(auth()->user()->hasRole('client_admin')){
+        if(auth()->user()->hasRole(['client_admin','client_admin_rfID'])){
 
             $client = Client::where('user_id',Auth::id())->first();
             if($client!=null){
