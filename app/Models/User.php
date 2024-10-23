@@ -51,11 +51,11 @@ class User extends Authenticatable
     // }
 
 
-    public function entry_codes(): HasMany{
+    public function entry_codes(){
 
         return $this->hasMany(EntryCode::class);
     }
-    public function people(): HasMany{
+    public function people(){
 
         return $this->hasMany(Person::class);
     }
@@ -68,6 +68,9 @@ class User extends Authenticatable
 
         return $this->hasMany(Staff::class);
 
+    }
+    public function client(){
+        return $this->hasOne(Client::class);
     }
 
 }

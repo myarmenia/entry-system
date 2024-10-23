@@ -41,7 +41,7 @@
                                   method="post"
                                   enctype="multipart/form-data">
                                 @method('put')
-                                
+
                                 <div class="row mb-3">
 
                                         <label class="col-sm-3 col-form-label">{{ $data['non_active_entry_code']==false &&  $data['person']->activated_code_connected_person!=null ? "Նույնականացման կոդ" : null }}</label>
@@ -79,7 +79,7 @@
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control" name="name"
                                             placeholder="Աշխատակցի անունը"
-                                            value="{{ $data['person']->name ?? null }}">
+                                            value = "{{ $data['person']->name ?? null }}">
                                     </div>
 
                                 </div>
@@ -138,8 +138,6 @@
                                             <option value='' disabled>Անձի կարգավիճակը</option>
                                             <option value="worker" {{ $data['person']->type=="worker" ?'selected': null}}> Աշխատող</option>
                                             <option value="visitor" {{ $data['person']->type=="visitor" ?'selected': null}}>Այցելու</option>
-
-
                                       </select>
                                       @error("type")
                                           <div class="mb-3 row justify-content-end">

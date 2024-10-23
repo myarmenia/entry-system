@@ -39,6 +39,11 @@ class CreateRolesSeeder extends Seeder
                 'position_name' => 'admin',
                 'interface' => 'client'
             ],
+            [
+                'name' => 'client_admin_rfID',
+                'position_name' => 'admin',
+                'interface' => 'client'
+            ],
 
             [
                 'name' => 'manager',
@@ -62,6 +67,8 @@ class CreateRolesSeeder extends Seeder
                 'position_name' => 'web',
                 'interface' => 'web'
             ],
+
+
 
 
         ];

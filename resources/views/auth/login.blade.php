@@ -101,7 +101,7 @@
                       <label for="yourUsername" class="form-label">Էլ․հասցե</label>
                       <div class="input-group has-validation">
                         <span class="input-group-text" id="inputGroupPrepend">@</span>
-                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{old('email')}}" required autocomplete="email" autofocus>
                         <div class="invalid-feedback">Մուտքագրեք Ձեր Էլ․հասցեն</div>
                       </div>
                     </div>
