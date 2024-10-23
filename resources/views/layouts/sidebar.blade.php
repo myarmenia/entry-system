@@ -216,7 +216,7 @@
             </a>
         </li>
        @endif
-       @if (Auth::user()->hasRole("client_admin"))
+       @if (Auth::user()->hasRole(["client_admin","client_admin_rfID"]))
       <li class="nav-item">
         <a class="nav-link {{ Route::is(['people.index', 'people.create', 'people.edit']) ? '' : 'collapsed' }}" href="{{ route('people.index') }}">
           <i class="bi bi-person"></i>

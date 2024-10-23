@@ -118,7 +118,7 @@
                                                                 </div>Կարգավիճակ
                                                             </a>
                                                         @endif
-                                                        @if(auth()->user()->hasRole('client_admin'))
+                                                        @if(auth()->user()->hasRole(['client_admin','client_admin_rfID']))
                                                             <a class="dropdown-item d-flex" href="javascript:void(0);">
                                                                 <div class="form-check form-switch">
                                                                     <input class="form-check-input change_status" type="checkbox"
@@ -133,10 +133,11 @@
                                                             class="bx bx-edit-alt me-1"></i>Ժամանակացույց</a>
 
                                                     @endif
-
+                                                    @if (!auth()->user()->hasRole('client_admin_rfID'))
 
                                                         <a class="dropdown-item" href="{{route('entry-codes-edit',$entry_code['id'])}}"><i
                                                                 class="bx bx-edit-alt me-1"></i>Խմբագրել</a>
+                                                    @endif
                                                         <button type="button" class="dropdown-item click_delete_item"
                                                             data-bs-toggle="modal" data-bs-target="#smallModal"><i
                                                                 class="bx bx-trash me-1"></i>
