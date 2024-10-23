@@ -84,7 +84,6 @@
 
                                 </div>
                                 <div class="row mb-3">
-
                                     <label for="inputText1" class="col-sm-3 col-form-label">Ազգանուն </label>
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control" name="surname"
@@ -106,8 +105,14 @@
                                     <label for="inputEmail" class="col-sm-3 col-form-label">Հեռախոսահամար</label>
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control" name="phone"
-                                            placeholder="+374 98-00 00"
+                                            placeholder="+374980000"
                                             value="{{ $data['person']->phone ?? null }}">
+                                            @error('phone')
+                                                <div class="mb-3 row">
+                                                    <div class="col-sm-10 text-danger fts-14">{{ $message }}
+                                                    </div>
+                                                </div>
+                                            @enderror
                                     </div>
                                 </div>
 
