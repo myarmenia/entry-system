@@ -70,7 +70,12 @@
                                 <th scope="row">{{ $person->id }}</th>
                                 <th scope="row">{{ $person->activated_code_connected_person->entry_code_id ?? null }}</th>
                                 <td>
-                                    <img src = "{{ $person->image ? route('get-file',['path' => $person->image ]) : null }}" style="width:80px">
+
+                                    @if($person->image !=null)
+                                        <img src = "{{  route('get-file',['path' => $person->image ]) }}" style="width:80px">
+
+                                    @endif
+
                                 </td>
                                 <td>
                                     {{ $person->name ?? null }}

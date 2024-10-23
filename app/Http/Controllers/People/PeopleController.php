@@ -87,7 +87,7 @@ class PeopleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(PersonRequest $request, string $id)
     {
 
         $person = Person::findOrFail($id);

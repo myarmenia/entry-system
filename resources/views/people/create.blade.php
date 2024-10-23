@@ -100,7 +100,7 @@
                                         <label for="inputText1" class="col-sm-3 col-form-label">Ազգանուն </label>
                                         <div class="col-sm-9">
                                             <input type="text" class="form-control" name="surname"
-                                                placeholder="Աշխատակցի ազգանունը" value="">
+                                                placeholder="Աշխատակցի ազգանունը" value="{{ old('surname') }}">
                                             @error('surname')
                                                 <div class="mb-3 row">
                                                     <p class="col-sm-9 mb-3 text-danger fs-6 ">{{ $message }}
@@ -115,14 +115,20 @@
                                         <label for="inputEmail" class="col-sm-3 col-form-label">Էլ.հասցե</label>
                                         <div class="col-sm-9">
                                             <input type="email" class="form-control" name="email"
-                                                placeholder="example@gmail.com" value="">
+                                                placeholder="example@gmail.com" value="{{ old('email') }}">
                                         </div>
                                     </div>
                                     <div class="row mb-3">
                                         <label for="inputEmail" class="col-sm-3 col-form-label">Հեռախոսահամար</label>
                                         <div class="col-sm-9">
                                             <input type="text" class="form-control" name="phone"
-                                                placeholder="+374 98-00 00" value="">
+                                                placeholder="+374980000" value="{{ old('phone') }}">
+                                                @error('phone')
+                                                <div class="mb-3 row">
+                                                    <div class="col-sm-10 text-danger fts-14">{{ $message }}
+                                                    </div>
+                                                </div>
+                                            @enderror
                                         </div>
                                     </div>
 
@@ -133,45 +139,6 @@
                                             <input class="form-control" type="file" id="formFile" name="image">
                                         </div>
                                     </div>
-                                    {{-- {{ dd($data->image) }} --}}
-                                    {{-- @if ($data->image !== null)
-                                        <div class="row mb-3">
-                                            <label for="inputNumber" class="col-sm-3 col-form-label"></label>
-                                            <div class="col-sm-9">
-                                                <div class="uploaded-image-div mx-2">
-                                                    <img src="{{ route('get-file', ['path' => $data->image]) }}"
-                                                        class="d-block rounded uploaded-image uploaded-photo-project"
-                                                        style="width:150px">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endif --}}
-                                    {{-- @if (auth()->user()->hasRole('super_admin'))
-                                        <div class="row mb-3">
-                                            <label class="col-sm-3 col-form-label">Կարգավիճակ</label>
-                                            <div class="col-sm-9">
-                                                <div class="form-check form-switch">
-                                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
-                                                        {{ $data->status == 1 ? 'checked' : '' }} name="status"
-                                                        value="{{ $data->status }}">
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endif --}}
-                                    {{-- @if (auth()->user()->hasRole('client_admin'))
-                                        <div class="row mb-3">
-                                            <label class="col-sm-3 col-form-label">Ակտիվացում </label>
-                                            <div class="col-sm-9">
-                                                <div class="form-check form-switch">
-                                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
-                                                        {{ $data->activation == 1 ? 'checked' : '' }} name="activation">
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endif --}}
-
 
                                     <div class="row mb-3">
                                         <label class="col-sm-3 col-form-label">Աշխատակցի կարգավիճակ</label>
