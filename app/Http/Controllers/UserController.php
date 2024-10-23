@@ -110,8 +110,9 @@ class UserController extends Controller
         $user = User::where('id',$id)->with('client')->first();
         $roles = Role::pluck('name','name')->all();
         $userRole = $user->roles->pluck('name','name')->all();
+        $isEditMode = true;
 
-        return view('users.edit',compact('user','roles','userRole'));
+        return view('users.edit',compact('user','roles','userRole','isEditMode'));
     }
 
     /**
@@ -149,12 +150,11 @@ class UserController extends Controller
     public function update(UserRequest $request, string $id)
     {
 
-       
+
 
         $data = $this->userService->updateUser( $id,$request->all());
 
         if ($data) {
-
             return redirect()->route('users.index')->with('success', "User updated successfully");
         }
 

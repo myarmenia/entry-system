@@ -30,19 +30,30 @@ class UserRequest extends FormRequest
             'name' => 'required',
             // 'email' => 'required|email|unique:users,email',
             // 'password' => 'required|min:8|same:confirm-password',
-            'roles' => 'required',
+
         ];
         if($currentRoute=='users.store'){
             $rules['email'] = 'required|email|unique:users,email';
             $rules['password'] = 'required|min:8|same:confirm-password';
+            $rules['roles'] ='required';
+
+            if($this->client['email']!=null){
+                $rules['client.email'] = 'required|email';
+            }
+
         }
         if($currentRoute == 'users.update'){
 
             $userId = $this->route('user');
 
             $rules['email']='required|email|unique:users,email,'.$userId;
+            if($this->password !=null){
 
-            
+                $rules['password'] = 'required|min:8|same:confirm-password';
+                
+            }
+
+
         }
         if(request()->has('client')){
 

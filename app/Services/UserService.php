@@ -33,12 +33,12 @@ class UserService
 
 
         if(!empty($data['password'])){
-            $$data['password'] = Hash::make($data['password']);
+            $data['password'] = Hash::make($data['password']);
         }else{
 
             $data = Arr::except($data,['password','confirm-password']);
         }
-      
+
 
         return $this->userRepository->update( $id, $data);
 

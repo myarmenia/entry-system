@@ -50,7 +50,7 @@
 <div class="row mb-3 d-flex justify-content-end" >
 
     <div class="col-sm-10 d-flex justify-content-end">
-        <button type="submit" class="btn btn-primary">Ստեղծել</button>
+        <button type="submit" class="btn btn-primary">Պահպանել</button>
     </div>
 </div>
 

@@ -21,7 +21,7 @@ class UserRepository implements UserRepositoryInterface
 
 
 
-            if(isset($data['client']['name']) && $data['client']['name']!=null){
+            if( $data['client']['name']!=null){
                 $client=new Client();
 
                 $client->user_id = $user->id;
@@ -63,10 +63,16 @@ class UserRepository implements UserRepositoryInterface
 
         $user->update($data);
 
-        DB::table('model_has_roles')->where('model_id',$id)->delete();
+        // DB::table('model_has_roles')->where('model_id',$id)->delete();
+// dd($data);
+        // $user->assignRole($data['roles']);
+        if(isset($data['client']['name']) && $data['client']['name']!=null){
 
-        $user->assignRole($data['roles']);
-        // if($data['client'])
+            $user->client->update($data['client']);
+            $user->client->save();
+
+        }
+
 
         return $user;
 

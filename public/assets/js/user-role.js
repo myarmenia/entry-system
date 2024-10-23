@@ -1,9 +1,14 @@
 $(function () {
     $('#selectedRole').on("change", function () {
+        console.log($('#selectedRole'))
+        var selectedValues = $(this).val();
+        console.log()
+            // if ($.inArray('client_admin', selectedValues) !== -1 || $.inArray('client_admin_rfID', selectedValues) !== -1) {
+        if( $(this).val()=="client_admin" || $(this).val()=="client_admin_rfID" ){
+            console.log("inner")
+            console.log($(this).val())
 
-        if($(this).val()=="client_admin" ||"client_admin_rfID"){
-
-            let userRole=$('input[name="roles"]').val();
+         
 
             $.ajax({
                 url: '/client-component',
@@ -31,33 +36,11 @@ $(function () {
             });
 
 
+        }else{
+            $('#componentContainer').html('');
         }
 
-    })
-// alert()
-    $('#myForm').on('submit', function(e) {
-        e.preventDefault();
-        // alert()
-        var $that = $(this)
-        var formData = new FormData($(this)[0]);;
-        console.log(66666)
-        // formData.append('name', );
 
-        // Send AJAX request
-        $.ajax({
-            url: "/store-user", // The route to your Laravel controller
-            type: 'POST',
-            data: formData,
-            contentType: false,  // Important: Prevent jQuery from processing the data
-            processData: false,  // Important: Prevent jQuery from converting data to a string
-            success: function(response) {
-                alert('Form submitted successfully!');
-                console.log(response); // You can handle the response here
-            },
-            error: function(xhr, status, error) {
-                console.error('Form submission failed:', error);
-            }
-        });
-    });
+    })
 
 })
