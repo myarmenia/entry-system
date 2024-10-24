@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\File;
 
 class User extends Authenticatable
 {
@@ -46,10 +47,6 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    // public function role()
-    // {
-    //     return $this->belongsTo(Role::class);
-    // }
 
 
     public function entry_codes(){
@@ -77,7 +74,13 @@ class User extends Authenticatable
     protected static function booted()
     {
         static::deleting(function ($user) {
-          
+        //    $client_id= $user->client()->id;
+        //     dd( $client_id);
+        //     $deletedFolderPath = storage_path('app/people'. $client_id);
+        //     if (File::exists($deletedFolderPath)) {
+        //         dd(777);
+        //         File::move($user->client()->image, $deletedFolderPath); // Move the folder
+        //     }
             $user->client()->delete();
 
         });
