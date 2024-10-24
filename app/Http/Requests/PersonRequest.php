@@ -22,22 +22,27 @@ class PersonRequest extends FormRequest
     public function rules(): array
     {
 
-        $rules= [
+        $ru= [
 
             'name' => 'required',
             'surname' => 'required',
+            // 'phone' => ['required', 'regex:/^\+\d{1,3}\d{9,11}$/'],
 
 
         ];
+
         if($this->phone!=null){
 
-            $rules['phone'] = [ 'regex:/^\+\d{1,3}\d{1,11}$/'];
+            // $rules['phone'] = 'required';
+            $ru['phone'] =  'regex:/^\+\d{1,3}\d{9,11}$/';
         }
-        return $rules;
+
+        return $ru;
     }
     public function messages()
 {
     return [
+
         'phone.regex' => 'Հեռախոսահամարը պետք է սկսվի  "+"նշանով, որին հաջորդում է երկրի կոդը  (1-3 նիշ) և առավելագույնը  11 թվային նիշ',
     ];
 }
