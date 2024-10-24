@@ -7,10 +7,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, Notifiable, HasRoles, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -71,6 +72,15 @@ class User extends Authenticatable
     }
     public function client(){
         return $this->hasOne(Client::class);
+    }
+
+    protected static function booted()
+    {
+        static::deleting(function ($user) {
+          
+            $user->client()->delete();
+
+        });
     }
 
 }
