@@ -170,13 +170,14 @@ class UserController extends Controller
      */
     public function destroy($id): RedirectResponse
     {
-        // User::find($id)->delete();
-        // return redirect()->route('users.index')
-        //                 ->with('success','User deleted successfully');
 
-        $data = $this->userService->deleteUser($id);
-        return redirect()->route('users.index')
-                        ->with('success','Օգտատերը ջնջվել է հաջողությամբ');
 
+
+            $data = $this->userService->deleteUser($id);
+            if($data){
+                return redirect()->route('users.index')
+                                ->with('success','Օգտատերը ջնջվել է հաջողությամբ');
+                            }
+            return redirect()->route('users.index')->with('error', 'User not found.');
     }
 }
