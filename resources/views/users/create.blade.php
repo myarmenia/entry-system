@@ -88,13 +88,14 @@
                                             <div class="row mb-3">
                                                 <label for="inputEmail" class="col-sm-3 col-form-label">Դերեր</label>
                                                 <div class="col-sm-9">
-                                                    <select name = "roles[]" class="form-control" id="selectedRole"
-                                                        {{-- multiple="multiple" --}}
-                                                      >
+                                                    <select name = "roles" class="form-control" id="selectedRole">
                                                         <option disabled> Ընտրել դերեր</option>
                                                         @foreach ($roles as $value => $label)
 
-                                                            <option  value = "{{ $value }}" {{ in_array($value, old('roles', [])) ? 'selected' : '' }} >
+                                                            {{-- <option  value = "{{ $value }}" {{ in_array($value, old('roles', [])) ? 'selected' : '' }} >
+                                                                {{ $label }}
+                                                            </option> --}}
+                                                            <option  value = "{{ $value }}" {{  old('roles') == $value ? 'selected' : '' }} >
                                                                 {{ $label }}
                                                             </option>
                                                         @endforeach
@@ -115,11 +116,18 @@
 
                             </div>
                             <div class="col-lg-6" id="componentContainer">
+                                 @if ($errors->has('client.name'))
+                                    <x-client/>
+                                 @endif
 
+                                @if ($errors->any(['name','email','password','confirm-password']))
 
-                                    @if ($errors->has('client.name'))
-                                        <x-client/>
+                                    @if (old('roles') === 'client_admin' || old('roles') === 'client_admin_rfID')
+                                        @if (!$errors->has('client.name'))
+                                            <x-client/>
+                                        @endif
                                     @endif
+                                @endif
 
                             </div>
 

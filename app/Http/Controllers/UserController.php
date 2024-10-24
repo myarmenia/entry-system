@@ -35,7 +35,7 @@ class UserController extends Controller
         $client = Client::where('user_id',Auth::id())->first();
         if($client){
             $staff = Staff::where('client_admin_id',$client->id)->pluck('user_id');
-           
+
             $data = User::whereIn('id',$staff)->latest()->paginate(5);
 
 
@@ -170,8 +170,13 @@ class UserController extends Controller
      */
     public function destroy($id): RedirectResponse
     {
-        User::find($id)->delete();
+        // User::find($id)->delete();
+        // return redirect()->route('users.index')
+        //                 ->with('success','User deleted successfully');
+
+        $data = $this->userService->deleteUser($id);
         return redirect()->route('users.index')
-                        ->with('success','User deleted successfully');
+                        ->with('success','Օգտատերը ջնջվել է հաջողությամբ');
+
     }
 }
