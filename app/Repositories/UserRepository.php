@@ -78,19 +78,10 @@ class UserRepository implements UserRepositoryInterface
 
     }
     public function delete($id){
-        try {
-        //     DB::beginTransaction();
 
           $user = User::find($id)->delete();
-        //   if($user){
-        //     $client=Client::where('user_id',$user->id)
 
-        //   }
-        }catch (\Exception $e) {
-            session(['errorMessage' => 'Ինչ որ բան այն չէ, խնդրում ենք փորձել մի փոքր ուշ']);
 
-        }
-        
     }
 }
 

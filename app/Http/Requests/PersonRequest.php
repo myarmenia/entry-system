@@ -22,22 +22,20 @@ class PersonRequest extends FormRequest
     public function rules(): array
     {
 
-        $ru= [
+        $rules= [
 
             'name' => 'required',
             'surname' => 'required',
-            // 'phone' => ['required', 'regex:/^\+\d{1,3}\d{9,11}$/'],
+
 
 
         ];
 
         if($this->phone!=null){
-
-            // $rules['phone'] = 'required';
-            $ru['phone'] =  'regex:/^\+\d{1,3}\d{9,11}$/';
+            $rules['phone'] =  'regex:/^\+\d{1,3}\d{9,11}$/';
         }
 
-        return $ru;
+        return  $rules;
     }
     public function messages()
 {
