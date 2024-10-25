@@ -7,12 +7,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\File;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasRoles, SoftDeletes;
+    use HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -71,19 +70,19 @@ class User extends Authenticatable
         return $this->hasOne(Client::class);
     }
 
-    protected static function booted()
-    {
-        static::deleting(function ($user) {
-        //    $client_id= $user->client()->id;
-        //     dd( $client_id);
-        //     $deletedFolderPath = storage_path('app/people'. $client_id);
-        //     if (File::exists($deletedFolderPath)) {
-        //         dd(777);
-        //         File::move($user->client()->image, $deletedFolderPath); // Move the folder
-        //     }
-            $user->client()->delete();
+    // protected static function booted()
+    // {
+    //     static::deleting(function ($user) {
+    //     //    $client_id= $user->client()->id;
+    //     //     dd( $client_id);
+    //     //     $deletedFolderPath = storage_path('app/people'. $client_id);
+    //     //     if (File::exists($deletedFolderPath)) {
+    //     //         dd(777);
+    //     //         File::move($user->client()->image, $deletedFolderPath); // Move the folder
+    //     //     }
+    //         $user->client()->delete();
 
-        });
-    }
+    //     });
+    // }
 
 }
