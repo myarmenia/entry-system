@@ -130,13 +130,14 @@
                                 @endif
 
                             </div>
-
-                        <div class="row mb-3 {{$errors->has('client.name') ?'d-none' : null  }}" id="loginBtn">
-                            <label class="col-sm-2 col-form-label"></label>
-                            <div class="col-sm-10">
-                            <button type="submit" class="btn btn-primary">Ստեղծել</button>
+                        @if (old('roles') != 'client_admin' && old('roles')!= 'client_admin_rfID')
+                            <div class="row mb-3 {{$errors->has('client.name') ?'d-none' : null  }}" id="loginBtn">
+                                <label class="col-sm-2 col-form-label"></label>
+                                <div class="col-sm-10">
+                                <button type="submit" class="btn btn-primary">Ստեղծել</button>
+                                </div>
                             </div>
-                        </div>
+                        @endif
 
 
 
