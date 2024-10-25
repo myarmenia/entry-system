@@ -217,13 +217,21 @@
         </li>
        @endif
        @if (Auth::user()->hasRole(["client_admin","client_admin_rfID"]))
-      <li class="nav-item">
-        <a class="nav-link {{ Route::is(['people.index', 'people.create', 'people.edit']) ? '' : 'collapsed' }}" href="{{ route('people.index') }}">
-          <i class="bi bi-person"></i>
-          <span>Անձնակազմ</span>
-        </a>
-      </li>
+        <li class="nav-item">
+            <a class="nav-link {{ Route::is(['people.index', 'people.create', 'people.edit']) ? '' : 'collapsed' }}" href="{{ route('people.index') }}">
+            <i class="bi bi-person"></i>
+            <span>Անձնակազմ</span>
+            </a>
+        </li>
       @endif
+      @if (Auth::user()->hasRole(["client_admin","client_admin_rfID"]))
+      <li class="nav-item">
+          <a class="nav-link {{ Route::is(['reportList']) ? '' : 'collapsed' }}"  href = "{{ route('reportList') }}">
+          <i class="bi bi-person"></i>
+          <span>Հաշվետվություն</span>
+          </a>
+      </li>
+    @endif
 
       {{-- <li class="nav-item">
         <a class="nav-link collapsed" href="{{ route('products.index') }}">

@@ -32,7 +32,6 @@ class DeleteItemService
 
           if(isset($item_db->image)){
             Storage::disk('public')->deleteDirectory("$tb_name/$id");
-
           }
           else{
 

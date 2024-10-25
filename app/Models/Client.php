@@ -27,6 +27,9 @@ class Client extends Model
         return $this->belongsToMany(PersonPosition::class);
 
     }
+    public function people(): HasMany{
+        return $this->hasMany(Person::class);
+    }
 
 
 
