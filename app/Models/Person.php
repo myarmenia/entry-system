@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\SoftDeletes;
+
 
 class Person extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
     protected $guarded =[];
     protected $table = 'people';
 
@@ -26,7 +26,7 @@ class Person extends Model
 
     public function attendance_sheets(): HasMany
     {
-        return $this->hasMany(AttendanceSheet::class);
+        return $this->hasMany(AttendanceSheet::class,'people_id');
     }
     public function activated_code_connected_person(): HasOne{
         return $this->hasOne(PersonPermission::class)->where('status',1);
