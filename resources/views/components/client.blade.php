@@ -31,7 +31,7 @@
                     <div class="col-sm-9">
                         <input type="email" class="form-control" name="client[email]"
                             placeholder="example@gmail.com"
-                            value="">
+                            value="{{ old('client.email')  }}">
                             @error('client.email')
                                 <div class="mb-3 row justify-content-start">
                                     <div class="col-sm-9 text-danger fts-14">{{ $message }}
@@ -45,7 +45,7 @@
                     <div class="col-sm-9">
                         <input type="text" class="form-control" name="client[address]"
                             placeholder="Գործատուի հասցե"
-                            value="">
+                            value="{{ old('client.address')  }}">
                             @error('client.address')
                                 <div class="mb-3 row justify-content-start">
                                     <div class="col-sm-9 text-danger fts-14">{{ $message }}
