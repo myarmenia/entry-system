@@ -79,8 +79,7 @@ class UserRepository implements UserRepositoryInterface
     }
     public function delete($id){
 
-          $user = User::find($id)->delete();
-
+        $user = User::find($id)->delete();
 
     }
 }
