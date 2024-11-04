@@ -2,6 +2,11 @@
 
 @section("page-script")
     <script src="{{ asset('assets/js/change-status.js') }}"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+
+
 @endsection
 
 @section('content')
@@ -38,6 +43,17 @@
 
 
                             </div>
+
+                            <form  action="{{ route('report') }}" method="get" class="mb-3 justify-content-end" style="display: flex; gap: 8px">
+
+                                {{-- <div class="col-2">
+                                    <input type="text"  class="form-select" id="yearPicker" placeholder="Select year" name="year" />
+                                </div> --}}
+                                <div class="col-2">
+                                    <input type="text"  class="form-select"  id="monthPicker" placeholder="Ընտրել ամիսը տարեթվով" name="mounth"/>
+                                </div>
+                                <button type="submit" class="btn btn-primary col-2 search">Հաշվետվություն</button>
+                            </form>
                             <!-- Bordered Table -->
 
                             <table class="table table-bordered">
@@ -45,103 +61,80 @@
                                 <tr>
                                     <th scope="col">Հ/Հ</th>
                                     <th scope="col">ID</th>
-                                    {{-- <th scope="col">Գործատու</th> --}}
-                                    <th scope="col">Թոքեն</th>
                                     <th scope="col">Անուն</th>
                                     <th scope="col">Ազգանուն</th>
                                     <th scope="col">Հեռախոսահամար</th>
-                                    <th scope="col">Կարգավիճակ</th>
-                                    <th scope="col">Գործողություն</th>
+
+                                    <th scope="col">Ամիս</th>
                                 </tr>
                                 </thead>
                                 <tbody>
 
-                                    {{-- @foreach ($data as $entry_code)
-
+                                    @foreach ($data as $item)
 
                                         <tr class="parent">
-                                            <td>{{ ++$i }}</td>
-                                            <th scope="row">{{ $entry_code->id }}</th>
+                                            <td>{{ $item->id }}</td>
+                                            <td scope="row">{{ $item->id }}</td>
 
-
-
-                                            <td >
-                                                {{ $entry_code->token ?? null }}
-
-                                            </td>
                                             <td class="personName">
-                                                {{ $entry_code->active_person->people->name ?? null }}
+                                                {{ $item->people->name ?? null }}
 
                                             </td>
                                             <td class="personSurname" >
-                                                {{ $entry_code->active_person->people->surname ?? null }}
+                                                {{ $item->people->surname ?? null }}
 
                                             </td >
                                             <td class="personPhone">
-                                                {{ $entry_code->active_person->people->phone ?? null }}
-                                            </td>
-                                            <td class="{{ auth()->user()->hasRole('super_admin') ? 'status' : 'activation' }}" >
-
-
-
-                                                        <div class="statusSection" ><span class="badge {{$entry_code->status==1 ? 'bg-success' : 'bg-danger'  }} px-2">{{ $entry_code->status==1 ? "Գործող" : "Կասեցված" }}</span></div>
-
-
-                                                    <div class="activationSection" ><span class="badge {{$entry_code->activation==1 ? 'bg-success' : 'bg-danger'  }} px-2">{{ $entry_code->activation==1 ? "Ակտիվ" : "Պասիվ" }}</span></div>
-
-
+                                                {{ $item->people->phone ?? null }}
                                             </td>
                                             <td>
 
-                                                <div class="dropdown action"data-id="{{ $entry_code['id'] }}" data-tb-name="entry_codes" >
-                                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
-                                                        data-bs-toggle="dropdown">
-                                                        <i class="bx bx-dots-vertical-rounded"></i>
-                                                    </button>
 
-                                                    <div class="dropdown-menu">
-                                                        @if(auth()->user()->hasRole('super_admin'))
-                                                            <a class="dropdown-item d-flex" href="javascript:void(0);">
-                                                                <div class="form-check form-switch">
-                                                                    <input class="form-check-input change_status" type="checkbox"
-                                                                        role="switch" data-field-name="status"
-                                                                        {{ $entry_code['status'] ? 'checked' : null }}>
-                                                                </div>Կարգավիճակ
-                                                            </a>
-                                                        @endif
-                                                        @if(auth()->user()->hasRole(['client_admin','client_admin_rfID']))
-                                                            <a class="dropdown-item d-flex" href="javascript:void(0);">
-                                                                <div class="form-check form-switch">
-                                                                    <input class="form-check-input change_status" type="checkbox"
-                                                                        role="switch" data-field-name="activation"
-                                                                        {{ $entry_code['activation'] ? 'checked' : null }}>
-                                                                </div>Ակտիվացում
-                                                            </a>
-                                                        @endif
 
-                                                    @if ($entry_code->active_person !=null  && $entry_code->active_person->people!=null)
-                                                        <a class="dropdown-item" href="{{route('calendar',$entry_code->active_person->people->id )}}"><i
-                                                            class="bx bx-edit-alt me-1"></i>Ժամանակացույց</a>
+                                                        {{-- <div class="statusSection" ><span class="badge {{$entry_code->status==1 ? 'bg-success' : 'bg-danger'  }} px-2">{{ $entry_code->status==1 ? "Գործող" : "Կասեցված" }}</span></div>
 
-                                                    @endif
-                                                    @if (!auth()->user()->hasRole('client_admin_rfID'))
 
-                                                        <a class="dropdown-item" href="{{route('entry-codes-edit',$entry_code['id'])}}"><i
-                                                                class="bx bx-edit-alt me-1"></i>Խմբագրել</a>
-                                                    @endif
-                                                        <button type="button" class="dropdown-item click_delete_item"
-                                                            data-bs-toggle="modal" data-bs-target="#smallModal"><i
-                                                                class="bx bx-trash me-1"></i>
-                                                            Ջնջել</button>
-                                                    </div>
-                                                </div>
+                                                    <div class="activationSection" ><span class="badge {{$entry_code->activation==1 ? 'bg-success' : 'bg-danger'  }} px-2">{{ $entry_code->activation==1 ? "Ակտիվ" : "Պասիվ" }}</span></div> --}}
+
+
                                             </td>
+
                                         </tr>
 
-                                    @endforeach --}}
+                                    @endforeach
 
 
                                 </tbody>
+                            </table>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Հ/Հ</th>
+                                        <th scope="col">Անուն</th>
+                                        <th scope="col">Ազգանուն</th>
+                                        <th scope="col">Հեռախոսահամար</th>
+
+                                        <th scope="col">nojember</th>
+                                    </tr>
+
+
+                                </thead>
+                                @foreach ($data as $item)
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                @endforeach
                             </table>
                             <!-- End Bordered Table -->
                             <div class="demo-inline-spacing">
@@ -162,6 +155,22 @@
     </section>
 
   </main><!-- End #main -->
+  <script>
+//     flatpickr("#yearPicker", {
+//       dateFormat: "Y", // Year only
+//       defaultDate: new Date().getFullYear().toString() // Optional default
+//     });
+
+//     flatpickr("#monthPicker", {
+//     plugins: [
+//       new flatpickr.monthSelectPlugin({
+//         shorthand: true, // Display short month names
+//         dateFormat: "Y-m", // Format as YYYY-MM
+//       })
+//     ]
+//   });
+</script>
 
 @endsection
+
 
