@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\ReportFilterTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Client extends Model
 {
-    use HasFactory;
+    use HasFactory, ReportFilterTrait;
 
     protected $guarded =[];
     public function user(): BelongsTo{
