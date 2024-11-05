@@ -16,7 +16,7 @@ use App\Http\Controllers\People\PeopleController;
 use App\Http\Controllers\People\PeoplelistController;
 use App\Http\Controllers\PersonPermission\PersonPermissionController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\ReportCotroller;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Services\FileUploadService;
@@ -66,10 +66,8 @@ Route::group(['middleware' => ['auth']], function() {
     // ========People==========================
     Route::resource('people', PeopleController::class);
     Route::get('delete-item/{tb_name}/{id}', [DeleteItemController::class, 'index'])->name('delete_item');
-    Route::get('report-list',[ReportCotroller::class,'index'])->name('reportList');
-
-
-
+    Route::get('report-list',[ReportController::class,'index'])->name('reportList');
+    Route::get('report', [ReportController::class,'report'])->name('report');
 
 });
 
