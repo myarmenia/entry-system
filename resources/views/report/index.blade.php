@@ -10,8 +10,29 @@
 @endsection
 
 @section('content')
+@php
+    use Carbon\Carbon;
 
+    // Assuming $request->month contains "2024-10"
+    $monthYear = $mounth;
 
+    // Parse the month-year string to get the start and end of the month
+    $startOfMonth = Carbon::parse($monthYear)->startOfMonth();
+    $endOfMonth = Carbon::parse($monthYear)->endOfMonth();
+    // dd($startOfMonth);
+// dd($startOfMonth->lte($endOfMonth));
+// dd($startOfMonth->addDay());
+
+$monthYear1 = $mounth;
+
+// Parse the month-year string to get the start and end of the month
+
+@endphp
+{{-- <ul>
+    @for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay())
+        <li>{{ $date->format('m-d') }}</li> <!-- Displays each day in "YYYY-MM-DD" format -->
+    @endfor
+</ul> --}}
 
    <main id="main" class="main">
 
@@ -44,17 +65,17 @@
 
                             </div>
 
-                            <form  action="{{ route('report') }}" method="get" class="mb-3 justify-content-end" style="display: flex; gap: 8px">
+                            <form  action="{{ route('reportList') }}" method="get" class="mb-3 justify-content-end" style="display: flex; gap: 8px">
 
-                                {{-- <div class="col-2">
-                                    <input type="text"  class="form-select" id="yearPicker" placeholder="Select year" name="year" />
-                                </div> --}}
+
                                 <div class="col-2">
                                     <input type="text"  class="form-select"  id="monthPicker" placeholder="Ընտրել ամիսը տարեթվով" name="mounth"/>
                                 </div>
                                 <button type="submit" class="btn btn-primary col-2 search">Հաշվետվություն</button>
                             </form>
                             <!-- Bordered Table -->
+                            @if($attendant!=null)
+
 
                             <table class="table table-bordered">
                                 <thead>
@@ -63,41 +84,62 @@
                                     <th scope="col">ID</th>
                                     <th scope="col">Անուն</th>
                                     <th scope="col">Ազգանուն</th>
-                                    <th scope="col">Հեռախոսահամար</th>
 
-                                    <th scope="col">Ամիս</th>
+                                    @for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay())
+                                        <th>{{ $date->format('d') }}</th> <!-- Displays each day in "YYYY-MM-DD" format -->
+                                    @endfor
+                                    <th>Օրերի քանակ</th>
                                 </tr>
                                 </thead>
                                 <tbody>
 
                                     @foreach ($data as $item)
-
+                                    @php
+                                        $summary=0;
+                                    @endphp
                                         <tr class="parent">
                                             <td>{{ $item->id }}</td>
-                                            <td scope="row">{{ $item->id }}</td>
+                                            <td scope="row">{{ $item->people_id }}</td>
 
                                             <td class="personName">
                                                 {{ $item->people->name ?? null }}
 
                                             </td>
-                                            <td class="personSurname" >
+                                            <td class="personSurname">
                                                 {{ $item->people->surname ?? null }}
-
-                                            </td >
-                                            <td class="personPhone">
-                                                {{ $item->people->phone ?? null }}
                                             </td>
+
+
+                                            @for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay())
+                                                <td>
+                                                    @php
+                                                        $count=0;
+
+                                                    @endphp
+                                                    @foreach ($attendant as $at )
+                                                        @if ($item->people_id==$at->people_id)
+                                                            @if ( \Carbon\Carbon::parse($at->date)->format('d')==$date->format('d'))
+                                                            {{-- + --}}
+                                                                @php
+                                                                    $count++;
+                                                                @endphp
+                                                            @endif
+                                                        @endif
+                                                    @endforeach
+                                                    @if($count>0)
+                                                        <span class="daySummary">+</span>
+                                                        @php
+                                                           $summary++;
+                                                        @endphp
+
+                                                    @endif
+                                                </td>
+                                            @endfor
                                             <td>
-
-
-
-                                                        {{-- <div class="statusSection" ><span class="badge {{$entry_code->status==1 ? 'bg-success' : 'bg-danger'  }} px-2">{{ $entry_code->status==1 ? "Գործող" : "Կասեցված" }}</span></div>
-
-
-                                                    <div class="activationSection" ><span class="badge {{$entry_code->activation==1 ? 'bg-success' : 'bg-danger'  }} px-2">{{ $entry_code->activation==1 ? "Ակտիվ" : "Պասիվ" }}</span></div> --}}
-
-
+                                                {{  $summary }}
                                             </td>
+
+
 
                                         </tr>
 
@@ -106,36 +148,8 @@
 
                                 </tbody>
                             </table>
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Հ/Հ</th>
-                                        <th scope="col">Անուն</th>
-                                        <th scope="col">Ազգանուն</th>
-                                        <th scope="col">Հեռախոսահամար</th>
+                            @endif
 
-                                        <th scope="col">nojember</th>
-                                    </tr>
-
-
-                                </thead>
-                                @foreach ($data as $item)
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                @endforeach
-                            </table>
                             <!-- End Bordered Table -->
                             <div class="demo-inline-spacing">
                                 {{-- {{ $data->links() }} --}}
