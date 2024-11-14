@@ -77,7 +77,6 @@ class PeopleController extends Controller
 
         $data = $this->personService->edit($id);
 
-
         if($data['person'] != null ){
             return view('people.edit', compact('data'));
         }

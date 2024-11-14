@@ -64,11 +64,12 @@
                                     <div class="row mb-3">
                                         <label class="col-sm-3 col-form-label">Նույնականացման կոդ</label>
                                         <div class="col-sm-9">
+
                                             <select class="form-select" aria-label="Default select example"
                                                 name ="entry_code_id">
                                                 <option value='' disabled>Ընտրել նույնականացման կոդը</option>
                                                 @foreach ($entry_codes as $code)
-                                                    <option value="{{ $code->id }}">{{ $code->id }}</option>
+                                                    <option value="{{ $code->id }}">{{ $code->token }}</option>
                                                 @endforeach
                                             </select>
                                             @error('type')
