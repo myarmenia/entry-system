@@ -23,9 +23,13 @@
 // dd($startOfMonth->lte($endOfMonth));
 // dd($startOfMonth->addDay());
 
-$monthYear1 = $mounth;
+$entry = new DateTime('2024-10-01 09:42:48');
+$exit = new DateTime('2024-10-01 18:00:00');
 
-// Parse the month-year string to get the start and end of the month
+$interval = $entry->diff($exit);
+echo $interval->format('%H hours %I minutes');
+
+// dd($interval->format('%H hours %I minutes'));
 
 @endphp
 {{-- <ul>
@@ -74,7 +78,7 @@ $monthYear1 = $mounth;
                                 <button type="submit" class="btn btn-primary col-2 search">Հաշվետվություն</button>
                             </form>
                             <!-- Bordered Table -->
-                            @if($attendant!=null)
+                            @if($attendant1!=null)
 
 
                             <table class="table table-bordered">
@@ -96,6 +100,8 @@ $monthYear1 = $mounth;
                                     @foreach ($data as $item)
                                     @php
                                         $summary=0;
+                                        $fullTime="";
+                                        $intervals = [];
                                     @endphp
                                         <tr class="parent">
                                             <td>{{ $item->id }}</td>
@@ -114,13 +120,33 @@ $monthYear1 = $mounth;
                                                 <td>
                                                     @php
                                                         $count=0;
-
                                                     @endphp
-                                                    @foreach ($attendant as $at )
+                                                    @foreach ($attendant1 as $at )
                                                         @if ($item->people_id==$at->people_id)
-                                                            @if ( \Carbon\Carbon::parse($at->date)->format('d')==$date->format('d'))
-                                                            {{-- + --}}
+
+                                                            @if (\Carbon\Carbon::parse($at->date)->format('d')==$date->format('d'))
+                                                                    @php
+                                                                        // $enter = '';
+                                                                        // $exit = '';
+                                                                    @endphp
+
+                                                                    @if ($at->direction == "enter")
+                                                                        @php
+                                                                            $entry = new DateTime($at->date);
+                                                                        @endphp
+                                                                    @else
+                                                                        @php
+                                                                           $exit = new DateTime($at->date);
+                                                                           $interval = $entry->diff($exit);
+                                                                           echo $interval->format('%H h %I m');
+
+                                                                        @endphp
+                                                                    @endif
+
                                                                 @php
+                                                                //  echo $interval->format('%H h %I m');
+                                                                    // $interval = $entry->diff($exit);
+
                                                                     $count++;
                                                                 @endphp
                                                             @endif

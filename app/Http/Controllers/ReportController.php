@@ -33,15 +33,19 @@ class ReportController extends Controller
             ->select('people_id', DB::raw('MAX(date) as date'))
             ->groupBy('people_id')
             ->get();
-
+// dd($data);
             $attendant = AttendanceSheet::whereIn('people_id',$people)
             ->whereYear('date', $year)
             ->whereMonth('date', $month)
             ->select('people_id', DB::raw('MAX(date) as date'))
             ->groupBy('people_id','date')
             ->get();
+            $attendant1 =  AttendanceSheet::whereIn('people_id',$people)->get();
 
+// dd( $attendant1);
             $mounth = $request->mounth;
+
+
 
         }else{
 
@@ -49,7 +53,7 @@ class ReportController extends Controller
 
         }
 
-        return view('report.index',compact('data','mounth','attendant'));
+        return view('report.index',compact('data','mounth','attendant','attendant1'));
 
     }
 
