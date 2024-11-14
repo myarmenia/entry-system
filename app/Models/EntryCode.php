@@ -28,5 +28,11 @@ class EntryCode extends Model
     public function active_person(): HasOne{
         return $this->hasOne(PersonPermission::class)->where('status',1);
     }
+    
+     // now added
+    public function person()
+    {
+        return $this->belongsToMany(Person::class, 'person_permissions', 'entry_code_id', 'person_id');
+    }
 
 }

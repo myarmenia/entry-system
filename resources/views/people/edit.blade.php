@@ -43,31 +43,48 @@
                                 @method('put')
 
                                 <div class="row mb-3">
+                                    {{-- {{dd($data['person']->entryCodes) }} --}}
 
                                         <label class="col-sm-3 col-form-label">{{ $data['non_active_entry_code']==false &&  $data['person']->activated_code_connected_person!=null ? "Նույնականացման կոդ" : null }}</label>
                                         <div class="col-sm-9">
+
                                             @if ($data['non_active_entry_code']==false &&  $data['person']->activated_code_connected_person!=null)
 
                                                 <input type="text" class="form-control" name="entry_code_id" disabled
 
-                                                value="{{$data['person']->activated_code_connected_person->entry_code_id  }}">
+                                                {{-- value="{{$data['person']->activated_code_connected_person->token  }}" --}}
+                                                {{ $data['person']->entryCodes->token }}
+                                                >
                                             @endif
                                         @if ($data['non_active_entry_code']!=false)
+                                        {{-- {{dd($data['person']->activated_code_connected_person) }} --}}
+
+                                        {{-- {{ dd($data['person']->activated_code_connected_person) }} --}}
                                             <select class="form-select" aria-label="Default select example" name ="entry_code_id" id="entryCodeNumber"
                                             data-person-id="{{$data['person']->id}}">
                                                     <option value='' disabled >Ընտրել նույնականացման կոդը</option>
                                                     @foreach ($data['non_active_entry_code'] as $code )
                                                         <option value="{{ $code->id }}">
-                                                            {{ $code->id }}
+                                                            {{ $code->token }} - {{ $code->type }}
                                                         </option>
                                                     @endforeach
-                                                    @if ($data['person']->activated_code_connected_person != null)
+                                                    {{-- @if ($data['person']->activated_code_connected_person != null)
                                                         <option class="active"
                                                                value="{{ $data['person']->activated_code_connected_person->entry_code_id  }}" selected
 
                                                               >
                                                             {{$data['person']->activated_code_connected_person->entry_code_id }}
+
                                                             </option>
+                                                    @endif --}}
+                                                    @if ($data['person']->activated_code_connected_person != null)
+                                                            @foreach ($data['person']->entryCodes  as $code )
+                                                                <option class="active"
+                                                                    value="{{ $code->token }}" selected
+                                                                >
+                                                                {{ $code->token }} - {{ $code->type }}
+                                                                </option>
+                                                            @endforeach
                                                     @endif
                                             </select>
                                         @endif

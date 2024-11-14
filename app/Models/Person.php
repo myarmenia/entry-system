@@ -31,6 +31,11 @@ class Person extends Model
     public function activated_code_connected_person(): HasOne{
         return $this->hasOne(PersonPermission::class)->where('status',1);
     }
+    // now added
+    public function entryCodes()
+    {
+        return $this->belongsToMany(EntryCode::class, 'person_permissions', 'person_id', 'entry_code_id');
+    }
 
 
 
