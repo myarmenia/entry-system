@@ -19,8 +19,8 @@ class ReportController extends Controller
         // $this->model = $model;
     }
     public function index(Request $request){
-$attendant="";
-$mounth='';
+        $attendant="";
+        $mounth='';
         $client = Client::where('user_id', Auth::id())->with('people.attendance_sheets')->first();
 
         $people = $client->people->pluck('id');
@@ -40,10 +40,6 @@ $mounth='';
             ->select('people_id', DB::raw('MAX(date) as date'))
             ->groupBy('people_id','date')
             ->get();
-            // dd($attendant);
-
-            // dd($data,$attendant);
-
 
             $mounth = $request->mounth;
 
@@ -56,22 +52,5 @@ $mounth='';
         return view('report.index',compact('data','mounth','attendant'));
 
     }
-    public function report(Request $request){
 
-       [$year, $month] = explode('-', $request->mounth);
-
-
-        $client = Client::where('user_id', Auth::id())->with('people.attendance_sheets')->first();
-        $people = $client->people->pluck('id');
-              $data = AttendanceSheet::whereIn('people_id',$people)
-                    ->whereYear('date', $year)
-                    ->whereMonth('date', $month)
-                    ->get();
-
-
-
-        return view('report.index',compact('data'));
-
-
-    }
 }
