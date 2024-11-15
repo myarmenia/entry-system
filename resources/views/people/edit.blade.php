@@ -36,7 +36,7 @@
                             </h5>
 
                             <!-- General Form Elements -->
-                            {{-- {{ dd($data['person']->activated_code_connected_person->entry_code_id ) }} --}}
+
                             <form action="{{ route('people.update', $data['person']->id) }}"
                                   method="post"
                                   enctype="multipart/form-data">
@@ -44,29 +44,32 @@
 
                                 <div class="row mb-3">
 
+
                                         <label class="col-sm-3 col-form-label">{{ $data['non_active_entry_code']==false &&  $data['person']->activated_code_connected_person!=null ? "Նույնականացման կոդ" : null }}</label>
                                         <div class="col-sm-9">
                                             @if ($data['non_active_entry_code']==false &&  $data['person']->activated_code_connected_person!=null)
 
+
                                                 <input type="text" class="form-control" name="entry_code_id" disabled
 
-                                                value="{{$data['person']->activated_code_connected_person->entry_code_id  }}">
+                                                value="{{$data['person']->activated_code_connected_person->entry_code->token }}">
+
                                             @endif
                                         @if ($data['non_active_entry_code']!=false)
                                             <select class="form-select" aria-label="Default select example" name ="entry_code_id" id="entryCodeNumber"
                                             data-person-id="{{$data['person']->id}}">
                                                     <option value='' disabled >Ընտրել նույնականացման կոդը</option>
                                                     @foreach ($data['non_active_entry_code'] as $code )
+                                                    
                                                         <option value="{{ $code->id }}">
-                                                            {{ $code->id }}
+                                                            {{ $code->token }}
                                                         </option>
                                                     @endforeach
                                                     @if ($data['person']->activated_code_connected_person != null)
                                                         <option class="active"
                                                                value="{{ $data['person']->activated_code_connected_person->entry_code_id  }}" selected
-
                                                               >
-                                                            {{$data['person']->activated_code_connected_person->entry_code_id }}
+                                                            {{$data['person']->activated_code_connected_person->entry_code->token }}
                                                             </option>
                                                     @endif
                                             </select>
