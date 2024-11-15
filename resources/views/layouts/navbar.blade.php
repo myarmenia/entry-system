@@ -186,7 +186,7 @@
           </a><!-- End Profile Iamge Icon -->
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-            <li class="dropdown-header">
+            {{-- <li class="dropdown-header">
               <h6>Kevin Anderson</h6>
               <span>Web Designer</span>
             </li>
@@ -222,7 +222,7 @@
             </li>
             <li>
               <hr class="dropdown-divider">
-            </li>
+            </li> --}}
 
             <li>
 
@@ -230,7 +230,7 @@
                 onclick="event.preventDefault();
                                 document.getElementById('logout-form').submit();">
                                  <i class="bi bi-box-arrow-right"></i>
-                    <span> {{ __('Sign Out') }}</span>
+                    <span>Ելք </span>
                 </a>
 
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
