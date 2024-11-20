@@ -31,6 +31,9 @@ class Client extends Model
     public function people(): HasMany{
         return $this->hasMany(Person::class);
     }
+    public function client_working_day_times(): HasMany{
+        return $this->hasMany(ClientWorkingDayTime::class);
+    }
 
 
 
