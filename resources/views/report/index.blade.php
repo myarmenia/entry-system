@@ -3,11 +3,15 @@
 @section("page-script")
     <script src="{{ asset('assets/js/change-status.js') }}"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
-
-
+    <style>
+        th{
+            font-size:12px
+        }
+    </style>
 @endsection
+
 
 @section('content')
 @php
@@ -160,7 +164,7 @@
                                                                                                             $delay_break_end_time = $people_credental->diff($client_break_end_credental);
                                                                                                             $delay_arr[]=$delay_break_end_time->format('%H h %I m');
                                                                                                             $delay_color=true;
-                                                                                                        
+
 
                                                                                                         }
 
@@ -257,9 +261,13 @@
                                                         $totalHours1 += floor($totalMinutes1 / 60);
                                                         $totalMinutes1 = $totalMinutes1 % 60;
 
-                                                        echo "{$totalHours1} ժ {$totalMinutes1} ր";
+                                                        $client_working_time=$client->working_time*1;
+
+
+                                                        // echo "{$totalHours1} ժ {$totalMinutes1} ր";
 
                                                     @endphp
+                                                      <span class=" {{ $totalHours1<$client->working_time*1?'text-danger':null}}">{{$totalHours1}} ժ {{$totalMinutes1}} ր</span>
                                                 </td>
                                                 <td>
                                                     @php
