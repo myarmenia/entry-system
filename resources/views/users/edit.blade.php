@@ -11,11 +11,7 @@
             method = "POST"
             action = "{{ route('users.update', $user->id) }}">
             @method('PUT')
-
-
-
                 <div class="row">
-
                             <div class="col-lg-6">
 
                                 <div class="card">
@@ -61,8 +57,6 @@
                                                         </div>
                                                     @enderror
                                                 </div>
-
-
 
                                             </div>
 
