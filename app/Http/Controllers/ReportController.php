@@ -27,6 +27,7 @@ class ReportController extends Controller
         $client = Client::where('user_id', Auth::id())->with('people.attendance_sheets')->first();
         $client_working_day_times = ClientWorkingDayTime::where('client_id',$client->id)->select('week_day','day_start_time','day_end_time','break_start_time','break_end_time')->get();
         $people = $client->people->pluck('id');
+      
         if($request->mounth!=null){
             [$year, $month] = explode('-', $request->mounth);
 
@@ -39,7 +40,7 @@ class ReportController extends Controller
             // ->paginate(1);
 
             $attendant = AttendanceSheet::whereIn('people_id',$people)->get();
-// dd($attendant);
+
             $mounth = $request->mounth;
 
         }else{
@@ -49,7 +50,7 @@ class ReportController extends Controller
         }
         $i=0;
 
-        return view('report.index',compact('data','mounth','attendant','client_working_day_times','client','i'));
+        return view('report.index_new',compact('data','mounth','attendant','client_working_day_times','client','i'));
         // return view('report.index',compact('data','mounth','attendant'))
         // ->with('i', ($request->input('page', 1) - 1) * 1);
 

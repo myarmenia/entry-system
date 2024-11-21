@@ -17,6 +17,10 @@
 @php
     use Carbon\Carbon;
     use App\Helpers\TimeHelper;
+    use App\Models\AttendanceSheet;
+    use Illuminate\Support\Facades\DB;
+
+
 
     // Assuming $request->month contains "2024-10"
     $monthYear = $mounth;
@@ -95,9 +99,10 @@
                                             @php
                                                 $summary=0;
                                                 $fullTime_arr=[];
-                                                $delay_arr = [];
+
                                                 $delay_color=false;
                                                 $delay_count=false;
+                                                $delay_arr = [];
                                             @endphp
                                             <tr class="parent">
 
@@ -119,65 +124,113 @@
                                                             $count=0;
                                                             $interval_arr = [];
 
+                                                            $key=0;
+
 
                                                         @endphp
-                                                        {{ dd($attendant) }}
-                                                        @foreach ($attendant as $key=>$at )
-                                                        {{-- @if(9==9) --}}
+
+                                                        @foreach ($attendant as $at )
+
+                                                                    {{-- {{ 71 }} --}}
+
+
+
+
                                                             @if ($item->people_id==$at->people_id)
-                                                            {{-- {{ dd($item->people_id, $at->people_id) }} --}}
-                                                                {{-- @if ("02" =="02" ) --}}
-                                                                {{-- {{ dd($at->date) }} --}}
-                                                        {{-- {{ dd(\Carbon\Carbon::parse($at->date)->format('d'),$date->format('d')) }} --}}
+
+
+
+                                                                      {{-- {{ $at->people_id }} --}}
+
+
                                                                 @if (\Carbon\Carbon::parse($at->date)->format('d')==$date->format('d'))
+                                                                            {{-- {{ 73 }} --}}
+
+
 
                                                                         @if ($at->direction == "enter")
+                                                                            {{-- {{ 74 }} --}}
+                                                                            @php
+                                                                            $key++;
+
+                                                                        @endphp
+
 
                                                                             @php
-                                                                            // dd($at->date);
                                                                                 $entry = new DateTime($at->date);
-                                                                                    dd($entry);
+
                                                                                     $get_day = \Carbon\Carbon::parse($entry)->format('l');
-                                                                                    dd($get_day);
+
                                                                                     foreach($client_working_day_times as $day_time){
+
+
+
                                                                                         if($day_time->week_day==$get_day){
-                                                                                            if($key==0){
-
-                                                                                                $datetime_people_start_time = Carbon::parse( $at->date);
-                                                                                                $peopleHourMinute = $datetime_people_start_time->format('H:i');
-
-                                                                                                $people_start_time = Carbon::createFromFormat('H:i', $peopleHourMinute);
-                                                                                                $client_start_time = Carbon::parse($day_time->day_start_time);
-
-                                                                                                $delay = $people_start_time->diff($client_start_time);
-
-                                                                                                $delay_arr[] = $delay->format('%H h %I m');
-                                                                                                $delay_color = true;
-                                                                                            }else{
+                                                                                            // echo "-";
+                                                                                            // dd($at->people_id );
+                                                                                            $model=DB::table('attendance_sheets')
+                                                                                            ->where('direction', "enter")
+                                                                                                                ->where('people_id', $at->people_id)
+                                                                                                                ->whereDate('date', date('Y-m-d', strtotime($at->date)))
+                                                                                                                ->get()->toArray();
+                                                                                                                echo 51;
+                                                                                                    if($key==1 ){
 
 
+                                                                                                        foreach($model as $k=>$mod){
+                                                                                                            // dump($key);
 
-                                                                                                 $datetime_people_time = Carbon::parse( $at->date);
-                                                                                                 $datetimeHourMinute = $datetime_people_time->format('H:i');
-                                                                                                 $people_time = Carbon::createFromFormat('H:i', $datetimeHourMinute);
-                                                                                                 $client_break_end_credental = Carbon::parse($day_time->break_end_time);
-                                                                                                 $people_credental= Carbon::parse($people_time);
-                                                                                                        // Checks if the first Carbon object is later.
-                                                                                                  if( $delay_count==false){
-                                                                                                        if($people_credental->greaterThan($client_break_end_credental)){
-                                                                                                            $delay_count=true;
 
-                                                                                                            $delay_break_end_time = $people_credental->diff($client_break_end_credental);
-                                                                                                            $delay_arr[]=$delay_break_end_time->format('%H h %I m');
-                                                                                                            $delay_color=true;
+                                                                                                            if($k==0){
+
+
+                                                                                                                $datetime_people_start_time = Carbon::parse( $mod->date);
+
+                                                                                                                $peopleHourMinute = $datetime_people_start_time->format('H:i');
+
+                                                                                                                $people_start_time = Carbon::createFromFormat('H:i', $peopleHourMinute);
+                                                                                                                $client_start_time = Carbon::parse($day_time->day_start_time);
+
+                                                                                                                $delay = $people_start_time->diff($client_start_time);
+
+                                                                                                                $delay_arr[] = $delay->format('%H h %I m');
+                                                                                                                if($delay->format('%H h %I m')!="00 h 00 m"){
+                                                                                                                    $delay_color = true;
+                                                                                                                }
+
+                                                                                                            }
+                                                                                                            else{
+                                                                                                                $datetime_people_time = Carbon::parse( $mod->date);
+                                                                                                                    $datetimeHourMinute = $datetime_people_time->format('H:i');
+                                                                                                                    $people_time = Carbon::createFromFormat('H:i', $datetimeHourMinute);
+                                                                                                                    $client_break_end_credental = Carbon::parse($day_time->break_end_time);
+                                                                                                                    $people_credental= Carbon::parse($people_time);
+                                                                                                                if($mod->direction=="enter" && $people_credental->greaterThan($client_break_end_credental  )){
+
+                                                                                                                    if( $delay_count==false){
+
+
+                                                                                                                            $delay_count=true;
+
+                                                                                                                            $delay_break_end_time = $people_credental->diff($client_break_end_credental);
+                                                                                                                            $delay_arr[]=$delay_break_end_time->format('%H h %I m');
+
+                                                                                                                            $delay_color=true;
+
+
+
+
+                                                                                                                    }
+
+                                                                                                                }
+
+                                                                                                            }
 
 
                                                                                                         }
+                                                                                                    }
 
 
-                                                                                                  }
-
-                                                                                            }
 
                                                                                         }
                                                                                     }
