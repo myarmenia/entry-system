@@ -3,11 +3,15 @@
 @section("page-script")
     <script src="{{ asset('assets/js/change-status.js') }}"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
-
-
+    <style>
+        th{
+            font-size:12px
+        }
+    </style>
 @endsection
+
 
 @section('content')
 @php
@@ -22,6 +26,7 @@
     $endOfMonth = Carbon::parse($monthYear)->endOfMonth();
 
 @endphp
+
 
 
    <main id="main" class="main">
@@ -51,6 +56,10 @@
                                         </ol>
                                     </nav>
                                 </h5>
+                                @php
+                                    $day = \Carbon\Carbon::now()->format('l'); // 'l' gives the full name of the day (e.g., Monday, Tuesday)
+                                    echo $day;
+                                @endphp
 
 
                             </div>
@@ -77,6 +86,7 @@
                                             @endfor
                                             <th>Օրերի քանակ</th>
                                             <th>ժամերի քանակ</th>
+                                            <th>Ուշացման ժամանակի գումար</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -85,6 +95,9 @@
                                             @php
                                                 $summary=0;
                                                 $fullTime_arr=[];
+                                                $delay_arr = [];
+                                                $delay_color=false;
+                                                $delay_count=false;
                                             @endphp
                                             <tr class="parent">
 
@@ -104,23 +117,77 @@
                                                     <td>
                                                         @php
                                                             $count=0;
-                                                            $interval_arr = []
+                                                            $interval_arr = [];
+
 
                                                         @endphp
-                                                        @foreach ($attendant as $at )
+                                                        @foreach ($attendant as $key=>$at )
                                                             @if ($item->people_id==$at->people_id)
 
                                                                 @if (\Carbon\Carbon::parse($at->date)->format('d')==$date->format('d'))
 
-
                                                                         @if ($at->direction == "enter")
+
                                                                             @php
                                                                                 $entry = new DateTime($at->date);
+
+                                                                                    $get_day = \Carbon\Carbon::parse($entry)->format('l');
+                                                                                    // dd($get_day);
+                                                                                    foreach($client_working_day_times as $day_time){
+                                                                                        if($day_time->week_day==$get_day){
+                                                                                            if($key==0){
+
+                                                                                                $datetime_people_start_time = Carbon::parse( $at->date);
+                                                                                                $peopleHourMinute = $datetime_people_start_time->format('H:i');
+
+                                                                                                $people_start_time = Carbon::createFromFormat('H:i', $peopleHourMinute);
+                                                                                                $client_start_time = Carbon::parse($day_time->day_start_time);
+
+                                                                                                $delay = $people_start_time->diff($client_start_time);
+
+                                                                                                $delay_arr[] = $delay->format('%H h %I m');
+                                                                                                $delay_color = true;
+                                                                                            }else{
+
+
+
+                                                                                                 $datetime_people_time = Carbon::parse( $at->date);
+                                                                                                 $datetimeHourMinute = $datetime_people_time->format('H:i');
+                                                                                                 $people_time = Carbon::createFromFormat('H:i', $datetimeHourMinute);
+                                                                                                 $client_break_end_credental = Carbon::parse($day_time->break_end_time);
+                                                                                                 $people_credental= Carbon::parse($people_time);
+                                                                                                        // Checks if the first Carbon object is later.
+                                                                                                  if( $delay_count==false){
+                                                                                                        if($people_credental->greaterThan($client_break_end_credental)){
+                                                                                                            $delay_count=true;
+
+                                                                                                            $delay_break_end_time = $people_credental->diff($client_break_end_credental);
+                                                                                                            $delay_arr[]=$delay_break_end_time->format('%H h %I m');
+                                                                                                            $delay_color=true;
+
+
+                                                                                                        }
+
+
+                                                                                                  }
+
+                                                                                            }
+
+                                                                                        }
+                                                                                    }
+
+
+
+
+
+
+
                                                                             @endphp
                                                                         @else
                                                                             @php
                                                                                 $exit = new DateTime($at->date);
                                                                                 $interval = $entry->diff($exit);
+
                                                                                 //    echo $interval->format('%H h %I m');
                                                                                 $interval_arr[] = $interval->format('%H h %I m');
 
@@ -134,7 +201,7 @@
                                                         @endforeach
 
                                                         @if($count>0)
-                                                            <span class="daySummary">+</span>
+                                                            <span class="daySummary {{ $delay_color==true?'text-danger':null}}">+</span>
                                                             @php $summary++; @endphp
 
                                                         @endif
@@ -194,9 +261,44 @@
                                                         $totalHours1 += floor($totalMinutes1 / 60);
                                                         $totalMinutes1 = $totalMinutes1 % 60;
 
-                                                        echo "{$totalHours1} ժ {$totalMinutes1} ր";
+                                                        $client_working_time=$client->working_time*1;
+
+
+                                                        // echo "{$totalHours1} ժ {$totalMinutes1} ր";
 
                                                     @endphp
+                                                      <span class=" {{ $totalHours1<$client->working_time*1?'text-danger':null}}">{{$totalHours1}} ժ {{$totalMinutes1}} ր</span>
+                                                </td>
+                                                <td>
+                                                    @php
+
+                                                        $delayHours = 0;
+                                                        $delayMinutes = 0;
+
+                                                        foreach ($delay_arr as $delay) {
+                                                            // Extract hours and minutes using regex
+                                                            preg_match('/(\d+) h (\d+) m/', $delay, $matches);
+                                                            if ($matches) {
+
+                                                                $hours = (int)$matches[1];
+                                                                $minutes = (int)$matches[2];
+
+                                                                // Add to the total hours and minutes
+                                                                $delayHours += $hours;
+                                                                $delayMinutes += $minutes;
+                                                            }
+                                                        }
+
+                                                        // Convert total minutes to hours and minutes
+
+                                                        $delayHours += floor($delayMinutes / 60);
+                                                        $delayMinutes = $delayMinutes % 60;
+
+                                                        echo "{$delayHours} ժ {$delayMinutes} ր";
+
+
+                                                    @endphp
+
                                                 </td>
                                             </tr>
 

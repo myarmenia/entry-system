@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('client_id')->unsigned();
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
-            $table->date('day');
-            $table->date('day_start_time');
-            $table->string('day_end_time');
-            $table->time('break_start_time');
-            $table->time('break_end_time');
+            $table->string('week_day')->nullable();
+            $table->time('day_start_time')->nullable();
+            $table->time('day_end_time')->nullable();
+            $table->time('break_start_time')->nullable();
+            $table->time('break_end_time')->nullable();
             $table->timestamps();
         });
     }
