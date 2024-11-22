@@ -62,7 +62,7 @@
                                 </h5>
                                 @php
                                     $day = \Carbon\Carbon::now()->format('l'); // 'l' gives the full name of the day (e.g., Monday, Tuesday)
-                                    echo $day;
+                                   
                                 @endphp
 
 
