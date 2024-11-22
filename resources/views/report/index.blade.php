@@ -17,6 +17,10 @@
 @php
     use Carbon\Carbon;
     use App\Helpers\TimeHelper;
+    use App\Models\AttendanceSheet;
+    use Illuminate\Support\Facades\DB;
+
+
 
     // Assuming $request->month contains "2024-10"
     $monthYear = $mounth;
@@ -90,14 +94,17 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                            {{-- {{ dd($data) }} --}}
 
                                         @foreach ($data as $item)
                                             @php
                                                 $summary=0;
                                                 $fullTime_arr=[];
-                                                $delay_arr = [];
+                                                // dump( $fullTime_arr);
+
                                                 $delay_color=false;
-                                                $delay_count=false;
+
+                                                $delay_arr = [];
                                             @endphp
                                             <tr class="parent">
 
@@ -120,58 +127,154 @@
                                                             $interval_arr = [];
 
 
+                                                            $key=0;
+
+
                                                         @endphp
-                                                        @foreach ($attendant as $key=>$at )
+
+                                                        @foreach ($attendant as $at )
+
+                                                                    {{-- {{ 71 }} --}}
+
+
+
+
                                                             @if ($item->people_id==$at->people_id)
 
+
+
+                                                                      {{-- {{ $at->people_id }} --}}
+
+
                                                                 @if (\Carbon\Carbon::parse($at->date)->format('d')==$date->format('d'))
+                                                                            {{-- {{ 73 }} --}}
+
+
 
                                                                         @if ($at->direction == "enter")
+                                                                            {{-- {{ 74 }} --}}
+                                                                            @php
+                                                                                $key++;
+                                                                             @endphp
+
 
                                                                             @php
                                                                                 $entry = new DateTime($at->date);
 
                                                                                     $get_day = \Carbon\Carbon::parse($entry)->format('l');
-                                                                                    // dd($get_day);
+
                                                                                     foreach($client_working_day_times as $day_time){
+
                                                                                         if($day_time->week_day==$get_day){
-                                                                                            if($key==0){
-
-                                                                                                $datetime_people_start_time = Carbon::parse( $at->date);
-                                                                                                $peopleHourMinute = $datetime_people_start_time->format('H:i');
-
-                                                                                                $people_start_time = Carbon::createFromFormat('H:i', $peopleHourMinute);
-                                                                                                $client_start_time = Carbon::parse($day_time->day_start_time);
-
-                                                                                                $delay = $people_start_time->diff($client_start_time);
-
-                                                                                                $delay_arr[] = $delay->format('%H h %I m');
-                                                                                                $delay_color = true;
-                                                                                            }else{
+                                                                                                    if($key==1 ){
 
 
+                                                                                                        $firstAfter840 = DB::table('attendance_sheets')
+                                                                                                            ->where('direction', 'enter')
+                                                                                                            ->where('people_id', $at->people_id)
+                                                                                                            ->whereDate('date', date('Y-m-d', strtotime($at->date)))
 
-                                                                                                 $datetime_people_time = Carbon::parse( $at->date);
-                                                                                                 $datetimeHourMinute = $datetime_people_time->format('H:i');
-                                                                                                 $people_time = Carbon::createFromFormat('H:i', $datetimeHourMinute);
-                                                                                                 $client_break_end_credental = Carbon::parse($day_time->break_end_time);
-                                                                                                 $people_credental= Carbon::parse($people_time);
-                                                                                                        // Checks if the first Carbon object is later.
-                                                                                                  if( $delay_count==false){
-                                                                                                        if($people_credental->greaterThan($client_break_end_credental)){
-                                                                                                            $delay_count=true;
-
-                                                                                                            $delay_break_end_time = $people_credental->diff($client_break_end_credental);
-                                                                                                            $delay_arr[]=$delay_break_end_time->format('%H h %I m');
-                                                                                                            $delay_color=true;
+                                                                                                            ->orderBy('date', 'asc') // Сортируем по времени
+                                                                                                            ->first();
+                                                                                                        //    dd($firstAfter840) ;
 
 
-                                                                                                        }
+                                                                                                          $delay_couny=false;
+                                                                                                            if($firstAfter840){
 
 
-                                                                                                  }
+                                                                                                                $datePart = explode(' ', $firstAfter840->date)[1];
 
-                                                                                            }
+                                                                                                                            $time1 = new DateTime($datePart);
+
+                                                                                                                            $time2 = new DateTime($day_time->day_start_time);
+
+                                                                                                                            $interval = $time1->diff($time2);
+                                                                                                                            // dd($interval);
+                                                                                                                            if($time1 >$time2){
+                                                                                                                                $delay_arr[] = $interval->format('%H h %I m');
+                                                                                                                                $delay_color = true;
+
+                                                                                                                            }
+
+
+
+                                                                                                            }
+                                                                                                            $breakfastInterval = DB::table('attendance_sheets')
+                                                                                                            ->where('people_id', $at->people_id)
+                                                                                                            ->whereDate('date', date('Y-m-d', strtotime($at->date)))
+                                                                                                            ->whereTime('date', '>=', $day_time->break_start_time) // Время после 08:40
+                                                                                                            ->whereTime('date', '<=', $day_time->break_end_time)
+                                                                                                            ->orderBy('date', 'desc') // Сортируем по времени
+                                                                                                            ->limit(2)
+                                                                                                            ->pluck('date','direction');
+
+
+
+
+
+                                                                                                            $ushacum=false;
+                                                                                                            if(count($breakfastInterval)>0){
+                                                                                                                if(count($breakfastInterval)==1 && isset($breakfastInterval["exit"])){
+                                                                                                                    $ushacum=true;
+                                                                                                                    // dump(4444);
+
+                                                                                                                }
+                                                                                                                if(count($breakfastInterval)>1 ){
+
+                                                                                                                    $enterTime = new DateTime($breakfastInterval['enter']);
+                                                                                                                        $exitTime = new DateTime($breakfastInterval['exit']);
+                                                                                                                        // dump($enterTime,$exitTime);
+
+                                                                                                                        if ($exitTime > $enterTime) {
+                                                                                                                            $ushacum=true;
+
+                                                                                                                        }
+
+
+
+                                                                                                                }
+                                                                                                                if( $ushacum==true){
+                                                                                                                    $firstAfter1400 = DB::table('attendance_sheets')
+                                                                                                                        ->where('direction', 'enter')
+                                                                                                                        ->where('people_id', $at->people_id)
+                                                                                                                        ->whereDate('date', date('Y-m-d', strtotime($at->date)))
+                                                                                                                        ->whereTime('date', '>', $day_time->break_end_time) // Время после 14:00
+                                                                                                                        ->orderBy('date', 'asc') // Сортируем по времени
+                                                                                                                        ->first();
+
+
+                                                                                                                        if($firstAfter1400){
+
+
+                                                                                                                            $firstAfter1400_datePart = explode(' ', $firstAfter1400->date)[1];
+
+                                                                                                                                        $firstAfter1400_time1 = new DateTime($firstAfter1400_datePart);
+
+                                                                                                                                        $firstAfter1400_time2 = new DateTime($day_time->break_end_time);
+
+                                                                                                                                        $firstAfter1400_interval = $firstAfter1400_time1 ->diff($firstAfter1400_time2);
+
+                                                                                                                            if($firstAfter1400_interval->format('%H h %I m')!=="00 h 00 m"){
+
+                                                                                                                                $delay_arr[] = $firstAfter1400_interval->format('%H h %I m');
+                                                                                                                                $delay_color = true;
+                                                                                                                                // dd($delay_arr);
+
+
+                                                                                                                            }
+
+                                                                                                                            }
+
+                                                                                                                }
+
+
+                                                                                                            }
+
+
+                                                                                                    }
+
+
 
                                                                                         }
                                                                                     }
@@ -185,11 +288,13 @@
                                                                             @endphp
                                                                         @else
                                                                             @php
+                                                                            // dump($at->date);
                                                                                 $exit = new DateTime($at->date);
                                                                                 $interval = $entry->diff($exit);
 
                                                                                 //    echo $interval->format('%H h %I m');
                                                                                 $interval_arr[] = $interval->format('%H h %I m');
+                                                                                // dump($interval_arr);
 
                                                                             @endphp
                                                                         @endif
@@ -202,10 +307,12 @@
 
                                                         @if($count>0)
                                                             <span class="daySummary {{ $delay_color==true?'text-danger':null}}">+</span>
+
                                                             @php $summary++; @endphp
 
                                                         @endif
                                                         @php
+                                                        // dd($interval_arr);
                                                             $totalHours = 0;
                                                             $totalMinutes = 0;
 
@@ -243,6 +350,7 @@
                                                         $totalMinutes1 = 0;
 
                                                         foreach ($fullTime_arr as $time) {
+
                                                             // Extract hours and minutes using regex
                                                             preg_match('/(\d+) h (\d+) m/', $time, $matches);
                                                             if ($matches) {
@@ -328,21 +436,6 @@
     </section>
 
   </main><!-- End #main -->
-  <script>
-//     flatpickr("#yearPicker", {
-//       dateFormat: "Y", // Year only
-//       defaultDate: new Date().getFullYear().toString() // Optional default
-//     });
-
-//     flatpickr("#monthPicker", {
-//     plugins: [
-//       new flatpickr.monthSelectPlugin({
-//         shorthand: true, // Display short month names
-//         dateFormat: "Y-m", // Format as YYYY-MM
-//       })
-//     ]
-//   });
-</script>
 
 @endsection
 
