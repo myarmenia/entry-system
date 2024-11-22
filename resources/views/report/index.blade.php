@@ -62,7 +62,7 @@
                                 </h5>
                                 @php
                                     $day = \Carbon\Carbon::now()->format('l'); // 'l' gives the full name of the day (e.g., Monday, Tuesday)
-                                   
+
                                 @endphp
 
 
@@ -102,7 +102,7 @@
                                                 $fullTime_arr=[];
                                                 // dump( $fullTime_arr);
 
-                                                $delay_color=false;
+
 
                                                 $delay_arr = [];
                                             @endphp
@@ -125,6 +125,7 @@
                                                         @php
                                                             $count=0;
                                                             $interval_arr = [];
+                                                            $delay_color=false;
 
 
                                                             $key=0;
