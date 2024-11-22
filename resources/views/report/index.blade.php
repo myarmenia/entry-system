@@ -94,13 +94,13 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                            {{-- {{ dd($data) }} --}}
+
 
                                         @foreach ($data as $item)
                                             @php
                                                 $summary=0;
                                                 $fullTime_arr=[];
-                                                // dump( $fullTime_arr);
+
 
 
 
@@ -121,11 +121,17 @@
 
 
                                                 @for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay())
-                                                    <td>
+                                                    @php
+
+                                                       $delay_color=false;
+
+                                                    @endphp
+
+                                                <td class="p-0">
                                                         @php
                                                             $count=0;
                                                             $interval_arr = [];
-                                                            $delay_color=false;
+                                                            // $delay_color=false;
 
 
                                                             $key=0;
@@ -214,11 +220,13 @@
 
 
 
+
                                                                                                             $ushacum=false;
                                                                                                             if(count($breakfastInterval)>0){
+
                                                                                                                 if(count($breakfastInterval)==1 && isset($breakfastInterval["exit"])){
                                                                                                                     $ushacum=true;
-                                                                                                                    // dump(4444);
+
 
                                                                                                                 }
                                                                                                                 if(count($breakfastInterval)>1 ){
@@ -227,15 +235,37 @@
                                                                                                                         $exitTime = new DateTime($breakfastInterval['exit']);
                                                                                                                         // dump($enterTime,$exitTime);
 
+
                                                                                                                         if ($exitTime > $enterTime) {
                                                                                                                             $ushacum=true;
+                                                                                                                            // dump($delay_arr);
 
                                                                                                                         }
 
 
 
                                                                                                                 }
-                                                                                                                if( $ushacum==true){
+
+
+
+                                                                                                            }
+                                                                                                            else{
+
+                                                                                                                $firstActionAfterBreakfast = DB::table('attendance_sheets')
+
+                                                                                                                        ->where('people_id', $at->people_id)
+                                                                                                                        ->whereDate('date', date('Y-m-d', strtotime($at->date)))
+                                                                                                                        ->whereTime('date', '>', $day_time->break_end_time) // Время после 14:00
+                                                                                                                        ->orderBy('date', 'asc') // Сортируем по времени
+                                                                                                                        ->first();
+                                                                                                                        if($firstActionAfterBreakfast->direction=="enter"){
+
+                                                                                                                            $ushacum=true;
+                                                                                                                        }
+
+                                                                                                            }
+                                                                                                            if( $ushacum==true){
+
                                                                                                                     $firstAfter1400 = DB::table('attendance_sheets')
                                                                                                                         ->where('direction', 'enter')
                                                                                                                         ->where('people_id', $at->people_id)
@@ -260,7 +290,7 @@
 
                                                                                                                                 $delay_arr[] = $firstAfter1400_interval->format('%H h %I m');
                                                                                                                                 $delay_color = true;
-                                                                                                                                // dd($delay_arr);
+
 
 
                                                                                                                             }
@@ -268,9 +298,6 @@
                                                                                                                             }
 
                                                                                                                 }
-
-
-                                                                                                            }
 
 
                                                                                                     }
@@ -307,7 +334,7 @@
                                                         @endforeach
 
                                                         @if($count>0)
-                                                            <span class="daySummary {{ $delay_color==true?'text-danger':null}}">+</span>
+                                                            <span style="width:50px" class="daySummary w-100 {{ $delay_color==true?'bg-danger':null}}">+</span>
 
                                                             @php $summary++; @endphp
 
