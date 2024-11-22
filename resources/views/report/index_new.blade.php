@@ -101,7 +101,7 @@
                                                 $fullTime_arr=[];
 
                                                 $delay_color=false;
-                                                $delay_count=false;
+
                                                 $delay_arr = [];
                                             @endphp
                                             <tr class="parent">
@@ -123,6 +123,7 @@
                                                         @php
                                                             $count=0;
                                                             $interval_arr = [];
+
 
                                                             $key=0;
 
@@ -151,9 +152,8 @@
                                                                         @if ($at->direction == "enter")
                                                                             {{-- {{ 74 }} --}}
                                                                             @php
-                                                                            $key++;
-
-                                                                        @endphp
+                                                                                $key++;
+                                                                             @endphp
 
 
                                                                             @php
@@ -163,71 +163,142 @@
 
                                                                                     foreach($client_working_day_times as $day_time){
 
-
-
                                                                                         if($day_time->week_day==$get_day){
                                                                                             // echo "-";
                                                                                             // dd($at->people_id );
                                                                                             $model=DB::table('attendance_sheets')
-                                                                                            ->where('direction', "enter")
-                                                                                                                ->where('people_id', $at->people_id)
-                                                                                                                ->whereDate('date', date('Y-m-d', strtotime($at->date)))
-                                                                                                                ->get()->toArray();
-                                                                                                                echo 51;
+                                                                                                        ->where('direction', "enter")
+                                                                                                        ->where('people_id', $at->people_id)
+                                                                                                        ->whereDate('date', date('Y-m-d', strtotime($at->date)))
+                                                                                                        ->get()->toArray();
+
+                                                                                                        // ===========
+
+                                                                                                            // dd($firstAfter840 ,$firstAfter1400);
+                                                                                                        // =======
+
+                                                                                                        // =======
+
+
+
+
+
+
                                                                                                     if($key==1 ){
 
+                                                                                                        $firstAfter840 = DB::table('attendance_sheets')
+                                                                                                            ->where('direction', 'enter')
+                                                                                                            ->where('people_id', $at->people_id)
+                                                                                                            ->whereDate('date', date('Y-m-d', strtotime($at->date)))
+                                                                                                            ->whereTime('date', '>', '08:40:00') // Время после 08:40
+                                                                                                            ->orderBy('date', 'asc') // Сортируем по времени
+                                                                                                            ->first();
+                                                                                                        $firstAfter1400 = DB::table('attendance_sheets')
+                                                                                                                        ->where('direction', 'enter')
+                                                                                                                        ->where('people_id', $at->people_id)
+                                                                                                                        ->whereDate('date', date('Y-m-d', strtotime($at->date)))
+                                                                                                                        ->whereTime('date', '>', '14:00:00') // Время после 14:00
+                                                                                                                        ->orderBy('date', 'asc') // Сортируем по времени
+                                                                                                                        ->first();
+                                                                                                        $delay_couny=false;
+                                                                                                        if($firstAfter840){
 
-                                                                                                        foreach($model as $k=>$mod){
-                                                                                                            // dump($key);
 
+                                                                                                            $datetime_people_start_time = Carbon::parse( $firstAfter840->date);
 
-                                                                                                            if($k==0){
+                                                                                                            $peopleHourMinute = $datetime_people_start_time->format('H:i');
 
+                                                                                                            $people_start_time = Carbon::createFromFormat('H:i', $peopleHourMinute);
+                                                                                                            $client_start_time = Carbon::parse($day_time->day_start_time);
 
-                                                                                                                $datetime_people_start_time = Carbon::parse( $mod->date);
+                                                                                                            $delay = $people_start_time->diff($client_start_time);
 
-                                                                                                                $peopleHourMinute = $datetime_people_start_time->format('H:i');
-
-                                                                                                                $people_start_time = Carbon::createFromFormat('H:i', $peopleHourMinute);
-                                                                                                                $client_start_time = Carbon::parse($day_time->day_start_time);
-
-                                                                                                                $delay = $people_start_time->diff($client_start_time);
-
-                                                                                                                $delay_arr[] = $delay->format('%H h %I m');
-                                                                                                                if($delay->format('%H h %I m')!="00 h 00 m"){
-                                                                                                                    $delay_color = true;
-                                                                                                                }
-
+                                                                                                            $delay_arr[] = $delay->format('%H h %I m');
+                                                                                                            if($delay->format('%H h %I m')!="00 h 00 m"){
+                                                                                                                $delay_color = true;
+                                                                                                                // dump($delay_color);
                                                                                                             }
-                                                                                                            else{
-                                                                                                                $datetime_people_time = Carbon::parse( $mod->date);
-                                                                                                                    $datetimeHourMinute = $datetime_people_time->format('H:i');
-                                                                                                                    $people_time = Carbon::createFromFormat('H:i', $datetimeHourMinute);
-                                                                                                                    $client_break_end_credental = Carbon::parse($day_time->break_end_time);
-                                                                                                                    $people_credental= Carbon::parse($people_time);
-                                                                                                                if($mod->direction=="enter" && $people_credental->greaterThan($client_break_end_credental  )){
+                                                                                                            // dump($delay_arr);
+                                                                                                        }
+                                                                                                        if($firstAfter1400){
+                                                                                                            $datetime_people_time = Carbon::parse( $firstAfter1400->date);
+                                                                                                            $datetimeHourMinute = $datetime_people_time->format('H:i');
+                                                                                                            $people_time = Carbon::createFromFormat('H:i', $datetimeHourMinute);
+                                                                                                            $client_break_end_credental = Carbon::parse($day_time->break_end_time);
+                                                                                                            $people_credental= Carbon::parse($people_time);
+                                                                                                                if( $people_credental->greaterThan($client_break_end_credental  )){
 
-                                                                                                                    if( $delay_count==false){
-
-
-                                                                                                                            $delay_count=true;
-
-                                                                                                                            $delay_break_end_time = $people_credental->diff($client_break_end_credental);
-                                                                                                                            $delay_arr[]=$delay_break_end_time->format('%H h %I m');
-
-                                                                                                                            $delay_color=true;
+                                                                                                                            $delay_couny=true;
 
 
-
-
-                                                                                                                    }
+                                                                                                                        $delay_break_end_time = $people_credental->diff($client_break_end_credental);
+                                                                                                                        $delay_arr[]=$delay_break_end_time->format('%H h %I m');
+                                                                                                                        // dump($delay_arr);
+                                                                                                                        $delay_color=true;
+                                                                                                                        // dump($delay_color);
+                                                                                                                        break;
 
                                                                                                                 }
-
-                                                                                                            }
-
 
                                                                                                         }
+                                                                                                         dump($delay_arr);
+
+
+
+                                                                                                        // foreach($model as $m=>$mod){
+
+
+
+
+                                                                                                        //     if($m==0){
+
+
+                                                                                                        //         $datetime_people_start_time = Carbon::parse( $mod->date);
+
+                                                                                                        //         $peopleHourMinute = $datetime_people_start_time->format('H:i');
+
+                                                                                                        //         $people_start_time = Carbon::createFromFormat('H:i', $peopleHourMinute);
+                                                                                                        //         $client_start_time = Carbon::parse($day_time->day_start_time);
+
+                                                                                                        //         $delay = $people_start_time->diff($client_start_time);
+
+                                                                                                        //         $delay_arr[] = $delay->format('%H h %I m');
+                                                                                                        //         if($delay->format('%H h %I m')!="00 h 00 m"){
+                                                                                                        //             $delay_color = true;
+                                                                                                        //             // dump($delay_color);
+                                                                                                        //         }
+
+                                                                                                        //     }
+                                                                                                        //     else{
+
+                                                                                                        //         if($delay_couny==false){
+
+                                                                                                        //             $datetime_people_time = Carbon::parse( $mod->date);
+                                                                                                        //                 $datetimeHourMinute = $datetime_people_time->format('H:i');
+                                                                                                        //                 $people_time = Carbon::createFromFormat('H:i', $datetimeHourMinute);
+                                                                                                        //                 $client_break_end_credental = Carbon::parse($day_time->break_end_time);
+                                                                                                        //                 $people_credental= Carbon::parse($people_time);
+                                                                                                        //             if( $people_credental->greaterThan($client_break_end_credental  )){
+
+                                                                                                        //                         $delay_couny=true;
+
+
+                                                                                                        //                     $delay_break_end_time = $people_credental->diff($client_break_end_credental);
+                                                                                                        //                     $delay_arr[]=$delay_break_end_time->format('%H h %I m');
+                                                                                                        //                     dump($delay_arr);
+                                                                                                        //                     $delay_color=true;
+                                                                                                        //                     // dump($delay_color);
+                                                                                                        //                     break;
+
+                                                                                                        //             }
+                                                                                                        //         }
+
+                                                                                                        //     }
+
+
+                                                                                                        // }
+                                                                                                    }else{
+                                                                                                        dump(100);
                                                                                                     }
 
 
