@@ -258,7 +258,8 @@
                                                                                                                         ->whereTime('date', '>', $day_time->break_end_time) // Время после 14:00
                                                                                                                         ->orderBy('date', 'asc') // Сортируем по времени
                                                                                                                         ->first();
-                                                                                                                        if($firstActionAfterBreakfast->direction=="enter"){
+
+                                                                                                                        if( isset($firstActionAfterBreakfast->direction) && $firstActionAfterBreakfast->direction=="enter"){
 
                                                                                                                             $ushacum=true;
                                                                                                                         }
