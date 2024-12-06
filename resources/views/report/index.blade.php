@@ -319,11 +319,15 @@
                                                                             @php
                                                                             // dump($at->date);
                                                                                 $exit = new DateTime($at->date);
+                                                                                if(isset($entry)){
+
+
                                                                                 $interval = $entry->diff($exit);
 
                                                                                 //    echo $interval->format('%H h %I m');
                                                                                 $interval_arr[] = $interval->format('%H h %I m');
                                                                                 // dump($interval_arr);
+                                                                                }
 
                                                                             @endphp
                                                                         @endif
