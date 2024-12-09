@@ -72,6 +72,7 @@ class ReportController extends Controller
         $mounth = $request->mounth;
 
         $groupedEntries=$this->report($request);
+        // dd($groupedEntries);
 
         return view('report.index1',compact('groupedEntries','mounth','attendant','client_working_day_times','client','i'));
 

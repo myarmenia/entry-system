@@ -258,14 +258,16 @@
                                                                                                                         ->orderBy('date', 'asc') // Сортируем по времени
                                                                                                                         ->first();
 
-                                                                                                                        if( isset($firstActionAfterBreakfast->direction) && $firstActionAfterBreakfast->direction=="enter"){
 
+
+                                                                                                                        if( isset($firstActionAfterBreakfast->direction) && $firstActionAfterBreakfast->direction=="enter"){
+                                                                                                                            // dump($firstActionAfterBreakfast);
                                                                                                                             $ushacum=true;
                                                                                                                         }
 
                                                                                                             }
                                                                                                             if($ushacum==true){
-                                                                                                                dump(777);
+
 
                                                                                                                     $firstAfter1400 = DB::table('attendance_sheets')
                                                                                                                         ->where('direction', 'enter')
@@ -274,7 +276,7 @@
                                                                                                                         ->whereTime('date', '>', $day_time->break_end_time) // Время после 14:00
                                                                                                                         ->orderBy('date', 'asc') // Сортируем по времени
                                                                                                                         ->first();
-                                                                                                                        dd($firstAfter1400);
+                                                                                                                        dd(11,$firstAfter1400);
 
 
                                                                                                                         if($firstAfter1400){

@@ -76,7 +76,7 @@
                                 <button type="submit" class="btn btn-primary col-2 search">Հաշվետվություն</button>
                             </form>
                             <!-- Bordered Table -->
-                            @if(count($groupedEntries)>0)
+                            @if(($groupedEntries)>0)
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
@@ -95,9 +95,10 @@
                                     </thead>
                                     <tbody>
 
-
+                                        {{-- {{ dd ($groupedEntries)}} --}}
                                         @foreach ($groupedEntries as $peopleId=>$item)
-                                        {{-- {{ dd($item) }} --}}
+
+                                            {{-- @dump($item) --}}
 
                                             <tr class="parent">
                                                 <td>{{ ++$i }}</td>
@@ -110,17 +111,36 @@
                                                 </td>
                                                 @for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay())
 
+                                                    <td class="p-0">
 
-                                                <td class="p-0">
-                                                </td>
+
+                                                        @if(isset($item[$date->format('d')]))
+
+                                                            {{-- @dump($item[$date->format('d')])  --}}
+                                                            @if (isset($item[$date->format('d')]['delay_display']))
+
+                                                                <div class="{{ isset($item[$date->format('d')]['delay_display'])?'bg-danger':null}}"> +</div>
+
+                                                            @elseif (isset($item[$date->format('d')]['anomalia']))
+
+                                                            <div class="{{ isset($item[$date->format('d')]['anomalia'])?'bg-warning':null}}"> ?</div>
+
+                                                            @else
+                                                            +
+                                                            @endif
+                                                        @endif
+                                                    </td>
                                                 @endfor
                                                 <td>
+                                                    {{$item['totalMonthDayCount'] }}
 
                                                 </td>
                                                 <td>
+                                                    {{$item['totalWorkingTimePerPerson'] }}
 
                                                 </td>
                                                 <td>
+                                                    {{$item['totaldelayPerPerson'] }}
                                                 </td>
                                             </tr>
                                         @endforeach

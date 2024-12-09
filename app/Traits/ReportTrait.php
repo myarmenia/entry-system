@@ -53,8 +53,10 @@ trait ReportTrait{
 
                 $totalWorkingTimePerPerson = [];
                 $peopleDailyRecord=[];
-
+// dd($groupedEntries);
                 foreach ($groupedEntries as $peopleId => $dailyRecords) {
+                    $peopleId=25;
+                    // dd($peopleId);
                     $totalWorkingTime = 0; // Секунды
                     $daysWorked = 0; // Количество отработанных дней
                     $totalDelayTime = 0; // Время задержки (в секундах)
@@ -63,12 +65,14 @@ trait ReportTrait{
 
                     // dd($dailyRecords);
                     foreach ($dailyRecords as $date => $records) {
+                        // dd($records);
                         // dd($date);
 
 
+                        $day=date('d',strtotime($date));
 
                         $records = $records->sortBy('date'); // Ensure records are sorted by time
-                        // dd($records);
+
                         $entryTime = null;
                         $dailyWorkingTime = 0; // Секунды
                         $dayOfWeek = Carbon::parse($date)->format('l');
@@ -102,10 +106,11 @@ trait ReportTrait{
 
                                     // Если вход и выход в один день, добавляем разницу
                                     if ($exitT->greaterThan($entryT)) {
+
                                         $interval = $exitT->diff($entryT);
 
-                                        $peopleDailyRecord[$peopleId][$date]['working_times'][] = $interval->format('%H:%I:%S');
-                                        // dump($peopleDailyRecord);
+                                        $peopleDailyRecord[$peopleId][$day]['working_times'][] = $interval->format('%H:%I:%S');
+                                        // dump($peopleDailyRecord[$peopleId][$day]['working_times']);
 
                                         // dd($dailyWorkingTime);
                                     }
@@ -114,14 +119,14 @@ trait ReportTrait{
                                 $entryTime = null;
 
 
-                            }else if($record->direction === 'exit'){
+                            }else if($record->direction == 'exit'){
+                                // dd($record);
 
-
-                                $peopleDailyRecord[$peopleId][$date]['daily_anomalia'] = false;
+                                $peopleDailyRecord[$peopleId][$day]['daily_anomalia'] = true;// ushacum ka
 
                             }
                         }
-                        // dd($peopleDailyRecord);
+                        // dump($peopleDailyRecord);
                         // dd($records);
                         $worker_first_enter = $records->where('direction', 'enter')->first();
                         // dd($worker_first_enter);
@@ -147,17 +152,18 @@ trait ReportTrait{
 
                                             $interval = $worker_first_enter_time->diff($get_client_week_working_start_time);
 
-                                            $peopleDailyRecord[$peopleId][$date]['delay_hour'][]=$interval->format('%h hours, %i minutes, %s seconds');
-                                            $peopleDailyRecord[$peopleId][$date]['delay_display']=true;
+                                            $peopleDailyRecord[$peopleId][$day]['delay_hour'][]=$interval->format('%H:%I:%S');
+                                            $peopleDailyRecord[$peopleId][$day]['delay_display']=true;
+
 
                                         }
 
                                     }else{
-                                        $peopleDailyRecord[$peopleId][$date]['anomalia']=true;
+                                        $peopleDailyRecord[$peopleId][$day]['anomalia']=true;
 
                                     }
                             }else{
-                                $peopleDailyRecord[$peopleId][$date]['anomalia']=true;
+                                $peopleDailyRecord[$peopleId][$day]['anomalia']=true;
                             }
                         // dd($peopleDailyRecord);
 
@@ -171,9 +177,11 @@ trait ReportTrait{
                         ->map(function ($group) {
                             return $group->first()->date; // Take the first (latest) record's date from each group
                         });
+                        // dump($breakfastInterval);
                         $ushacum=false;
-                    // dd($breakfastInterval);
+                        // dd($breakfastInterval);
                         if(count($breakfastInterval)>0){
+                            // dump($breakfastInterval);
 
                             if(count($breakfastInterval)==1 && isset($breakfastInterval["exit"])){
                                 $ushacum=true;
@@ -185,33 +193,73 @@ trait ReportTrait{
                                     $exitTime = new DateTime($breakfastInterval['exit']);
                                     // dump($enterTime,$exitTime);
                                     if ($exitTime > $enterTime) {
-                                        $ushacum=true;
-
+                                        $ushacum = true;
                                     }
 
                             }
                             if($ushacum == true){
-                                $this->ushacum($peopleId, $date, $clientSchedule, $peopleDailyRecord);
+                                $this->ushacum($peopleId, $date,$day, $clientSchedule, $peopleDailyRecord);
 
                             }
 
                         }
+                        // dd($records);
+                        $firstActionAfterBreakfast = $records
+                                        ->filter(function ($record) use ($peopleId, $clientSchedule) {
+                                            // Parse the date using Carbon and format it to 'H:i:s' (hours:minutes:seconds)
+                                            $recordTime = Carbon::parse($record->date)->format('H:i:s');
+
+                                            // Check if the direction is 'enter', the time is after $clientSchedule->break_end_time, and people_id is $peopleId
+                                            return $record->direction === 'enter' && $recordTime >= $clientSchedule->break_end_time && $record->people_id == $peopleId;
+                                        })
+                                        ->sortBy('date') // Sort by date in ascending order
+                                        ->first();
+                        // dump($firstActionAfterBreakfast);
+
+
+                        if( isset($firstActionAfterBreakfast->direction) && $firstActionAfterBreakfast->direction=="enter"){
+                            dump($firstActionAfterBreakfast);
+                            $ushacum=true;
+                        }
+
+
+
+                            // dump($records);
+
+
+
+
+
 
                     }
 
 
-                    dd($peopleDailyRecord);
+                    // dd($peopleDailyRecord);
+
                 }
 
 
-
-                    return  $groupedEntries;
-
         }
+            // dd($peopleDailyRecord);
+            if(isset($peopleDailyRecord)){
+                $total_monthly_working_hours = $this->calculate($peopleDailyRecord);
+
+
+
+                return  $peopleDailyRecord=$total_monthly_working_hours ?? null;
+
+            }else{
+                return false;
+            }
+
+
+
+
+
 
 
     }
-    public function ushacum($peopleId, $date, $clientSchedule, $peopleDailyRecord){
+    public function ushacum($peopleId, $date,$day, $clientSchedule, $peopleDailyRecord){
 
 
 
@@ -228,28 +276,75 @@ trait ReportTrait{
 
 
                     $firstAfter1400_datePart = explode(' ', $firstAfter1400->date)[1];
-                    // dd($firstAfter1400_datePart);
+
 
                                 $firstAfter1400_time1 = new DateTime($firstAfter1400_datePart);
 
                                 $firstAfter1400_time2 = new DateTime($clientSchedule->break_end_time);
 
                                 $firstAfter1400_interval = $firstAfter1400_time1 ->diff($firstAfter1400_time2);
-                                // dd($firstAfter1400_interval);
+
 
                     if($firstAfter1400_interval->format('%H h %I m')!=="00 h 00 m"){
+
+                        $peopleDailyRecord[$peopleId][$day]['delay_hour'][]= $firstAfter1400_interval->format('%h hours, %i minutes, %s seconds');
+                        $peopleDailyRecord[$peopleId][$day]['delay_display']=true;
                         // dd( $peopleDailyRecord);
-                        // $delay_arr[] = $firstAfter1400_interval->format('%H h %I m');
-                        // $delay_color = true;
-                        $peopleDailyRecord[$peopleId][$date]['delay_hour'][]= $firstAfter1400_interval->format('%h hours, %i minutes, %s seconds');
-                        $peopleDailyRecord[$peopleId][$date]['delay_display']=true;
-                        dd( $peopleDailyRecord);
 
 
                     }
 
                 }
 
+
+
+    }
+
+    public function calculate($peopleDailyRecord){
+
+        // $totalWorkingTimePerPerson = [];
+
+        foreach ($peopleDailyRecord as $personId => $records) {
+            $totalSeconds = 0;
+            $delaytotalSeconds =0;
+            // dd($records);
+
+            // Iterate through each person's records
+            foreach ($records as $key => $data) {
+                if (isset($data['working_times'])) {
+                    foreach ($data['working_times'] as $time) {
+                        // Convert each time string (HH:MM:SS) to seconds
+                        list($hours, $minutes, $seconds) = explode(':', $time);
+                        $totalSeconds += $hours * 3600 + $minutes * 60 + $seconds;
+                    }
+                }
+                if (isset($data['delay_hour'])) {
+                    foreach ($data['delay_hour'] as $delay) {
+                        // Convert each time string (HH:MM:SS) to seconds
+                        list($hours, $minutes, $seconds) = explode(':', $delay);
+                        $delaytotalSeconds += $hours * 3600 + $minutes * 60 + $seconds;
+                    }
+                }
+            }
+
+            // Convert total seconds back to hours, minutes, and seconds
+            $totalHours = floor($totalSeconds / 3600);
+            $totalSeconds %= 3600;
+            $totalMinutes = floor($totalSeconds / 60);
+            $totalSeconds %= 60;
+
+            $delaytotalHours = floor($delaytotalSeconds / 3600);
+            $delaytotalSeconds %= 3600;
+            $delaytotalMinutes = floor($delaytotalSeconds / 60);
+            $delaytotalSeconds %= 60;
+
+            $peopleDailyRecord[$personId]['totalMonthDayCount'] =count($records);
+            // Format the result into HH:MM:SS
+            $peopleDailyRecord[$personId]['totalWorkingTimePerPerson'] = sprintf('%d ժ, %d ր', $totalHours, $totalMinutes, $totalSeconds);
+            $peopleDailyRecord[$personId]['totaldelayPerPerson'] = sprintf('%d ժ, %d ր', $delaytotalHours, $delaytotalMinutes, $delaytotalSeconds);
+            // dd($peopleDailyRecord);
+        }
+        return  $peopleDailyRecord;
 
 
     }
