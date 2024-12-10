@@ -152,7 +152,7 @@ trait ReportTrait{
                         ->map(function ($group) {
                             return $group->first()->date; // Take the first (latest) record's date from each group
                         });
-                        // dump($breakfastInterval);
+
                         $ushacum = false;
                         // dd($breakfastInterval);
                         if(count($breakfastInterval)>0){
@@ -175,20 +175,29 @@ trait ReportTrait{
 
 
                         }
-                        // dd($records);
-                        $firstActionAfterBreakfast = $records
-                                                    ->filter(function ($record) use ($peopleId, $clientSchedule) {
-                                                        // Parse the date using Carbon and format it to 'H:i:s' (hours:minutes:seconds)
-                                                        $recordTime = Carbon::parse($record->date)->format('H:i:s');
+                        else{
 
-                                                        // Check if the direction is 'enter', the time is after $clientSchedule->break_end_time, and people_id is $peopleId
-                                                        return $record->direction === 'enter' && $recordTime >= $clientSchedule->break_end_time && $record->people_id == $peopleId;
-                                                    })
-                                                    ->sortBy('date') // Sort by date in ascending order
-                                                    ->first();
 
-                        if( isset($firstActionAfterBreakfast->direction) && $firstActionAfterBreakfast->direction=="enter"){
-                            $ushacum=true;
+                            if($clientSchedule->week_day!="Saturday"){
+                                // dd($records);
+                                $firstActionAfterBreakfast = $records
+                                                            ->filter(function ($record) use ($peopleId, $clientSchedule,$day) {
+                                                                // Parse the date using Carbon and format it to 'H:i:s' (hours:minutes:seconds)
+                                                                $recordTime = Carbon::parse($record->date)->format('H:i:s');
+                                                                // dump($day, $peopleId, $recordTime, $clientSchedule->break_end_time);
+                                                                // Check if the direction is 'enter', the time is after $clientSchedule->break_end_time, and people_id is $peopleId
+                                                                return $record->direction === 'enter' && $recordTime >= $clientSchedule->break_end_time && $record->people_id == $peopleId;
+                                                            })
+                                                            ->sortBy('date') // Sort by date in ascending order
+                                                            ->first();
+                                                            // dump( $peopleId,$firstActionAfterBreakfast);
+
+
+                                if( isset($firstActionAfterBreakfast->direction) && $firstActionAfterBreakfast->direction=="enter"){
+                                    $ushacum=true;
+                                    // dump($peopleId,"after",$day, $firstActionAfterBreakfast);
+                                }
+                            }
                         }
 
                         if($ushacum == true){
@@ -251,12 +260,14 @@ trait ReportTrait{
 
                                 $firstAfter1400_interval = $firstAfter1400_time1 ->diff($firstAfter1400_time2);
 
-// dump($firstAfter1400_interval->format('%H h %I m'));
+        // dump($firstAfter1400_interval->format('%H h %I m'));
+        // dd($firstAfter1400_interval);
+
                     if($firstAfter1400_interval->format('%H h %I m')!=="00 h 00 m"){
 
                         $peopleDailyRecord[$peopleId][$day]['delay_hour'][]= $firstAfter1400_interval->format('%H:%I:%S');
                         $peopleDailyRecord[$peopleId][$day]['delay_display']=true;
-
+                        // dump($peopleDailyRecord);
 
                     }
 
