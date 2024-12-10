@@ -111,7 +111,7 @@
                                                 </td>
                                                 @for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay())
 
-                                                    <td class="p-0">
+                                                    <td class="p-0 text-center">
 
 
                                                         @if(isset($item[$date->format('d')]))
@@ -136,7 +136,12 @@
 
                                                 </td>
                                                 <td>
-                                                    {{$item['totalWorkingTimePerPerson'] }}
+
+
+                                                    <span class="{{ isset($item['personWorkingTimeLessThenClientWorkingTime']) ? 'text-danger' : null  }}">
+                                                        {{$item['totalWorkingTimePerPerson'] }}
+                                                     <span>
+
 
                                                 </td>
                                                 <td>

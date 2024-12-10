@@ -64,17 +64,15 @@ class ReportController extends Controller
     // }
 
     public function index(Request $request){
-        $client_working_day_times = [];
-        $client = [];
+
         $i = 0;
-        $data = [];
-        $attendant = [];
+
         $mounth = $request->mounth;
 
         $groupedEntries=$this->report($request);
         // dd($groupedEntries);
 
-        return view('report.index1',compact('groupedEntries','mounth','attendant','client_working_day_times','client','i'));
+        return view('report.index1',compact('groupedEntries','mounth','i'));
 
     }
 

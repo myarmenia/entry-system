@@ -15,14 +15,8 @@ trait ReportTrait{
     public function report($request){
 
         $client = Client::where('user_id', Auth::id())->with('people.attendance_sheets')->first();
-        $client_working_day_times = ClientWorkingDayTime::where('client_id',$client->id)->select('week_day','day_start_time','day_end_time','break_start_time','break_end_time')->get();
-        // $people = $client->people->pluck(['name', 'surname'], 'id');
-        $people = $client->people->pluck('id');
-        // dd($people);
 
         if($request->mounth!=null){
-
-
 
             [$year, $month] = explode('-', $request->mounth);
 
@@ -40,34 +34,17 @@ trait ReportTrait{
                 $groupedEntries = $attendance_sheet->groupBy(['people_id', function ($oneFromCollection) {
                     return Carbon::parse($oneFromCollection->date)->toDateString();
                 }]);
-                // dd($groupedEntries);
-
 
                 $clientWorkingTimes = DB::table('client_working_day_times')
                                     ->where('client_id', $client->id)
                                     ->get()
                                     ->keyBy('week_day');
 
-                        // dd($clientWorkingTimes);
-
-
-                $totalWorkingTimePerPerson = [];
                 $peopleDailyRecord=[];
-// dd($groupedEntries);
+
                 foreach ($groupedEntries as $peopleId => $dailyRecords) {
-                    $peopleId=25;
-                    // dd($peopleId);
-                    $totalWorkingTime = 0; // Секунды
-                    $daysWorked = 0; // Количество отработанных дней
-                    $totalDelayTime = 0; // Время задержки (в секундах)
-                    $delay_arr = [];
 
-
-                    // dd($dailyRecords);
                     foreach ($dailyRecords as $date => $records) {
-                        // dd($records);
-                        // dd($date);
-
 
                         $day=date('d',strtotime($date));
 
@@ -78,12 +55,10 @@ trait ReportTrait{
                         $dayOfWeek = Carbon::parse($date)->format('l');
                         $clientSchedule = $clientWorkingTimes[$dayOfWeek] ?? null;
 
-
                         foreach ($records as $record) {
 
-
                             if ($record->direction == 'enter' && !$entryTime ) {
-                                // dd('enter');
+
                                 $entryTime  = Carbon::parse($record->date);
 
 
@@ -100,9 +75,6 @@ trait ReportTrait{
                                     $exitT = Carbon::createFromFormat('H:i:s', $exit);
 
                                     // dump($entryT, $exitT );
-                                    // $entryT = Carbon::createFromFormat('H:i:s', '15:11:44');
-                                    // $exitT = Carbon::createFromFormat('H:i:s', '15:20:41');
-
 
                                     // Если вход и выход в один день, добавляем разницу
                                     if ($exitT->greaterThan($entryT)) {
@@ -112,7 +84,7 @@ trait ReportTrait{
                                         $peopleDailyRecord[$peopleId][$day]['working_times'][] = $interval->format('%H:%I:%S');
                                         // dump($peopleDailyRecord[$peopleId][$day]['working_times']);
 
-                                        // dd($dailyWorkingTime);
+
                                     }
 
                                 // Сбрасываем время входа после расчета
@@ -125,14 +97,17 @@ trait ReportTrait{
                                 $peopleDailyRecord[$peopleId][$day]['daily_anomalia'] = true;// ushacum ka
 
                             }
+                            else if($record->direction == 'unknown'){
+                                // dd($record);
+
+                                $peopleDailyRecord[$peopleId][$day]['daily_anomalia'] = true;// ushacum ka
+
+                            }
                         }
-                        // dump($peopleDailyRecord);
-                        // dd($records);
+
                         $worker_first_enter = $records->where('direction', 'enter')->first();
                         // dd($worker_first_enter);
                             if($worker_first_enter){
-
-
 
                                     // dd($clientSchedule);
                                     $get_client_week_working_start_time = new DateTime($clientSchedule->day_start_time);
@@ -178,13 +153,13 @@ trait ReportTrait{
                             return $group->first()->date; // Take the first (latest) record's date from each group
                         });
                         // dump($breakfastInterval);
-                        $ushacum=false;
+                        $ushacum = false;
                         // dd($breakfastInterval);
                         if(count($breakfastInterval)>0){
                             // dump($breakfastInterval);
 
                             if(count($breakfastInterval)==1 && isset($breakfastInterval["exit"])){
-                                $ushacum=true;
+                                $ushacum = true;
 
                             }
                             if(count($breakfastInterval)>1 ){
@@ -197,38 +172,30 @@ trait ReportTrait{
                                     }
 
                             }
-                            if($ushacum == true){
-                                $this->ushacum($peopleId, $date,$day, $clientSchedule, $peopleDailyRecord);
 
-                            }
 
                         }
                         // dd($records);
                         $firstActionAfterBreakfast = $records
-                                        ->filter(function ($record) use ($peopleId, $clientSchedule) {
-                                            // Parse the date using Carbon and format it to 'H:i:s' (hours:minutes:seconds)
-                                            $recordTime = Carbon::parse($record->date)->format('H:i:s');
+                                                    ->filter(function ($record) use ($peopleId, $clientSchedule) {
+                                                        // Parse the date using Carbon and format it to 'H:i:s' (hours:minutes:seconds)
+                                                        $recordTime = Carbon::parse($record->date)->format('H:i:s');
 
-                                            // Check if the direction is 'enter', the time is after $clientSchedule->break_end_time, and people_id is $peopleId
-                                            return $record->direction === 'enter' && $recordTime >= $clientSchedule->break_end_time && $record->people_id == $peopleId;
-                                        })
-                                        ->sortBy('date') // Sort by date in ascending order
-                                        ->first();
-                        // dump($firstActionAfterBreakfast);
-
+                                                        // Check if the direction is 'enter', the time is after $clientSchedule->break_end_time, and people_id is $peopleId
+                                                        return $record->direction === 'enter' && $recordTime >= $clientSchedule->break_end_time && $record->people_id == $peopleId;
+                                                    })
+                                                    ->sortBy('date') // Sort by date in ascending order
+                                                    ->first();
 
                         if( isset($firstActionAfterBreakfast->direction) && $firstActionAfterBreakfast->direction=="enter"){
-                            dump($firstActionAfterBreakfast);
                             $ushacum=true;
                         }
 
+                        if($ushacum == true){
 
+                            $peopleDailyRecord=$this->ushacum($peopleId, $date,$day, $clientSchedule, $peopleDailyRecord);
 
-                            // dump($records);
-
-
-
-
+                        }
 
 
                     }
@@ -242,7 +209,7 @@ trait ReportTrait{
         }
             // dd($peopleDailyRecord);
             if(isset($peopleDailyRecord)){
-                $total_monthly_working_hours = $this->calculate($peopleDailyRecord);
+                $total_monthly_working_hours = $this->calculate($peopleDailyRecord,$client);
 
 
 
@@ -270,7 +237,7 @@ trait ReportTrait{
                 ->whereTime('date', '>', $clientSchedule->break_end_time) // Время после 14:00
                 ->orderBy('date', 'asc') // Сортируем по времени
                 ->first();
-                    // dd($firstAfter1400);
+                    // dump($firstAfter1400);
 
                 if($firstAfter1400){
 
@@ -284,12 +251,11 @@ trait ReportTrait{
 
                                 $firstAfter1400_interval = $firstAfter1400_time1 ->diff($firstAfter1400_time2);
 
-
+// dump($firstAfter1400_interval->format('%H h %I m'));
                     if($firstAfter1400_interval->format('%H h %I m')!=="00 h 00 m"){
 
-                        $peopleDailyRecord[$peopleId][$day]['delay_hour'][]= $firstAfter1400_interval->format('%h hours, %i minutes, %s seconds');
+                        $peopleDailyRecord[$peopleId][$day]['delay_hour'][]= $firstAfter1400_interval->format('%H:%I:%S');
                         $peopleDailyRecord[$peopleId][$day]['delay_display']=true;
-                        // dd( $peopleDailyRecord);
 
 
                     }
@@ -297,12 +263,11 @@ trait ReportTrait{
                 }
 
 
-
+                return  $peopleDailyRecord;
     }
 
-    public function calculate($peopleDailyRecord){
+    public function calculate($peopleDailyRecord,$client){
 
-        // $totalWorkingTimePerPerson = [];
 
         foreach ($peopleDailyRecord as $personId => $records) {
             $totalSeconds = 0;
@@ -311,8 +276,10 @@ trait ReportTrait{
 
             // Iterate through each person's records
             foreach ($records as $key => $data) {
+                // dump($data);
                 if (isset($data['working_times'])) {
                     foreach ($data['working_times'] as $time) {
+                        // dump($time);
                         // Convert each time string (HH:MM:SS) to seconds
                         list($hours, $minutes, $seconds) = explode(':', $time);
                         $totalSeconds += $hours * 3600 + $minutes * 60 + $seconds;
@@ -325,6 +292,7 @@ trait ReportTrait{
                         $delaytotalSeconds += $hours * 3600 + $minutes * 60 + $seconds;
                     }
                 }
+
             }
 
             // Convert total seconds back to hours, minutes, and seconds
@@ -343,7 +311,15 @@ trait ReportTrait{
             $peopleDailyRecord[$personId]['totalWorkingTimePerPerson'] = sprintf('%d ժ, %d ր', $totalHours, $totalMinutes, $totalSeconds);
             $peopleDailyRecord[$personId]['totaldelayPerPerson'] = sprintf('%d ժ, %d ր', $delaytotalHours, $delaytotalMinutes, $delaytotalSeconds);
             // dd($peopleDailyRecord);
+            // dd($client->working_time,$totalHours);
+            $clientWorkingHours = (float) $client->working_time; // Convert string to float
+            $personWorkingHours = (float) $totalHours;
+            if($clientWorkingHours>$personWorkingHours){
+                $peopleDailyRecord[$personId]['personWorkingTimeLessThenClientWorkingTime'] =true;
+
+            }
         }
+        // dd($peopleDailyRecord);
         return  $peopleDailyRecord;
 
 
