@@ -137,11 +137,9 @@
                                                 </td>
                                                 <td>
 
-
                                                     <span class="{{ isset($item['personWorkingTimeLessThenClientWorkingTime']) ? 'text-danger' : null  }}">
                                                         {{$item['totalWorkingTimePerPerson'] }}
                                                      <span>
-
 
                                                 </td>
                                                 <td>
