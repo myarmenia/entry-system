@@ -30,10 +30,12 @@ trait ReportTrait{
                                 ->orderBy('people_id')
                                 ->orderBy('date')
                                 ->get();
+                                // dd($attendance_sheet);
 
                 $groupedEntries = $attendance_sheet->groupBy(['people_id', function ($oneFromCollection) {
                     return Carbon::parse($oneFromCollection->date)->toDateString();
                 }]);
+                // dd($groupedEntries);
 
                 $clientWorkingTimes = DB::table('client_working_day_times')
                                     ->where('client_id', $client->id)
@@ -44,7 +46,10 @@ trait ReportTrait{
 
                 foreach ($groupedEntries as $peopleId => $dailyRecords) {
 
+
+
                     foreach ($dailyRecords as $date => $records) {
+                        // dump( $date,$records);
 
                         $day=date('d',strtotime($date));
 
@@ -91,7 +96,8 @@ trait ReportTrait{
                                 $entryTime = null;
 
 
-                            }else if($record->direction == 'exit'){
+                            }
+                            else if($record->direction == 'exit'){
                                 // dd($record);
 
                                 $peopleDailyRecord[$peopleId][$day]['daily_anomalia'] = true;// ushacum ka
@@ -106,7 +112,7 @@ trait ReportTrait{
                         }
 
                         $worker_first_enter = $records->where('direction', 'enter')->first();
-                        // dd($worker_first_enter);
+                        // dump($worker_first_enter);
                             if($worker_first_enter){
 
                                     // dd($clientSchedule);
@@ -129,9 +135,14 @@ trait ReportTrait{
 
                                             $peopleDailyRecord[$peopleId][$day]['delay_hour'][]=$interval->format('%H:%I:%S');
                                             $peopleDailyRecord[$peopleId][$day]['delay_display']=true;
+                                            $peopleDailyRecord[$peopleId][$day]['coming']=true;
 
 
                                         }
+                                        else{
+                                            $peopleDailyRecord[$peopleId][$day]['coming']=true;
+                                        }
+
 
                                     }else{
                                         $peopleDailyRecord[$peopleId][$day]['anomalia']=true;
