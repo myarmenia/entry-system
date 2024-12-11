@@ -125,8 +125,8 @@
 
                                                             <div class="{{ isset($item[$date->format('d')]['anomalia'])?'bg-warning':null}}"> ?</div>
 
-                                                            @else
-                                                            +
+                                                            @elseif(isset($item[$date->format('d')]['coming']))
+                                                                +
                                                             @endif
                                                         @endif
                                                     </td>
