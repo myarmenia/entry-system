@@ -223,7 +223,7 @@ trait ReportTrait{
 
                             }
                             else{
-                                dump($peopleId, $worker_first_enter);
+                                // dump($peopleId, $worker_first_enter);
                                 // dd($worker_first_enter);
 
                                     $peopleDailyRecord[$peopleId][$day]['anomalia']=true;
