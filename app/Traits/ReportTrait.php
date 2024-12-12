@@ -4,6 +4,7 @@ namespace App\Traits;
 use App\Models\AttendanceSheet;
 use App\Models\Client;
 use App\Models\ClientWorkingDayTime;
+use App\Models\Turnstile;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Support\Facades\Auth;
@@ -150,7 +151,7 @@ trait ReportTrait{
                                     ->map(function ($group) {
                                         return $group->first()->date; // Take the first (latest) record's date from each group
                                     });
-                                    // dump($peopleId, $breakfastInterval);
+
 
 
                                     $ushacum = false;
@@ -165,14 +166,28 @@ trait ReportTrait{
                                         }
                                         if(count($breakfastInterval)>1 ){
 
+
                                             $enterTime = new DateTime($breakfastInterval['enter']);
-                                            if(isset($breakfastInterval['enter']) && isset($breakfastInterval['exit'])){
-                                                $exitTime = new DateTime($breakfastInterval['exit']);
-                                                // dump($enterTime,$exitTime);
-                                                if ($exitTime > $enterTime) {
-                                                    $ushacum = true;
+
+                                            if(isset($breakfastInterval['enter'])){
+                                                if(isset($breakfastInterval['unknown'])){
+                                                    $exitTime = new DateTime($breakfastInterval['unknown']);
+                                                    // dump($exitTime);
                                                 }
+                                                if(isset($breakfastInterval['exit'])){
+                                                    $exitTime = new DateTime($breakfastInterval['exit']);
+
+                                                }
+                                               
+
                                             }
+
+                                            if(isset($enterTime) && isset($exitTime)){
+                                                if ($exitTime > $enterTime) {
+                                                            $ushacum = true;
+                                                        }
+                                            }
+
 
                                         }
 
