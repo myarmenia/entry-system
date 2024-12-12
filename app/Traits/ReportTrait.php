@@ -46,8 +46,6 @@ trait ReportTrait{
 
                 foreach ($groupedEntries as $peopleId => $dailyRecords) {
 
-
-
                     foreach ($dailyRecords as $date => $records) {
                         // dump( $date,$records);
 
@@ -102,7 +100,7 @@ trait ReportTrait{
                             else if($record->direction == 'unknown'){
                                 // dd($record);
 
-                                $peopleDailyRecord[$peopleId][$day]['daily_anomalia'] = true;// ushacum ka
+                                $peopleDailyRecord[$peopleId][$day]['anomalia'] = true;// ushacum ka
 
                             }
                         }
@@ -158,20 +156,23 @@ trait ReportTrait{
                                     $ushacum = false;
                                     // dd($breakfastInterval);
                                     if(count($breakfastInterval)>0){
-                                        // dump($breakfastInterval);
+                                        // dump($peopleId,$breakfastInterval);
 
                                         if(count($breakfastInterval)==1 && isset($breakfastInterval["exit"])){
+
                                             $ushacum = true;
 
                                         }
                                         if(count($breakfastInterval)>1 ){
 
                                             $enterTime = new DateTime($breakfastInterval['enter']);
+                                            if(isset($breakfastInterval['enter']) && isset($breakfastInterval['exit'])){
                                                 $exitTime = new DateTime($breakfastInterval['exit']);
                                                 // dump($enterTime,$exitTime);
                                                 if ($exitTime > $enterTime) {
                                                     $ushacum = true;
                                                 }
+                                            }
 
                                         }
 
@@ -222,6 +223,7 @@ trait ReportTrait{
 
                             }
                             else{
+                                dump($peopleId, $worker_first_enter);
                                 // dd($worker_first_enter);
 
                                     $peopleDailyRecord[$peopleId][$day]['anomalia']=true;
