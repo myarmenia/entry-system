@@ -114,9 +114,11 @@
                                                     <td class="p-0 text-center">
 
 
+
                                                         @if(isset($item[$date->format('d')]))
 
-                                                            {{-- @dump($item[$date->format('d')])  --}}
+
+
                                                             @if (isset($item[$date->format('d')]['delay_display']))
 
                                                                 <div class="{{ isset($item[$date->format('d')]['delay_display'])?'bg-danger':null}}"> +</div>
