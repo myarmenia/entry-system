@@ -16,6 +16,7 @@ return new class extends Migration
             $table->bigInteger('client_id')->unsigned()->nullable();
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
             $table->string('mac');
+            $table->string('direction')->nullable();
             $table->timestamps();
         });
     }
