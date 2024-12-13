@@ -68,6 +68,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('delete-item/{tb_name}/{id}', [DeleteItemController::class, 'index'])->name('delete_item');
     Route::get('report-list',[ReportController::class,'index'])->name('reportList');
 
+    Route::get('/report/export',[ReportController::class,'export'])->name('export-xlsx');
+
 
 });
 

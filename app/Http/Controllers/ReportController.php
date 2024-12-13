@@ -2,78 +2,47 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\PeopleResource;
-use App\Models\AttendanceSheet;
-use App\Models\Client;
-use App\Models\ClientWorkingDayTime;
-use App\Services\ReportService;
+use App\Exports\ReportExport;
 use App\Traits\ReportTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
 {
     use ReportTrait;
 
-    protected $model;
-    public function __construct(AttendanceSheet $model)
-    {
-        $this->model = $model;
+    public function calculateReport($mounth){
+
+
+
+        $mounth = $mounth ?? \Carbon\Carbon::now()->format('Y-m');
+        // dd($mounth);
+
+        $groupedEntries = $this->report($mounth);
+
+        return $groupedEntries;
     }
-    // public function index(Request $request){
-    //     // dd($request->all());
-    //     $attendant="";
-    //     $mounth='';
-    //     $attendant1='';
-    //     $client = Client::where('user_id', Auth::id())->with('people.attendance_sheets')->first();
-    //     $client_working_day_times = ClientWorkingDayTime::where('client_id',$client->id)->select('week_day','day_start_time','day_end_time','break_start_time','break_end_time')->get();
-    //     $people = $client->people->pluck('id');
-
-    //     if($request->mounth!=null){
-    //         [$year, $month] = explode('-', $request->mounth);
-
-    //         $data = AttendanceSheet::whereIn('people_id',$people)
-    //         ->whereYear('date', $year)
-    //         ->whereMonth('date', $month)
-    //         ->select('people_id', DB::raw('MAX(date) as date'))
-    //         ->groupBy('people_id')
-    //         ->get();
-    //         // ->paginate(1);
-
-    //         $attendant = AttendanceSheet::whereIn('people_id',$people)
-    //         ->whereYear('date', $year)
-    //         ->whereMonth('date', $month)
-    //         ->orderBy('date','asc')
-    //         ->get();
-    //         // dd($attendant);
-
-    //         $mounth = $request->mounth;
-
-    //     }else{
-
-    //         $data = AttendanceSheet::whereIn('people_id',$people)->get();
-
-    //     }
-    //     $i=0;
-
-    //     return view('report.index',compact('data','mounth','attendant','client_working_day_times','client','i'));
-    //     // return view('report.index',compact('data','mounth','attendant'))
-    //     // ->with('i', ($request->input('page', 1) - 1) * 1);
-
-    // }
 
     public function index(Request $request){
 
         $i = 0;
 
-        $mounth = $request->mounth;
+        $mounth = $request->mounth??\Carbon\Carbon::now()->format('Y-m');
+        // dd($mounth);
 
-        $groupedEntries=$this->report($request);
+        $groupedEntries = $this->calculateReport($mounth);
         // dd($groupedEntries);
 
-        return view('report.index1',compact('groupedEntries','mounth','i'));
+        return view('report.index',compact('groupedEntries','mounth','i'));
 
+    }
+
+    public function export(Request $request)
+    {
+        $mounth = $request->mounth??\Carbon\Carbon::now()->format('Y-m');
+        $k=$this->calculateReport($mounth);
+
+        return Excel::download(new ReportExport($mounth), 'report.xlsx');
     }
 
 }

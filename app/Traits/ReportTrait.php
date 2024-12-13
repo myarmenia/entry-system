@@ -9,18 +9,20 @@ use Carbon\Carbon;
 use DateTime;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 
 trait ReportTrait{
 
 
-    public function report($request){
+    public function report($mounth){
+        // dd($mounth);
 
         $client = Client::where('user_id', Auth::id())->with('people.attendance_sheets')->first();
 
-        if($request->mounth!=null){
+        if($mounth!=null){
 
-            [$year, $month] = explode('-', $request->mounth);
-
+            [$year, $month] = explode('-', $mounth);
+// dd($year, $month);
             $monthDate = Carbon::createFromDate($year, $month, 1);
 
             $startOfMonth =  $monthDate->startOfMonth()->toDateTimeString();
@@ -36,7 +38,7 @@ trait ReportTrait{
                 $groupedEntries = $attendance_sheet->groupBy(['people_id', function ($oneFromCollection) {
                     return Carbon::parse($oneFromCollection->date)->toDateString();
                 }]);
-            
+
 
                 $clientWorkingTimes = DB::table('client_working_day_times')
                                     ->where('client_id', $client->id)
@@ -304,9 +306,14 @@ trait ReportTrait{
             if(isset($peopleDailyRecord)){
                 $total_monthly_working_hours = $this->calculate($peopleDailyRecord,$client);
 
+                $routeName = Route::currentRouteName();
+                if($routeName=="export-xlsx"){
+                    $total_monthly_working_hours['mounth']=$month;
 
+                }
+                // dd($total_monthly_working_hours);
 
-                return  $peopleDailyRecord=$total_monthly_working_hours ?? null;
+                return  $peopleDailyRecord = $total_monthly_working_hours ?? null;
 
             }else{
                 return false;
