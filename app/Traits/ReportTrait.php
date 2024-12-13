@@ -151,6 +151,17 @@ trait ReportTrait{
                                     ->map(function ($group) {
                                         return $group->first()->date; // Take the first (latest) record's date from each group
                                     });
+                                    $breakfastInterval_find_mac = $records
+                                    ->filter(function ($record) use ($clientSchedule) {
+                                    $recordTime = (new DateTime($record->date))->format('H:i:s');
+                                    return $recordTime >= $clientSchedule->break_start_time && $recordTime <= $clientSchedule->break_end_time;
+                                })
+                                ->sortByDesc('date') // Sort by date in descending order
+                                ->groupBy('direction') // Group records by 'direction'
+                                ->map(function ($group) {
+                                    return $group->first()->mac; // Take the first (latest) record's date from each group
+                                });
+                                    // dump( $peopleId, $breakfastInterval,$breakfastInterval_find_mac);
 
 
 
@@ -167,22 +178,52 @@ trait ReportTrait{
                                         if(count($breakfastInterval)>1 ){
 
 
-                                            $enterTime = new DateTime($breakfastInterval['enter']);
+                                            // $enterTime = new DateTime($breakfastInterval['enter']);
 
-                                            if(isset($breakfastInterval['enter'])){
-                                                if(isset($breakfastInterval['unknown'])){
-                                                    $exitTime = new DateTime($breakfastInterval['unknown']);
-                                                    // dump($exitTime);
-                                                }
-                                                if(isset($breakfastInterval['exit'])){
-                                                    $exitTime = new DateTime($breakfastInterval['exit']);
+                                            // if(isset($breakfastInterval['enter'])){
+                                            //     if(isset($breakfastInterval['unknown'])){
+                                            //         $exitTime = new DateTime($breakfastInterval['unknown']);
+                                            //         // dump($exitTime);
+                                            //     }
+                                            //     if(isset($breakfastInterval['exit'])){
+                                            //         $exitTime = new DateTime($breakfastInterval['exit']);
 
+                                            //     }
+
+
+                                            // }
+                                            // dump( $peopleId, $breakfastInterval,$breakfastInterval_find_mac);
+                                            $enterTime='';
+                                            $exitTime = '';
+                                            if(isset($breakfastInterval_find_mac['unknown'])){
+                                                $turnstile=Turnstile::where('mac',$breakfastInterval_find_mac['unknown'])->first();
+
+                                                if($turnstile){
+                                                    if($turnstile->direction == "exit"){
+                                                        $exitTime = new DateTime($breakfastInterval['unknown']);
+                                                        // dump($exitTime);
+
+                                                    }
+                                                    else{
+                                                        $enterTime = new DateTime($breakfastInterval['unknown']);
+                                                    }
                                                 }
-                                               
+                                            }else{
+
+                                                $enterTime = new DateTime($breakfastInterval['enter']);
+                                                  if(isset($breakfastInterval['enter'])){
+                                                        if(isset($breakfastInterval['exit'])){
+                                                            $exitTime = new DateTime($breakfastInterval['exit']);
+
+                                                        }
+                                                   }
+                                                //   dd($breakfastInterval_find_mac);
+                                                //   dump( $peopleId, $breakfastInterval,$breakfastInterval_find_mac);
+
 
                                             }
-
                                             if(isset($enterTime) && isset($exitTime)){
+                                                // dump($peopleId, $enterTime, $exitTime);
                                                 if ($exitTime > $enterTime) {
                                                             $ushacum = true;
                                                         }
