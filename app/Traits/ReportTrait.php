@@ -36,7 +36,7 @@ trait ReportTrait{
                 $groupedEntries = $attendance_sheet->groupBy(['people_id', function ($oneFromCollection) {
                     return Carbon::parse($oneFromCollection->date)->toDateString();
                 }]);
-                // dd($groupedEntries);
+            
 
                 $clientWorkingTimes = DB::table('client_working_day_times')
                                     ->where('client_id', $client->id)
@@ -48,18 +48,25 @@ trait ReportTrait{
                 foreach ($groupedEntries as $peopleId => $dailyRecords) {
 
                     foreach ($dailyRecords as $date => $records) {
-                        // dump( $date,$records);
+
 
                         $day=date('d',strtotime($date));
 
-                        $records = $records->sortBy('date'); // Ensure records are sorted by time
+                        $records = $records->sortBy('date')->unique('date'); // Ensure records are sorted by time
 
                         $entryTime = null;
                         $dailyWorkingTime = 0; // Секунды
                         $dayOfWeek = Carbon::parse($date)->format('l');
                         $clientSchedule = $clientWorkingTimes[$dayOfWeek] ?? null;
 
+
                         foreach ($records as $record) {
+
+                            if($record->direction == "unknown"){
+                                $find_mac_direction = Turnstile::where('mac',$record->mac)->value('direction');
+
+                                $record->direction = $find_mac_direction;
+                            }
 
 
                             if ($record->direction == 'enter' && !$entryTime ) {
@@ -98,12 +105,12 @@ trait ReportTrait{
 
                             }
 
-                            else if($record->direction == 'unknown'){
-                                // dd($record);
+                            // else if($record->direction == 'unknown'){
+                            //     // dd($record);
 
-                                $peopleDailyRecord[$peopleId][$day]['anomalia'] = true;// ushacum ka
+                            //     $peopleDailyRecord[$peopleId][$day]['anomalia'] = true;// ushacum ka
 
-                            }
+                            // }
                         }
 
                         $worker_first_enter = $records->first();
@@ -279,8 +286,6 @@ trait ReportTrait{
 
                             }
                             else{
-                                // dump($peopleId, $worker_first_enter);
-                                // dd($worker_first_enter);
 
                                     $peopleDailyRecord[$peopleId][$day]['anomalia']=true;
                                 }
