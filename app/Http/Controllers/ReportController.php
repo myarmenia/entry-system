@@ -40,7 +40,9 @@ class ReportController extends Controller
     public function export(Request $request)
     {
         $mounth = $request->mounth??\Carbon\Carbon::now()->format('Y-m');
+        // dd($mounth);
         $k=$this->calculateReport($mounth);
+        // dd($k);
 
         return Excel::download(new ReportExport($mounth), 'report.xlsx');
     }
