@@ -122,9 +122,16 @@ trait ReportTrait{
                             if($worker_first_enter->direction=="enter"){
 
                                     // dd($clientSchedule);
-                                    $get_client_week_working_start_time = new DateTime($clientSchedule->day_start_time);
+                                    $get_client_week_working_start_time='';
+                                    $get_client_week_working_end_time='';
+                                    if(isset($clientSchedule->day_start_time) && $clientSchedule->day_start_time!=null){
+                                        $get_client_week_working_start_time = new DateTime($clientSchedule->day_start_time);
 
-                                    $get_client_week_working_end_time = new DateTime($clientSchedule->day_end_time);
+                                    }
+                                    if( isset($clientSchedule->day_start_time) && $clientSchedule->day_end_time!=null){
+                                        $get_client_week_working_end_time = new DateTime($clientSchedule->day_end_time);
+
+                                    }
                                     // dd($get_client_week_working_end_time);
                                     $worker_first_enter_time = explode(' ', $worker_first_enter->date)[1];
                                     // dd($worker_first_enter_time);
