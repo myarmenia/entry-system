@@ -19,6 +19,7 @@ class ReportController extends Controller
         // dd($mounth);
 
         $groupedEntries = $this->report($mounth);
+        // dd($groupedEntries);
 
         return $groupedEntries;
     }
@@ -41,7 +42,9 @@ class ReportController extends Controller
     {
         $mounth = $request->mounth??\Carbon\Carbon::now()->format('Y-m');
         // dd($mounth);
-        $k=$this->calculateReport($mounth);
+        $mounth = "2024-11";
+        // dd($mounth);
+        // $k=$this->calculateReport($mounth);
         // dd($k);
 
         return Excel::download(new ReportExport($mounth), 'report.xlsx');

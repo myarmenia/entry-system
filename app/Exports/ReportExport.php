@@ -29,14 +29,14 @@ class ReportExport implements  FromCollection, WithHeadings,WithStyles
         $this->request = $request;
         $this->year = $year ?? now()->year;
         $this->month = $month ?? now()->month;
-        // dd($this->year);
+        // dd($this->year, $this->month);
 
     }
     public function collection()
     {
         // Use the trait's report logic
         $groupedEntries = $this->report($this->request);
-        // dd($groupedEntries);
+        dd($groupedEntries);
         $lastElement = end($groupedEntries);
         $this->month = $lastElement;
         // dd($this->month);
@@ -122,7 +122,7 @@ class ReportExport implements  FromCollection, WithHeadings,WithStyles
                 if ($cell->getValue() == "+ուշ") {
                     $sheet->getStyle($cell->getCoordinate())->getFont()->getColor()->setRGB('FF0000'); // Red
                 }
-                
+
             }
         }
     }

@@ -62,7 +62,7 @@
 
                     @if( $data !=null && count($data)>0)
                         @foreach ($data as $person)
-                        @dump($person);
+             
 
                         {{-- {{ dump($entry_code->active_person->people->name) }} --}}
 

@@ -24,7 +24,7 @@ trait ReportTrait{
             [$year, $month] = explode('-', $mounth);
 // dd($year, $month);
             $monthDate = Carbon::createFromDate($year, $month, 1);
-
+dd()
             $startOfMonth =  $monthDate->startOfMonth()->toDateTimeString();
             $endOfMonth =  $monthDate->endOfMonth()->toDateTimeString();
 
@@ -33,7 +33,7 @@ trait ReportTrait{
                                 ->orderBy('people_id')
                                 ->orderBy('date')
                                 ->get();
-                                // dd($attendance_sheet);
+                                dd($attendance_sheet);
 
                 $groupedEntries = $attendance_sheet->groupBy(['people_id', function ($oneFromCollection) {
                     return Carbon::parse($oneFromCollection->date)->toDateString();
