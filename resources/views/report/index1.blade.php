@@ -77,6 +77,19 @@
                             </form>
                             <!-- Bordered Table -->
                             @if(($groupedEntries)>0)
+                                <div>
+                                    <div class="d-flex">
+                                        <div class="d-flex border border-3 justify-content-center" style="height:30px;width:30px">+</div>
+                                        <p class="mx-1">-</p>
+                                        <p class="mx-1">Աշխատակիցը ներկայացել է աշխատանքի ժամանակին </p>
+                                    </div>
+                                    <div class="d-flex">
+                                        <div class="d-flex border border-3 justify-content-center " style="height:30px;width:30px">+</div>
+                                        <p class="mx-1">-</p>
+                                        <p class="mx-1">Աշխատակիցը  աշխատանքի ժամանակին </p>
+                                    </div>
+
+                                </div>
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
