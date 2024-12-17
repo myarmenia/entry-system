@@ -300,7 +300,7 @@ trait ReportTrait{
 
 
         }
-            dd($peopleDailyRecord);
+     
             if(isset($peopleDailyRecord)){
                 $total_monthly_working_hours = $this->calculate($peopleDailyRecord,$client);
 
