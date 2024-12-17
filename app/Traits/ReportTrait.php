@@ -56,8 +56,10 @@ trait ReportTrait{
 
                         $entryTime = null;
                         $dailyWorkingTime = 0; // Секунды
-                        $dayOfWeek = Carbon::parse($date)->format('l');
+                        $dayOfWeek = Carbon::parse(time: $date)->format('l');
+                        // dd($date);
                         $clientSchedule = $clientWorkingTimes[$dayOfWeek] ?? null;
+                        // dd($clientSchedule);
 
 
                         foreach ($records as $record) {
@@ -109,8 +111,10 @@ trait ReportTrait{
                         }
 
                         $worker_first_enter = $records->first();
+                        if(isset($clientSchedule)){
 
                             if($worker_first_enter->direction=="enter"){
+
 
                                     // dd($clientSchedule);
                                     $get_client_week_working_start_time='';
@@ -125,162 +129,152 @@ trait ReportTrait{
                                     }
                                     // dd($get_client_week_working_end_time);
                                     $worker_first_enter_time = explode(' ', $worker_first_enter->date)[1];
-                                    // dd($worker_first_enter_time);
+                                    // dump($peopleId, $day, $worker_first_enter_time);
 
                                     $worker_first_enter_time = new DateTime($worker_first_enter_time);
                                     // dd($get_client_week_working_end_time, $worker_first_enter_time);
-                                    if($worker_first_enter_time<$get_client_week_working_end_time){
 
-                                        // dd($worker_first_enter_time,$get_client_week_working_start_time);
-                                        if($worker_first_enter_time>$get_client_week_working_start_time){
-                                            // dd($get_client_week_working_start_time);
+                                        if($worker_first_enter_time<$get_client_week_working_end_time){
 
-                                            $interval = $worker_first_enter_time->diff($get_client_week_working_start_time);
+                                            // dd($worker_first_enter_time,$get_client_week_working_start_time);
+                                            if($worker_first_enter_time>$get_client_week_working_start_time){
+                                                // dd($get_client_week_working_start_time);
 
-                                            $peopleDailyRecord[$peopleId][$day]['delay_hour'][]=$interval->format('%H:%I:%S');
-                                            $peopleDailyRecord[$peopleId][$day]['delay_display']=true;
-                                            $peopleDailyRecord[$peopleId][$day]['coming']=true;
+                                                $interval = $worker_first_enter_time->diff($get_client_week_working_start_time);
+
+                                                $peopleDailyRecord[$peopleId][$day]['delay_hour'][]=$interval->format('%H:%I:%S');
+                                                $peopleDailyRecord[$peopleId][$day]['delay_display']=true;
+                                                $peopleDailyRecord[$peopleId][$day]['coming']=true;
+
+
+                                            }
+                                            else{
+                                                $peopleDailyRecord[$peopleId][$day]['coming']=true;
+                                            }
+
+                                            // =================
+                                            $breakfastInterval = $records
+                                            ->filter(function ($record) use ($clientSchedule) {
+                                            $recordTime = (new DateTime($record->date))->format('H:i:s');
+                                                return $recordTime >= $clientSchedule->break_start_time && $recordTime <= $clientSchedule->break_end_time;
+                                            })
+                                            ->sortByDesc('date') // Sort by date in descending order
+                                            ->groupBy('direction') // Group records by 'direction'
+                                            ->map(function ($group) {
+                                                return $group->first()->date; // Take the first (latest) record's date from each group
+                                            });
+                                            $breakfastInterval_find_mac = $records
+                                            ->filter(function ($record) use ($clientSchedule) {
+                                            $recordTime = (new DateTime($record->date))->format('H:i:s');
+                                                return $recordTime >= $clientSchedule->break_start_time && $recordTime <= $clientSchedule->break_end_time;
+                                            })
+                                            ->sortByDesc('date') // Sort by date in descending order
+                                            ->groupBy('direction') // Group records by 'direction'
+                                            ->map(function ($group) {
+                                                return $group->first()->mac; // Take the first (latest) record's date from each group
+                                            });
+                                            // dump( $peopleId, $breakfastInterval,$breakfastInterval_find_mac);
+
+
+
+                                            $ushacum = false;
+                                            // dd($breakfastInterval);
+                                            if(count($breakfastInterval)>0){
+                                                // dump($peopleId,$breakfastInterval);
+
+                                                if(count($breakfastInterval)==1 && isset($breakfastInterval["exit"])){
+
+                                                    $ushacum = true;
+
+                                                }
+                                                if(count($breakfastInterval)>1 ){
+
+
+
+                                                    // dump( $peopleId, $breakfastInterval,$breakfastInterval_find_mac);
+                                                    $enterTime='';
+                                                    $exitTime = '';
+                                                    if(isset($breakfastInterval_find_mac['unknown'])){
+                                                        $turnstile=Turnstile::where('mac',$breakfastInterval_find_mac['unknown'])->first();
+
+                                                        if($turnstile){
+                                                            if($turnstile->direction == "exit"){
+                                                                $exitTime = new DateTime($breakfastInterval['unknown']);
+                                                                // dump($exitTime);
+
+                                                            }
+                                                            else{
+                                                                $enterTime = new DateTime($breakfastInterval['unknown']);
+                                                            }
+                                                        }
+                                                    }else{
+
+                                                        $enterTime = new DateTime($breakfastInterval['enter']);
+                                                        if(isset($breakfastInterval['enter'])){
+                                                                if(isset($breakfastInterval['exit'])){
+                                                                    $exitTime = new DateTime($breakfastInterval['exit']);
+
+                                                                }
+                                                        }
+
+                                                        //   dump( $peopleId, $breakfastInterval,$breakfastInterval_find_mac);
+
+
+                                                    }
+                                                    if(isset($enterTime) && isset($exitTime)){
+                                                        // dump($peopleId, $enterTime, $exitTime);
+                                                        if ($exitTime > $enterTime) {
+                                                                    $ushacum = true;
+                                                                }
+                                                    }
+
+
+                                                }
+
+
+                                            }
+                                            else{
+
+
+                                                if($clientSchedule->week_day!="Saturday"){
+                                                    // dd($records);
+                                                    $firstActionAfterBreakfast = $records
+                                                                                ->filter(function ($record) use ($peopleId, $clientSchedule,$day) {
+                                                                                    // Parse the date using Carbon and format it to 'H:i:s' (hours:minutes:seconds)
+                                                                                    $recordTime = Carbon::parse($record->date)->format('H:i:s');
+                                                                                    // dump($day, $peopleId, $recordTime, $clientSchedule->break_end_time);
+                                                                                    // Check if the direction is 'enter', the time is after $clientSchedule->break_end_time, and people_id is $peopleId
+                                                                                    return $record->direction === 'enter' && $recordTime >= $clientSchedule->break_end_time && $record->people_id == $peopleId;
+                                                                                })
+                                                                                ->sortBy('date') // Sort by date in ascending order
+                                                                                ->first();
+                                                                                // dump( $peopleId,$firstActionAfterBreakfast);
+
+
+                                                    if( isset($firstActionAfterBreakfast->direction) && $firstActionAfterBreakfast->direction=="enter"){
+                                                        $ushacum=true;
+                                                        // dump($peopleId,"after",$day, $firstActionAfterBreakfast);
+                                                    }
+                                                }
+                                            }
+
+
+                                                if($ushacum == true){
+
+                                                    $peopleDailyRecord=$this->ushacum($peopleId, $date,$day, $clientSchedule, $peopleDailyRecord);
+
+                                                }
+                                                // =================
 
 
                                         }
                                         else{
-                                            $peopleDailyRecord[$peopleId][$day]['coming']=true;
-                                        }
-
-                                        // =================
-                                        $breakfastInterval = $records
-                                        ->filter(function ($record) use ($clientSchedule) {
-                                        $recordTime = (new DateTime($record->date))->format('H:i:s');
-                                        return $recordTime >= $clientSchedule->break_start_time && $recordTime <= $clientSchedule->break_end_time;
-                                    })
-                                    ->sortByDesc('date') // Sort by date in descending order
-                                    ->groupBy('direction') // Group records by 'direction'
-                                    ->map(function ($group) {
-                                        return $group->first()->date; // Take the first (latest) record's date from each group
-                                    });
-                                    $breakfastInterval_find_mac = $records
-                                    ->filter(function ($record) use ($clientSchedule) {
-                                    $recordTime = (new DateTime($record->date))->format('H:i:s');
-                                    return $recordTime >= $clientSchedule->break_start_time && $recordTime <= $clientSchedule->break_end_time;
-                                })
-                                ->sortByDesc('date') // Sort by date in descending order
-                                ->groupBy('direction') // Group records by 'direction'
-                                ->map(function ($group) {
-                                    return $group->first()->mac; // Take the first (latest) record's date from each group
-                                });
-                                    // dump( $peopleId, $breakfastInterval,$breakfastInterval_find_mac);
-
-
-
-                                    $ushacum = false;
-                                    // dd($breakfastInterval);
-                                    if(count($breakfastInterval)>0){
-                                        // dump($peopleId,$breakfastInterval);
-
-                                        if(count($breakfastInterval)==1 && isset($breakfastInterval["exit"])){
-
-                                            $ushacum = true;
-
-                                        }
-                                        if(count($breakfastInterval)>1 ){
-
-
-                                            // $enterTime = new DateTime($breakfastInterval['enter']);
-
-                                            // if(isset($breakfastInterval['enter'])){
-                                            //     if(isset($breakfastInterval['unknown'])){
-                                            //         $exitTime = new DateTime($breakfastInterval['unknown']);
-                                            //         // dump($exitTime);
-                                            //     }
-                                            //     if(isset($breakfastInterval['exit'])){
-                                            //         $exitTime = new DateTime($breakfastInterval['exit']);
-
-                                            //     }
-
-
-                                            // }
-                                            // dump( $peopleId, $breakfastInterval,$breakfastInterval_find_mac);
-                                            $enterTime='';
-                                            $exitTime = '';
-                                            if(isset($breakfastInterval_find_mac['unknown'])){
-                                                $turnstile=Turnstile::where('mac',$breakfastInterval_find_mac['unknown'])->first();
-
-                                                if($turnstile){
-                                                    if($turnstile->direction == "exit"){
-                                                        $exitTime = new DateTime($breakfastInterval['unknown']);
-                                                        // dump($exitTime);
-
-                                                    }
-                                                    else{
-                                                        $enterTime = new DateTime($breakfastInterval['unknown']);
-                                                    }
-                                                }
-                                            }else{
-
-                                                $enterTime = new DateTime($breakfastInterval['enter']);
-                                                  if(isset($breakfastInterval['enter'])){
-                                                        if(isset($breakfastInterval['exit'])){
-                                                            $exitTime = new DateTime($breakfastInterval['exit']);
-
-                                                        }
-                                                   }
-                                                //   dd($breakfastInterval_find_mac);
-                                                //   dump( $peopleId, $breakfastInterval,$breakfastInterval_find_mac);
-
+                                                // dump($peopleId);
+                                                $peopleDailyRecord[$peopleId][$day]['anomalia']=true; // gorci jamic heto e eke
 
                                             }
-                                            if(isset($enterTime) && isset($exitTime)){
-                                                // dump($peopleId, $enterTime, $exitTime);
-                                                if ($exitTime > $enterTime) {
-                                                            $ushacum = true;
-                                                        }
-                                            }
 
-
-                                        }
-
-
-                                    }
-                                    else{
-
-
-                                        if($clientSchedule->week_day!="Saturday"){
-                                            // dd($records);
-                                            $firstActionAfterBreakfast = $records
-                                                                        ->filter(function ($record) use ($peopleId, $clientSchedule,$day) {
-                                                                            // Parse the date using Carbon and format it to 'H:i:s' (hours:minutes:seconds)
-                                                                            $recordTime = Carbon::parse($record->date)->format('H:i:s');
-                                                                            // dump($day, $peopleId, $recordTime, $clientSchedule->break_end_time);
-                                                                            // Check if the direction is 'enter', the time is after $clientSchedule->break_end_time, and people_id is $peopleId
-                                                                            return $record->direction === 'enter' && $recordTime >= $clientSchedule->break_end_time && $record->people_id == $peopleId;
-                                                                        })
-                                                                        ->sortBy('date') // Sort by date in ascending order
-                                                                        ->first();
-                                                                        // dump( $peopleId,$firstActionAfterBreakfast);
-
-
-                                            if( isset($firstActionAfterBreakfast->direction) && $firstActionAfterBreakfast->direction=="enter"){
-                                                $ushacum=true;
-                                                // dump($peopleId,"after",$day, $firstActionAfterBreakfast);
-                                            }
-                                        }
-                                    }
-
-
-                                    if($ushacum == true){
-
-                                        $peopleDailyRecord=$this->ushacum($peopleId, $date,$day, $clientSchedule, $peopleDailyRecord);
-
-                                    }
-                                        // =================
-
-
-                                    }else{
-                                        $peopleDailyRecord[$peopleId][$day]['anomalia']=true; // gorci jamic heto e eke
-
-                                    }
-
-                                    // dd($peopleDailyRecord);
+                                         // dd($peopleDailyRecord);
 
 
 
@@ -289,6 +283,7 @@ trait ReportTrait{
 
                                     $peopleDailyRecord[$peopleId][$day]['anomalia']=true;
                                 }
+                        } //if(isset($clientSchedule)
 
 
                     }
@@ -300,7 +295,7 @@ trait ReportTrait{
 
 
         }
-     
+
             if(isset($peopleDailyRecord)){
                 $total_monthly_working_hours = $this->calculate($peopleDailyRecord,$client);
 

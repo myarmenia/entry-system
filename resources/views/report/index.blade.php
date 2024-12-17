@@ -77,6 +77,12 @@
                             </form>
                             <!-- Bordered Table -->
                             @if($attendant)
+                                <div>
+                                    <div>
+                                        <div></div>
+                                        <p></p>
+                                    </div>
+                                </div>
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
@@ -324,13 +330,12 @@
                                                                             if(isset($entry)){
                                                                                 $exit = new DateTime($at->date);
                                                                                 if(isset($entry)){
+                                                                                    $interval = $entry->diff($exit);
 
-
-                                                                                $interval = $entry->diff($exit);
-
-                                                                                //    echo $interval->format('%H h %I m');
-                                                                                $interval_arr[] = $interval->format('%H h %I m');
-                                                                                // dump($interval_arr);
+                                                                                    //    echo $interval->format('%H h %I m');
+                                                                                    $interval_arr[] = $interval->format('%H h %I m');
+                                                                                    // dump($interval_arr);
+                                                                                }
 
                                                                             }
 
