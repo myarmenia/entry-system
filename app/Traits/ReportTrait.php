@@ -31,7 +31,7 @@ trait ReportTrait{
                                 ->orderBy('people_id')
                                 ->orderBy('date')
                                 ->get();
-                                // dd($attendance_sheet);
+
 
                 $groupedEntries = $attendance_sheet->groupBy(['people_id', function ($oneFromCollection) {
                     return Carbon::parse($oneFromCollection->date)->toDateString();
@@ -69,7 +69,7 @@ trait ReportTrait{
                             }
 
 
-                            if ($record->direction == 'enter' && !$entryTime ) {
+                            if ($record->direction == 'enter') {
 
                                 $entryTime  = Carbon::parse($record->date);
 
@@ -105,18 +105,11 @@ trait ReportTrait{
 
                             }
 
-                            // else if($record->direction == 'unknown'){
-                            //     // dd($record);
 
-                            //     $peopleDailyRecord[$peopleId][$day]['anomalia'] = true;// ushacum ka
-
-                            // }
                         }
 
                         $worker_first_enter = $records->first();
-                        // dd( $worker_first_enter);
-                        // $worker_first_record = $records->value('direction');
-                        // dump( $worker_first_record);
+
                             if($worker_first_enter->direction=="enter"){
 
                                     // dd($clientSchedule);
@@ -307,7 +300,7 @@ trait ReportTrait{
 
 
         }
-            // dd($peopleDailyRecord);
+     
             if(isset($peopleDailyRecord)){
                 $total_monthly_working_hours = $this->calculate($peopleDailyRecord,$client);
 
