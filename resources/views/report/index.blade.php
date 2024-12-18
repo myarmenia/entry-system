@@ -68,22 +68,35 @@
 
                             </div>
 
+
                             <form  action="{{ route('reportList') }}" method="get" class="mb-3 justify-content-end" style="display: flex; gap: 8px">
 
                                 <div class="col-2">
                                     <input type="text"  class="form-select"  id="monthPicker" placeholder="Ընտրել ամիսը տարեթվով" name="mounth"/>
                                 </div>
-                                @php
-                                    $mounth = $mounth ?? \Carbon\Carbon::now()->format('Y-m');
-                                @endphp
-
-                                    <a href="{{ route('export-xlsx' ) }}"  class="btn btn-primary col-2">Արտահանել XLSX</a>
-
                                 <button type="submit" class="btn btn-primary col-2 search">Հաշվետվություն</button>
+                                <a href="{{ route('export-xlsx') }}" type="submit" class="btn btn-primary col-2 search">Արտահանել XLSX</a>
                             </form>
                             <!-- Bordered Table -->
-                            {{-- {{ dd($groupedEntries) }} --}}
                             @if(($groupedEntries)>0)
+                                <div>
+                                    <div class="d-flex">
+                                        <div class="d-flex border border-3 justify-content-center" style="height:30px;width:30px">+</div>
+                                        <p class="mx-1">-</p>
+                                        <p class="mx-1">Աշխատակիցը ներկայացել է աշխատանքի ժամանակին </p>
+                                    </div>
+                                    <div class="d-flex">
+                                        <div class="d-flex border border-3 justify-content-center bg-danger " style="height:30px;width:30px">+</div>
+                                        <p class="mx-1">-</p>
+                                        <p class="mx-1">Աշխատակիցը ուշացել է աշխատանքային ժամից </p>
+                                    </div>
+                                    <div class="d-flex">
+                                        <div class="d-flex border border-3 justify-content-center bg-warning " style="height:30px;width:30px">?</div>
+                                        <p class="mx-1">-</p>
+                                        <p class="mx-1">Աշխատակցի առաջին մուտքը ելք է եղել </p>
+                                    </div>
+
+                                </div>
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>

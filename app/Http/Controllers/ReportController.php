@@ -42,7 +42,7 @@ class ReportController extends Controller
     {
         $mounth = $request->mounth??\Carbon\Carbon::now()->format('Y-m');
         // dd($mounth);
-        $mounth = "2024-11";
+        // $mounth = "2024-11";
         // dd($mounth);
         // $k=$this->calculateReport($mounth);
         // dd($k);
