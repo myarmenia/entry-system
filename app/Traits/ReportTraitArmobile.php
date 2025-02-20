@@ -10,15 +10,16 @@ use DateTime;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Exception;
 
-trait ReportTrait{
+trait ReportTraitArmobile{
 
 
-    public function report($mounth){
+    public function report_armobile($mounth){
         // dd($mounth);
 
         $client = Client::where('user_id', Auth::id())->with('people.attendance_sheets')->first();
-// dd($client->people);
+        // dd($client->people->pluck('id'));
         if($mounth!=null){
 
             [$year, $month] = explode('-', $mounth);
@@ -27,13 +28,19 @@ trait ReportTrait{
 
             $startOfMonth =  $monthDate->startOfMonth()->toDateTimeString();
             $endOfMonth =  $monthDate->endOfMonth()->toDateTimeString();
+            // dd($startOfMonth,$endOfMonth);
 
+
+            // $attendance_sheet = AttendanceSheet::whereBetween('date', [$startOfMonth, $endOfMonth])
+            //                     ->orderBy('people_id')
+            //                     ->orderBy('date')
+            //                     ->get();
 
             $attendance_sheet = AttendanceSheet::whereBetween('date', [$startOfMonth, $endOfMonth])
+                                ->whereIn("people_id", $client->people->pluck('id')->toArray())
                                 ->orderBy('people_id')
                                 ->orderBy('date')
                                 ->get();
-
                                 // dd($attendance_sheet);
 
 
@@ -49,6 +56,11 @@ trait ReportTrait{
                                     ->where('client_id', $client->id)
                                     ->get()
                                     ->keyBy('week_day');
+                                    // dd($clientWorkingTimes);
+                                    if(count($clientWorkingTimes)==0){
+                                        throw new Exception("Հաճախորդի աշխատանքային ժամանակը սահմանված չէ"); // Выбрасываем ошибку
+                                        
+                                    }
 
                 $peopleDailyRecord=[];
 

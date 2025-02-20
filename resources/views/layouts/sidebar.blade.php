@@ -231,6 +231,12 @@
           <span>Հաշվետվություն</span>
           </a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link {{ Route::is(['reportListArmobile']) ? '' : 'collapsed' }}"  href = "{{ route('reportListArmobile') }}">
+        <i class="bi bi-person"></i>
+        <span>Հաշվետվություն*</span>
+        </a>
+    </li>
     @endif
 
       {{-- <li class="nav-item">

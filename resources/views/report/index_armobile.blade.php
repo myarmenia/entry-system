@@ -23,11 +23,13 @@
 
 
     // Assuming $request->month contains "2024-10"
-    $monthYear = $mounth;
+    $monthYear = $mounth ?? null;
 
     // Parse the month-year string to get the start and end of the month
     $startOfMonth = Carbon::parse($monthYear)->startOfMonth();
     $endOfMonth = Carbon::parse($monthYear)->endOfMonth();
+
+    $groupedEntries = $groupedEntries ?? null
 
 @endphp
 
@@ -52,11 +54,17 @@
                                 </div>
                             @endif
 
+
                             <div class = "d-flex justify-content-between">
+                                @if (isset($error))
+                                <div class="alert alert-danger">
+                                    {{ $error }}
+                                </div>
+                            @endif
                                 <h5 class="card-title">
                                     <nav>
                                         <ol class="breadcrumb">
-                                            <li class="breadcrumb-item active">Հաշվետվություն2</li>
+                                            <li class="breadcrumb-item active">Հաշվետվություն</li>
                                         </ol>
                                     </nav>
                                 </h5>
@@ -69,7 +77,7 @@
                             </div>
 
 
-                            <form  action="{{ route('reportList') }}" method="get" class="mb-3 justify-content-end" style="display: flex; gap: 8px">
+                            <form  action="{{ route('reportListArmobile') }}" method="get" class="mb-3 justify-content-end" style="display: flex; gap: 8px">
 
                                 <div class="col-2">
                                     <input type="text"  class="form-select"  id="monthPicker" placeholder="Ընտրել ամիսը տարեթվով" name="mounth"/>
@@ -98,7 +106,7 @@
 
                                 </div>
                                 <table class="table table-bordered">
-                                    <thead>
+                                    {{-- <thead>
                                         <tr>
                                             <th scope="col">Հ/Հ</th>
                                             <th scope="col">ID</th>
@@ -111,6 +119,28 @@
                                             <th>Օրերի քանակ</th>
                                             <th>ժամերի քանակ</th>
                                             <th>Ուշացման ժամանակի գումար</th>
+                                        </tr>
+                                    </thead> --}}
+                                    <thead>
+                                        <tr>
+                                            <th rowspan="2" scope="col">Հ/Հ</th>
+                                            <th rowspan="2" scope="col">ID</th>
+                                            <th rowspan="2" scope="col">Անուն</th>
+                                            <th rowspan="2" scope="col">Ազգանուն</th>
+
+                                            @for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay())
+                                                <th  colspan="2">{{ $date->format('d') }}</th> <!-- Displays each day in "YYYY-MM-DD" format -->
+
+                                            @endfor
+                                            <th rowspan="2">Օրերի քանակ</th>
+                                            <th rowspan="2">ժամերի քանակ</th>
+                                            <th rowspan="2">Ուշացման ժամանակի գումար</th>
+                                        </tr>
+                                        <tr>
+                                            @for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay())
+                                                <th>Մուտք</th>
+                                                <th>Ելք</th>
+                                            @endfor
                                         </tr>
                                     </thead>
                                     <tbody>
