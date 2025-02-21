@@ -140,16 +140,22 @@
                                                     @for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay())
                                                         <td class="p-0 text-center">
                                                             @if(isset($item[$date->format('d')]['enter']))
-                                                                @foreach ($item[$date->format('d')]['enter'] as $ent)
-                                                                    <span>{{ $ent }}</span><br>
-                                                                @endforeach
+                                                                {{-- @foreach ($item[$date->format('d')]['enter'] as $ent) --}}
+                                                                    <span>{{ $item[$date->format('d')]['enter'][0] }}</span><br>
+                                                                {{-- @endforeach --}}
                                                             @endif
                                                         </td>
                                                         <td class="p-0 text-center">
                                                             @if(isset($item[$date->format('d')]['exit']))
-                                                                @foreach ($item[$date->format('d')]['exit'] as $ex)
-                                                                    <span>{{ $ex }}</span><br>
-                                                                @endforeach
+                                                                {{-- {{ $item[$date->format('d')]['exit']->last() }} --}}
+
+                                                                {{-- @foreach ($item[$date->format('d')]['exit'] as $ex) --}}
+                                                                    <span>
+
+                                                                        {{  last(array_slice($item[$date->format('d')]['exit'], -1))  }}
+
+                                                                    </span><br>
+                                                                {{-- @endforeach --}}
                                                             @endif
                                                         </td>
                                                     @endfor

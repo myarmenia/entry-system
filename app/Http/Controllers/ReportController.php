@@ -20,8 +20,6 @@ class ReportController extends Controller
 
     public function calculateReport($mounth){
 
-
-
         $mounth = $mounth ?? \Carbon\Carbon::now()->format('Y-m');
         // dd($mounth);
 
@@ -66,10 +64,8 @@ class ReportController extends Controller
 
                 $mounth = $request->mounth??\Carbon\Carbon::now()->format('Y-m');
                 // dd($mounth);
-
                 $groupedEntries = $this->calculateReportArmobile($mounth);
                 // dd($groupedEntries);
-
 
                 return view('report.index_armobile',compact('groupedEntries','mounth','i'));
             } catch (Exception $e) {
