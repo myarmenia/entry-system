@@ -12,10 +12,11 @@ use Maatwebsite\Excel\Facades\Excel;
 class ReportController extends Controller
 {
     // use ReportTrait, ReportTraitArmobile;
-    use ReportTrait, ReportTraitArmobile {
-        ReportTraitArmobile::ushacum insteadof ReportTrait;
-        ReportTraitArmobile::calculate insteadof ReportTrait;
-    }
+    use ReportTrait, ReportTraitArmobile;
+    // {
+    //     ReportTraitArmobile::ushacum insteadof ReportTrait;
+    //     ReportTraitArmobile::calculate insteadof ReportTrait;
+    // }
 
     public function calculateReport($mounth){
 
@@ -51,6 +52,7 @@ class ReportController extends Controller
         // dd($mounth);
 
         $groupedEntries = $this->calculateReport($mounth);
+        // dd($groupedEntries);
 
 
         return view('report.index',compact('groupedEntries','mounth','i'));
@@ -71,9 +73,9 @@ class ReportController extends Controller
 
                 return view('report.index_armobile',compact('groupedEntries','mounth','i'));
             } catch (Exception $e) {
-                // dd($e->getMessage());
+
                 return view('report.index_armobile')->with('error', $e->getMessage());
-                // return redirect()->back()->with('error', $e->getMessage()); // Редирект с ошибкой
+
             }
     }
 

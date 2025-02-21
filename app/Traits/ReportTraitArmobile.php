@@ -59,24 +59,29 @@ trait ReportTraitArmobile{
                                     // dd($clientWorkingTimes);
                                     if(count($clientWorkingTimes)==0){
                                         throw new Exception("Հաճախորդի աշխատանքային ժամանակը սահմանված չէ"); // Выбрасываем ошибку
-                                        
+
                                     }
 
                 $peopleDailyRecord=[];
-
+                        // dd($groupedEntries);
                 foreach ($groupedEntries as $peopleId => $dailyRecords) {
+                    // dd($dailyRecords);
 
                     foreach ($dailyRecords as $date => $records) {
+                        // dd($records);
 
 
-                        $day=date('d',strtotime($date));
+                        $day = date('d',strtotime($date));
 
                         $records = $records->sortBy('date')->unique('date'); // Ensure records are sorted by time
 
                         $entryTime = null;
                         $dailyWorkingTime = 0; // Секунды
+                        // $enter = [];
+                        // $exit = [];
                         $dayOfWeek = Carbon::parse(time: $date)->format('l');
                         // dd($date);
+                        // dd($enter,$exit);
                         $clientSchedule = $clientWorkingTimes[$dayOfWeek] ?? null;
                         // dd($clientSchedule);
 
@@ -92,11 +97,17 @@ trait ReportTraitArmobile{
 
                             if ($record->direction == 'enter') {
 
+
                                 $entryTime  = Carbon::parse($record->date);
 
+                                $peopleDailyRecord[$peopleId][$day]['enter'][]= Carbon::parse($record->date)->format('H:i');
 
-                            } elseif ($record->direction == 'exit' && $entryTime) {
 
+                           
+                            }
+
+                             elseif ($record->direction == 'exit' && $entryTime) {
+                                $peopleDailyRecord[$peopleId][$day]['exit'][] = Carbon::parse($record->date)->format('H:i');
 
                                 $exitTime = Carbon::parse($record->date);
 
@@ -280,7 +291,7 @@ trait ReportTraitArmobile{
 
                                                 if($ushacum == true){
 
-                                                    $peopleDailyRecord=$this->ushacum($peopleId, $date,$day, $clientSchedule, $peopleDailyRecord);
+                                                    $peopleDailyRecord=$this->ushacum_arm($peopleId, $date,$day, $clientSchedule, $peopleDailyRecord);
 
                                                 }
                                                 // =================
@@ -316,7 +327,7 @@ trait ReportTraitArmobile{
         }
 
             if(isset($peopleDailyRecord)){
-                $total_monthly_working_hours = $this->calculate($peopleDailyRecord,$client);
+                $total_monthly_working_hours = $this->calculate_arm($peopleDailyRecord,$client);
 
                 $routeName = Route::currentRouteName();
                 if($routeName=="export-xlsx"){
@@ -338,7 +349,7 @@ trait ReportTraitArmobile{
 
 
     }
-    public function ushacum($peopleId, $date,$day, $clientSchedule, $peopleDailyRecord){
+    public function ushacum_arm($peopleId, $date,$day, $clientSchedule, $peopleDailyRecord){
 
 
 
@@ -380,7 +391,7 @@ trait ReportTraitArmobile{
                 return  $peopleDailyRecord;
     }
 
-    public function calculate($peopleDailyRecord,$client){
+    public function calculate_arm($peopleDailyRecord,$client){
 
 
         foreach ($peopleDailyRecord as $personId => $records) {
