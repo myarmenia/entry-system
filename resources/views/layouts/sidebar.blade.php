@@ -237,6 +237,13 @@
         <span>Հաշվետվություն*</span>
         </a>
     </li>
+    
+    <li class="nav-item">
+        <a class="nav-link {{ Route::is(['supervisedStaff']) ? '' : 'collapsed' }}"  href = "{{ route('supervisedStaff') }}">
+        <i class="bi bi-person"></i>
+        <span>Վերահսկվող աշխատակիցներ</span>
+        </a>
+    </li>
     @endif
 
       {{-- <li class="nav-item">

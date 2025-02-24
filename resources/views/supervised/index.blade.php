@@ -30,15 +30,13 @@
 
                     <nav>
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Աշխատակիցների/Այցելուների ցանկ</li>
+                            <li class="breadcrumb-item active">Վերահսկվող աշխատակիցների ցանկ</li>
 
                         </ol>
                     </nav>
 
                     </h5>
-                    <div class="pull-right d-flex justify-content-end m-3" >
-                        <a class="btn btn-primary  mb-2" href="{{ route('people.create') }}"><i class="fa fa-plus"></i> Ստեղծել նոր աշխատակից/այցելու</a>
-                    </div>
+
 
                 </div>
               <!-- Bordered Table -->
@@ -49,14 +47,10 @@
                   <tr>
                     <th scope="col">Հ/Հ</th>
                     <th scope="col">ID</th>
-                    <th scope="col">Նույնականացման կոդ</th>
-                    <th scope="col">Նկար</th>
+                    {{-- <th scope="col">Նույնականացման կոդ</th> --}}
+                    {{-- <th scope="col">Նկար</th> --}}
                     <th scope="col">Անուն</th>
                     <th scope="col">Ազգանուն</th>
-
-                    <th scope="col">Հեռախոսահամար</th>
-                    <th scope="col">Տեսակ</th>
-                    <th scope="col">Վերահսկվող</br> աշխատակից</th>
                     <th scope="col">Գործողություն</th>
                   </tr>
                 </thead>
@@ -71,15 +65,6 @@
                             <tr>
                                 <td>{{ ++$i }}</td>
                                 <th scope="row">{{ $person->id }}</th>
-                                <th scope="row">{{ $person->activated_code_connected_person->entry_code_id ?? null }}</th>
-                                <td>
-
-                                    @if($person->image !=null)
-                                        <img src = "{{  route('get-file',['path' => $person->image ]) }}" style="width:80px">
-
-                                    @endif
-
-                                </td>
                                 <td>
                                     {{ $person->name ?? null }}
 
@@ -88,19 +73,12 @@
                                     {{ $person->surname ?? null }}
 
                                 </td>
-                                <td>
+                                {{-- <td>
                                     {{ $person->phone ?? null }}
-                                </td>
-                                <td>
-                                    {{ $person->type=="worker"? "Աշխատակից" : "Այցելու"}}
-                                </td>
-                                <td>
-                                    <input type="checkbox"/ class="supervised" value="{{$person->id}}" data-client="{{$person->client->id}}">
-                                </td>
-
+                                </td> --}}
                                 <td>
 
-                                    <div class="dropdown action"data-id="{{ $person->id }}" data-tb-name="people">
+                                    <div class="dropdown action"data-id="{{ $person->id }}" data-tb-name="superviceds">
                                         <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
                                             data-bs-toggle="dropdown">
                                             <i class="bx bx-dots-vertical-rounded"></i>
@@ -155,7 +133,7 @@
 
               @if( $data !=null && count($data)>0)
                 <div class="demo-inline-spacing">
-                    {{ $data->links() }}
+                    {{-- {{ $data->links() }} --}}
                 </div>
                 @endif
             </div>
