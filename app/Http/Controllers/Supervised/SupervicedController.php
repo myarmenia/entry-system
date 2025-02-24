@@ -31,4 +31,14 @@ class SupervicedController extends Controller
         return view('supervised.index',compact('data','i'))->with('i', ($request->input('page', 1) - 1) * 10);;
 
     }
+    public function delete(Request $request){
+
+        $data = Superviced::where(['people_id'=>$request->people_id,'client_id'=>$request->client_id])->delete();
+        if ($data) {
+            return response()->json(['messages' => "Deleted successfully"],200);
+        } else {
+            return response()->json(['messages' => "No records found to delete"], 404);
+        }
+
+    }
 }

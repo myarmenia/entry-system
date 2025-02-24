@@ -73,7 +73,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/report/export',[ReportController::class,'export'])->name('export-xlsx');
     Route::post('supervised',[SupervicedController::class,'superviced_person']);
     Route::get('supervised-staff',[SupervicedController:: class,'supervised_staff'])->name('supervisedStaff');
-
+    Route::post('delete-superviced',[SupervicedController::class,'delete']);
 
 
 });

@@ -30,7 +30,7 @@
 
                     <nav>
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Վերահսկվող աշխատակիցների ցանկ</li>
+                            <li class="breadcrumb-item active">Վերահսկվող անձնակազմի ցանկ</li>
 
                         </ol>
                     </nav>
@@ -104,19 +104,19 @@
                                                 </a>
                                             @endif --}}
 
-                                        @if ($person !=null )
-                                            <a class="dropdown-item" href="{{route('calendar',$person->id )}}"><i
-                                                class="bx bx-edit-alt me-1"></i>Ժամանակացույց</a>
+                                            @if ($person !=null )
+                                                <a class="dropdown-item" href="{{route('calendar',$person->id )}}"><i
+                                                    class="bx bx-edit-alt me-1"></i>Ժամանակացույց</a>
 
-                                        @endif
+                                            @endif
 
 
-                                            <a class="dropdown-item" href="{{route('people.edit',$person->id)}}"><i
-                                                    class="bx bx-edit-alt me-1"></i>Խմբագրել</a>
-                                            <button type="button" class="dropdown-item click_delete_item"
+                                            {{-- <a class="dropdown-item" href="{{route('people.edit',$person->id)}}"><i
+                                                    class="bx bx-edit-alt me-1"></i>Խմբագրել</a>--}}
+                                            {{-- <button type="button" class="dropdown-item click_delete_item"
                                                 data-bs-toggle="modal" data-bs-target="#smallModal"><i
                                                     class="bx bx-trash me-1"></i>
-                                                Ջնջել</button>
+                                                Ջնջել</button> --}}
                                         </div>
                                     </div>
                                 </td>

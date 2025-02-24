@@ -31,6 +31,9 @@ class Person extends Model
     public function activated_code_connected_person(): HasOne{
         return $this->hasOne(PersonPermission::class)->where('status',1);
     }
+    public function superviced(){
+        return $this->hasOne(Superviced::class,'people_id');
+    }
 
 
 

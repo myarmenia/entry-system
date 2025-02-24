@@ -66,6 +66,8 @@
                         @foreach ($data as $person)
 
 
+
+
                         {{-- {{ dump($entry_code->active_person->people->name) }} --}}
 
                             <tr>
@@ -95,7 +97,7 @@
                                     {{ $person->type=="worker"? "Աշխատակից" : "Այցելու"}}
                                 </td>
                                 <td>
-                                    <input type="checkbox"/ class="supervised" value="{{$person->id}}" data-client="{{$person->client->id}}">
+                                    <input type="checkbox" class="supervised" {{ $person->superviced != null ? "checked": null }} value="{{$person->id}}" data-client="{{$person->client->id}}"/>
                                 </td>
 
                                 <td>
@@ -175,13 +177,16 @@
 
   </main><!-- End #main -->
 <script>
+
     $('.supervised').on('change', function() {
 
         // alert(7777)
         let isChecked = $(this).prop("checked") ? 1 : 0;
+        console.log(isChecked)
+        let people_id=$(this).val()
+        let client_id = $(this).attr('data-client')
         if(isChecked){
-            let people_id=$(this).val()
-            let client_id = $(this).attr('data-client')
+
             $.ajax({
             type: "POST",
             url: '/supervised',
@@ -200,6 +205,29 @@
                 }
             }
             });
+
+        }else{
+            console.log(people_id,client_id)
+
+            $.ajax({
+            type: "POST",
+            url: '/delete-superviced',
+            data: {
+                people_id: people_id,
+                client_id: client_id
+            },
+            cache: false,
+            success: function (data) {
+                if (data.success) {
+
+                }
+                else {
+                message = data.message
+
+                }
+            }
+            });
+
 
         }
     })
