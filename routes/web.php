@@ -18,6 +18,7 @@ use App\Http\Controllers\PersonPermission\PersonPermissionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\Supervised\SupervicedController;
 use App\Http\Controllers\UserController;
 use App\Services\FileUploadService;
 use Illuminate\Support\Facades\Route;
@@ -67,6 +68,12 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('people', PeopleController::class);
     Route::get('delete-item/{tb_name}/{id}', [DeleteItemController::class, 'index'])->name('delete_item');
     Route::get('report-list',[ReportController::class,'index'])->name('reportList');
+    Route::get('report-list-armobile',[ReportController::class,'index_armobile'])->name('reportListArmobile');
+
+    Route::get('/report/export',[ReportController::class,'export'])->name('export-xlsx');
+    Route::post('supervised',[SupervicedController::class,'superviced_person']);
+    Route::get('supervised-staff',[SupervicedController:: class,'supervised_staff'])->name('supervisedStaff');
+    Route::post('delete-superviced',[SupervicedController::class,'delete']);
 
 
 });
