@@ -30,6 +30,7 @@ trait ReportTrait{
 
 
             $attendance_sheet = AttendanceSheet::whereBetween('date', [$startOfMonth, $endOfMonth])
+                                ->whereIn("people_id", $client->people->pluck('id')->toArray())
                                 ->orderBy('people_id')
                                 ->orderBy('date')
                                 ->get();
