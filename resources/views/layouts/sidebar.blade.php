@@ -231,6 +231,24 @@
           <span>Հաշվետվություն</span>
           </a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link {{ Route::is(['reportListArmobile']) ? '' : 'collapsed' }}"  href = "{{ route('reportListArmobile') }}">
+        <i class="bi bi-person"></i>
+        <span>Հաշվետվություն*</span>
+        </a>
+    </li>
+
+
+        {{-- @if (\App\Helpers\MyHelper::client_superviced_stuff()==true) --}}
+            <li class="nav-item">
+                <a class="nav-link {{ Route::is(['supervisedStaff']) ? '' : 'collapsed' }}"  href = "{{ route('supervisedStaff') }}">
+                <i class="bi bi-person"></i>
+                <span>Վերահսկվող անձնակազմի հաշվետվություն</span>
+                </a>
+            </li>
+
+        {{-- @endif --}}
+
     @endif
 
       {{-- <li class="nav-item">

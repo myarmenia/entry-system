@@ -30,15 +30,13 @@
 
                     <nav>
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Աշխատակիցների/Այցելուների ցանկ</li>
+                            <li class="breadcrumb-item active">Վերահսկվող անձնակազմի ցանկ</li>
 
                         </ol>
                     </nav>
 
                     </h5>
-                    <div class="pull-right d-flex justify-content-end m-3" >
-                        <a class="btn btn-primary  mb-2" href="{{ route('people.create') }}"><i class="fa fa-plus"></i> Ստեղծել նոր աշխատակից/այցելու</a>
-                    </div>
+
 
                 </div>
               <!-- Bordered Table -->
@@ -49,14 +47,10 @@
                   <tr>
                     <th scope="col">Հ/Հ</th>
                     <th scope="col">ID</th>
-                    <th scope="col">Նույնականացման կոդ</th>
-                    <th scope="col">Նկար</th>
+                    {{-- <th scope="col">Նույնականացման կոդ</th> --}}
+                    {{-- <th scope="col">Նկար</th> --}}
                     <th scope="col">Անուն</th>
                     <th scope="col">Ազգանուն</th>
-
-                    <th scope="col">Հեռախոսահամար</th>
-                    <th scope="col">Տեսակ</th>
-                    <th scope="col">Վերահսկվող</br> աշխատակից</th>
                     <th scope="col">Գործողություն</th>
                   </tr>
                 </thead>
@@ -66,22 +60,11 @@
                         @foreach ($data as $person)
 
 
-
-
                         {{-- {{ dump($entry_code->active_person->people->name) }} --}}
 
                             <tr>
                                 <td>{{ ++$i }}</td>
                                 <th scope="row">{{ $person->id }}</th>
-                                <th scope="row">{{ $person->activated_code_connected_person->entry_code_id ?? null }}</th>
-                                <td>
-
-                                    @if($person->image !=null)
-                                        <img src = "{{  route('get-file',['path' => $person->image ]) }}" style="width:80px">
-
-                                    @endif
-
-                                </td>
                                 <td>
                                     {{ $person->name ?? null }}
 
@@ -90,19 +73,12 @@
                                     {{ $person->surname ?? null }}
 
                                 </td>
-                                <td>
+                                {{-- <td>
                                     {{ $person->phone ?? null }}
-                                </td>
-                                <td>
-                                    {{ $person->type=="worker"? "Աշխատակից" : "Այցելու"}}
-                                </td>
-                                <td>
-                                    <input type="checkbox" class="supervised" {{ $person->superviced != null ? "checked": null }} value="{{$person->id}}" data-client="{{$person->client->id}}"/>
-                                </td>
-
+                                </td> --}}
                                 <td>
 
-                                    <div class="dropdown action"data-id="{{ $person->id }}" data-tb-name="people">
+                                    <div class="dropdown action"data-id="{{ $person->id }}" data-tb-name="superviceds">
                                         <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
                                             data-bs-toggle="dropdown">
                                             <i class="bx bx-dots-vertical-rounded"></i>
@@ -128,19 +104,19 @@
                                                 </a>
                                             @endif --}}
 
-                                        @if ($person !=null )
-                                            <a class="dropdown-item" href="{{route('calendar',$person->id )}}"><i
-                                                class="bx bx-edit-alt me-1"></i>Ժամանակացույց</a>
+                                            @if ($person !=null )
+                                                <a class="dropdown-item" href="{{route('calendar',$person->id )}}"><i
+                                                    class="bx bx-edit-alt me-1"></i>Ժամանակացույց</a>
 
-                                        @endif
+                                            @endif
 
 
-                                            <a class="dropdown-item" href="{{route('people.edit',$person->id)}}"><i
-                                                    class="bx bx-edit-alt me-1"></i>Խմբագրել</a>
-                                            <button type="button" class="dropdown-item click_delete_item"
+                                            {{-- <a class="dropdown-item" href="{{route('people.edit',$person->id)}}"><i
+                                                    class="bx bx-edit-alt me-1"></i>Խմբագրել</a>--}}
+                                            {{-- <button type="button" class="dropdown-item click_delete_item"
                                                 data-bs-toggle="modal" data-bs-target="#smallModal"><i
                                                     class="bx bx-trash me-1"></i>
-                                                Ջնջել</button>
+                                                Ջնջել</button> --}}
                                         </div>
                                     </div>
                                 </td>
@@ -157,7 +133,7 @@
 
               @if( $data !=null && count($data)>0)
                 <div class="demo-inline-spacing">
-                    {{ $data->links() }}
+                    {{-- {{ $data->links() }} --}}
                 </div>
                 @endif
             </div>
@@ -177,16 +153,13 @@
 
   </main><!-- End #main -->
 <script>
-
     $('.supervised').on('change', function() {
 
         // alert(7777)
         let isChecked = $(this).prop("checked") ? 1 : 0;
-        console.log(isChecked)
-        let people_id=$(this).val()
-        let client_id = $(this).attr('data-client')
         if(isChecked){
-
+            let people_id=$(this).val()
+            let client_id = $(this).attr('data-client')
             $.ajax({
             type: "POST",
             url: '/supervised',
@@ -205,29 +178,6 @@
                 }
             }
             });
-
-        }else{
-            console.log(people_id,client_id)
-
-            $.ajax({
-            type: "POST",
-            url: '/delete-superviced',
-            data: {
-                people_id: people_id,
-                client_id: client_id
-            },
-            cache: false,
-            success: function (data) {
-                if (data.success) {
-
-                }
-                else {
-                message = data.message
-
-                }
-            }
-            });
-
 
         }
     })

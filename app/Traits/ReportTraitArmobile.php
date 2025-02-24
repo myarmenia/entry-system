@@ -10,15 +10,16 @@ use DateTime;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Exception;
 
-trait ReportTrait{
+trait ReportTraitArmobile{
 
 
-    public function report($mounth){
+    public function report_armobile($mounth){
         // dd($mounth);
 
         $client = Client::where('user_id', Auth::id())->with('people.attendance_sheets')->first();
-// dd($client->people);
+        // dd($client->people->pluck('id'));
         if($mounth!=null){
 
             [$year, $month] = explode('-', $mounth);
@@ -27,13 +28,19 @@ trait ReportTrait{
 
             $startOfMonth =  $monthDate->startOfMonth()->toDateTimeString();
             $endOfMonth =  $monthDate->endOfMonth()->toDateTimeString();
+            // dd($startOfMonth,$endOfMonth);
 
+
+            // $attendance_sheet = AttendanceSheet::whereBetween('date', [$startOfMonth, $endOfMonth])
+            //                     ->orderBy('people_id')
+            //                     ->orderBy('date')
+            //                     ->get();
 
             $attendance_sheet = AttendanceSheet::whereBetween('date', [$startOfMonth, $endOfMonth])
+                                ->whereIn("people_id", $client->people->pluck('id')->toArray())
                                 ->orderBy('people_id')
                                 ->orderBy('date')
                                 ->get();
-
                                 // dd($attendance_sheet);
 
 
@@ -49,22 +56,32 @@ trait ReportTrait{
                                     ->where('client_id', $client->id)
                                     ->get()
                                     ->keyBy('week_day');
+                                    // dd($clientWorkingTimes);
+                                    if(count($clientWorkingTimes)==0){
+                                        throw new Exception("Հաճախորդի աշխատանքային ժամանակը սահմանված չէ"); // Выбрасываем ошибку
+
+                                    }
 
                 $peopleDailyRecord=[];
-
+                        // dd($groupedEntries);
                 foreach ($groupedEntries as $peopleId => $dailyRecords) {
+                    // dd($dailyRecords);
 
                     foreach ($dailyRecords as $date => $records) {
+                        // dd($records);
 
 
-                        $day=date('d',strtotime($date));
+                        $day = date('d',strtotime($date));
 
                         $records = $records->sortBy('date')->unique('date'); // Ensure records are sorted by time
 
                         $entryTime = null;
                         $dailyWorkingTime = 0; // Секунды
+                        // $enter = [];
+                        // $exit = [];
                         $dayOfWeek = Carbon::parse(time: $date)->format('l');
                         // dd($date);
+                        // dd($enter,$exit);
                         $clientSchedule = $clientWorkingTimes[$dayOfWeek] ?? null;
                         // dd($clientSchedule);
 
@@ -80,11 +97,17 @@ trait ReportTrait{
 
                             if ($record->direction == 'enter') {
 
+
                                 $entryTime  = Carbon::parse($record->date);
 
+                                $peopleDailyRecord[$peopleId][$day]['enter'][]= Carbon::parse($record->date)->format('H:i');
 
-                            } elseif ($record->direction == 'exit' && $entryTime) {
 
+                           
+                            }
+
+                             elseif ($record->direction == 'exit' && $entryTime) {
+                                $peopleDailyRecord[$peopleId][$day]['exit'][] = Carbon::parse($record->date)->format('H:i');
 
                                 $exitTime = Carbon::parse($record->date);
 
@@ -268,7 +291,7 @@ trait ReportTrait{
 
                                                 if($ushacum == true){
 
-                                                    $peopleDailyRecord=$this->ushacum($peopleId, $date,$day, $clientSchedule, $peopleDailyRecord);
+                                                    $peopleDailyRecord=$this->ushacum_arm($peopleId, $date,$day, $clientSchedule, $peopleDailyRecord);
 
                                                 }
                                                 // =================
@@ -304,7 +327,7 @@ trait ReportTrait{
         }
 
             if(isset($peopleDailyRecord)){
-                $total_monthly_working_hours = $this->calculate($peopleDailyRecord,$client);
+                $total_monthly_working_hours = $this->calculate_arm($peopleDailyRecord,$client);
 
                 $routeName = Route::currentRouteName();
                 if($routeName=="export-xlsx"){
@@ -326,7 +349,7 @@ trait ReportTrait{
 
 
     }
-    public function ushacum($peopleId, $date,$day, $clientSchedule, $peopleDailyRecord){
+    public function ushacum_arm($peopleId, $date,$day, $clientSchedule, $peopleDailyRecord){
 
 
 
@@ -368,7 +391,7 @@ trait ReportTrait{
                 return  $peopleDailyRecord;
     }
 
-    public function calculate($peopleDailyRecord,$client){
+    public function calculate_arm($peopleDailyRecord,$client){
 
 
         foreach ($peopleDailyRecord as $personId => $records) {

@@ -37,7 +37,9 @@ class PersonRepository implements PersonRepositoryInterface
     {
         if(auth()->user()->hasRole(['client_admin','client_admin_rfID'])){
 
+
             $client = Client::where('user_id',Auth::id())->first();
+
             if($client!=null){
 
                 $query = EntryCode::where(['client_id'=>$client->id,'activation'=>0])->get();
