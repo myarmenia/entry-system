@@ -35,9 +35,11 @@ class ReportExport implements  FromCollection, WithHeadings,WithStyles
     public function collection()
     {
         // Use the trait's report logic
+        // dd($this->request);
         $groupedEntries = $this->report($this->request);
         // dd($groupedEntries);
         $lastElement = end($groupedEntries);
+        // dd($lastElement);
         $this->month = $lastElement;
         // dd($this->month);
 
