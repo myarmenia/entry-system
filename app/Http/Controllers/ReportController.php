@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\ReportExport;
 use App\Traits\ReportTrait;
 use App\Traits\ReportTraitArmobile;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -47,7 +48,7 @@ class ReportController extends Controller
         $i = 0;
 
         $mounth = $request->mounth??\Carbon\Carbon::now()->format('Y-m');
-        // dd($mounth);
+
 
         $groupedEntries = $this->calculateReport($mounth);
         // dd($groupedEntries);
@@ -78,12 +79,21 @@ class ReportController extends Controller
 
     public function export(Request $request)
     {
-        $mounth = $request->mounth??\Carbon\Carbon::now()->format('Y-m');
-        // dd($mounth);
-        // $mounth = "2024-11";
-        // dd($mounth);
-        // $k=$this->calculateReport($mounth);
-        // dd($k);
+        // $mounth = $request->mounth??\Carbon\Carbon::now()->format('Y-m');
+        // dd(  $mounth);
+         // Check if 'month' parameter exists in the URL
+         $monthParam = $request->query('mounth');
+
+         // If the 'month' parameter is set, use it. Otherwise, use the current month.
+         if ($monthParam) {
+             $selectedMonth = Carbon::createFromFormat('Y-m', $monthParam);
+         } else {
+             $selectedMonth = Carbon::now(); // Current month
+         }
+
+         // Format the selected month if needed
+         $mounth = $selectedMonth->format('Y-m');
+        //  dd( $formattedMonth);
 
         return Excel::download(new ReportExport($mounth), 'report.xlsx');
     }

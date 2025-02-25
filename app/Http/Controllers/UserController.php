@@ -33,14 +33,36 @@ class UserController extends Controller
     public function index(Request $request): View
     {
         $client = Client::where('user_id',Auth::id())->first();
+        // dd($client);
+        $query = User::latest();
+        // dd($query );
         if($client){
+
             $staff = Staff::where('client_admin_id',$client->id)->pluck('user_id');
 
             $data = User::whereIn('id',$staff)->latest()->paginate(5);
 
 
         }else{
-            $data = User::latest()->paginate(5);
+
+
+            if(Auth::user()->hasRole('super_admin')){
+
+                $user_id = Client::all()->pluck('user_id');
+
+                $query = $query->whereIn('id',$user_id);
+
+            }
+            else{
+            
+
+                $client_id = Staff::where('user_id',Auth::id())->value('client_admin_id');
+                $staff = Staff::where('client_admin_id',$client_id)->pluck('user_id');
+                $query = $query->whereIn('id',$staff);
+
+            }
+            $data = $query->paginate(5);
+
         }
 
 
