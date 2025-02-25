@@ -234,7 +234,7 @@
       <li class="nav-item">
         <a class="nav-link {{ Route::is(['reportListArmobile']) ? '' : 'collapsed' }}"  href = "{{ route('reportListArmobile') }}">
         <i class="bi bi-person"></i>
-        <span>Հաշվետվություն*</span>
+        <span>Հաշվետվություն ըստ մուտքի և ելքի</span>
         </a>
     </li>
 
