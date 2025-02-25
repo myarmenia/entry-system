@@ -64,7 +64,7 @@
                                 <h5 class="card-title">
                                     <nav>
                                         <ol class="breadcrumb">
-                                            <li class="breadcrumb-item active">Հաշվետվություն</li>
+                                            <li class="breadcrumb-item active">Հաշվետվություն ըստ մուտքի և ելքի</li>
                                         </ol>
                                     </nav>
                                 </h5>
