@@ -14,7 +14,8 @@ class UserRepository implements UserRepositoryInterface
 {
     public function store(array $data): User
     {
-
+// dd($data);
+// dd(Auth::user()->roles);
         $user = User::create($data);
 
         $user->assignRole($data['roles']);

@@ -75,7 +75,7 @@
                                     <input type="text"  class="form-select"  id="monthPicker" placeholder="Ընտրել ամիսը տարեթվով" name="mounth"/>
                                 </div>
                                 <button type="submit" class="btn btn-primary col-2 search">Հաշվետվություն</button>
-                                <a href="{{ route('export-xlsx') }}" type="submit" class="btn btn-primary col-2 search">Արտահանել XLSX</a>
+                                <a href="{{ route('export-xlsx',['mounth'=>$mounth]) }}" type="submit" class="btn btn-primary col-2 search">Արտահանել XLSX</a>
                             </form>
                             <!-- Bordered Table -->
                             @if(($groupedEntries)>0)
@@ -97,81 +97,83 @@
                                     </div>
 
                                 </div>
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Հ/Հ</th>
-                                            <th scope="col">ID</th>
-                                            <th scope="col">Անուն</th>
-                                            <th scope="col">Ազգանուն</th>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Հ/Հ</th>
+                                                <th scope="col">ID</th>
+                                                <th scope="col">Անուն</th>
+                                                <th scope="col">Ազգանուն</th>
 
-                                            @for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay())
-                                                <th>{{ $date->format('d') }}</th> <!-- Displays each day in "YYYY-MM-DD" format -->
-                                            @endfor
-                                            <th>Օրերի քանակ</th>
-                                            <th>ժամերի քանակ</th>
-                                            <th>Ուշացման ժամանակի գումար</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-                                        {{-- {{ dd ($groupedEntries)}} --}}
-                                        @foreach ($groupedEntries as $peopleId=>$item)
-
-                                            {{-- @dump($item) --}}
-
-                                            <tr class="parent">
-                                                <td>{{ ++$i }}</td>
-                                                <td scope="row">{{ $peopleId }}</td>
-                                                <td class="personName">
-                                                    {{ getPeople($peopleId)->name ?? null }}
-                                                </td>
-                                                <td class="personSurname">
-                                                    {{ getPeople($peopleId)->surname ?? null }}
-                                                </td>
                                                 @for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay())
-
-                                                    <td class="p-0 text-center">
-
-
-
-                                                        @if(isset($item[$date->format('d')]))
-
-
-
-                                                            @if (isset($item[$date->format('d')]['delay_display']))
-
-                                                                <div class="{{ isset($item[$date->format('d')]['delay_display'])?'bg-danger':null}}"> +</div>
-
-                                                            @elseif (isset($item[$date->format('d')]['anomalia']))
-
-                                                            <div class="{{ isset($item[$date->format('d')]['anomalia'])?'bg-warning':null}}"> ?</div>
-
-                                                            @elseif(isset($item[$date->format('d')]['coming']))
-                                                                +
-                                                            @endif
-                                                        @endif
-                                                    </td>
+                                                    <th>{{ $date->format('d') }}</th> <!-- Displays each day in "YYYY-MM-DD" format -->
                                                 @endfor
-                                                <td>
-                                                    {{$item['totalMonthDayCount'] }}
-
-                                                </td>
-                                                <td>
-
-                                                    <span class="{{ isset($item['personWorkingTimeLessThenClientWorkingTime']) ? 'text-danger' : null  }}">
-                                                        {{$item['totalWorkingTimePerPerson'] }}
-                                                     <span>
-
-                                                </td>
-                                                <td>
-                                                    {{$item['totaldelayPerPerson'] }}
-                                                </td>
+                                                <th>Օրերի քանակ</th>
+                                                <th>ժամերի քանակ</th>
+                                                <th>Ուշացման ժամանակի գումար</th>
                                             </tr>
-                                        @endforeach
+                                        </thead>
+                                        <tbody>
 
-                                    </tbody>
-                                </table>
+                                            {{-- {{ dd ($groupedEntries)}} --}}
+                                            @foreach ($groupedEntries as $peopleId=>$item)
+
+                                                {{-- @dump($item) --}}
+
+                                                <tr class="parent">
+                                                    <td>{{ ++$i }}</td>
+                                                    <td scope="row">{{ $peopleId }}</td>
+                                                    <td class="personName">
+                                                        {{ getPeople($peopleId)->name ?? null }}
+                                                    </td>
+                                                    <td class="personSurname">
+                                                        {{ getPeople($peopleId)->surname ?? null }}
+                                                    </td>
+                                                    @for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay())
+
+                                                        <td class="p-0 text-center">
+
+
+
+                                                            @if(isset($item[$date->format('d')]))
+
+
+
+                                                                @if (isset($item[$date->format('d')]['delay_display']))
+
+                                                                    <div class="{{ isset($item[$date->format('d')]['delay_display'])?'bg-danger':null}}"> +</div>
+
+                                                                @elseif (isset($item[$date->format('d')]['anomalia']))
+
+                                                                <div class="{{ isset($item[$date->format('d')]['anomalia'])?'bg-warning':null}}"> ?</div>
+
+                                                                @elseif(isset($item[$date->format('d')]['coming']))
+                                                                    +
+                                                                @endif
+                                                            @endif
+                                                        </td>
+                                                    @endfor
+                                                    <td>
+                                                        {{$item['totalMonthDayCount'] }}
+
+                                                    </td>
+                                                    <td>
+
+                                                        <span class="{{ isset($item['personWorkingTimeLessThenClientWorkingTime']) ? 'text-danger' : null  }}">
+                                                            {{$item['totalWorkingTimePerPerson'] }}
+                                                        <span>
+
+                                                    </td>
+                                                    <td>
+                                                        {{$item['totaldelayPerPerson'] }}
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+
+                                        </tbody>
+                                    </table>
+                                </div>
                             @endif
 
                             <!-- End Bordered Table -->
