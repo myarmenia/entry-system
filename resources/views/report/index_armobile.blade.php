@@ -83,7 +83,7 @@
                                     <input type="text"  class="form-select"  id="monthPicker" placeholder="Ընտրել ամիսը տարեթվով" name="mounth"/>
                                 </div>
                                 <button type="submit" class="btn btn-primary col-2 search">Հաշվետվություն</button>
-                                {{-- <a href="{{ route('export-xlsx-armobil') }}" type="submit" class="btn btn-primary col-2 search">Արտահանել XLSX</a> --}}
+                                <a href="{{ route('export-xlsx-armobil') }}" type="submit" class="btn btn-primary col-2 search">Արտահանել XLSX</a>
                             </form>
                             <!-- Bordered Table -->
                             @if(($groupedEntries)>0)
