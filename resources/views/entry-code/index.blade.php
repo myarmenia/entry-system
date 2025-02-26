@@ -2,6 +2,7 @@
 
 @section("page-script")
     <script src="{{ asset('assets/js/change-status.js') }}"></script>
+    <script src="{{ asset('assets/js/delete-item.js') }}"></script>
 @endsection
 
 @section('content')
@@ -35,7 +36,7 @@
                                         </ol>
                                     </nav>
                                 </h5>
-                                @if (auth()->user()->hasAnyRole(['client_admin','super_admin']))
+                                @if (auth()->user()->hasAnyRole(['client_admin','super_admin','manager']))
                                     <div class="pull-right d-flex justify-content-end m-3" >
                                         <a class="btn btn-primary  mb-2" href="{{ route('entry-codes-create') }}"><i class="fa fa-plus"></i> Ստեղծել նույնականացման կոդ</a>
                                     </div>
@@ -173,4 +174,5 @@
   </main><!-- End #main -->
 
 @endsection
+<x-modal-delete></x-modal-delete>
 

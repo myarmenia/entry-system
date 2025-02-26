@@ -19,22 +19,5 @@ class MyHelper
         return $decimal;
     }
 
-    public static function client_superviced_stuff()
-    {
-        $client = Client::where('user_id',Auth::id())->first();
-
-        $superviced = Superviced::where('client_id',$client->id)->get();
-
-
-        if(count($superviced)>0){
-            return true;
-        }else{
-            return false;
-        }
-       
-    }
-
-
-
-
+   
 }

@@ -54,7 +54,7 @@ class UserController extends Controller
 
             }
             else{
-            
+
 
                 $client_id = Staff::where('user_id',Auth::id())->value('client_admin_id');
                 $staff = Staff::where('client_admin_id',$client_id)->pluck('user_id');
@@ -116,6 +116,7 @@ class UserController extends Controller
      */
     public function show($id): View
     {
+
         $user = User::find($id);
 
         return view('users.show',compact('user'));
@@ -129,8 +130,10 @@ class UserController extends Controller
      */
     public function edit($id): View
     {
+        // dd(444);
         // $user = User::find($id);
         $user = User::where('id',$id)->with('client')->first();
+        // dd($user);
         $roles = Role::pluck('name','name')->all();
         $userRole = $user->roles->pluck('name','name')->all();
         $isEditMode = true;
@@ -193,13 +196,16 @@ class UserController extends Controller
     public function destroy($id): RedirectResponse
     {
 
-
-
             $data = $this->userService->deleteUser($id);
+
             if($data){
                 return redirect()->route('users.index')
                                 ->with('success','Օգտատերը ջնջվել է հաջողությամբ');
-                            }
-            return redirect()->route('users.index')->with('error', 'User not found.');
+            }else{
+                return redirect()->route('users.index')
+                ->with('error','Նման օգտատեր չի գտնվել');
+            }
+
+
     }
 }

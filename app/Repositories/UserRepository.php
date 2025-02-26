@@ -14,13 +14,10 @@ class UserRepository implements UserRepositoryInterface
 {
     public function store(array $data): User
     {
-// dd($data);
-// dd(Auth::user()->roles);
+
         $user = User::create($data);
 
         $user->assignRole($data['roles']);
-
-
 
             if(isset($data['client']['name']) && $data['client']['name']!=null){
                 $client=new Client();
@@ -44,9 +41,6 @@ class UserRepository implements UserRepositoryInterface
                   Staff::create($staff_user);
 
             }
-
-
-
 
         return $user;
 
@@ -80,7 +74,15 @@ class UserRepository implements UserRepositoryInterface
     }
     public function delete($id){
 
-        $user = User::find($id)->delete();
+
+        $user = User::find($id);
+        if($user){
+            $user ->delete();
+            return true;
+        }else{
+            return false;
+        }
+
 
     }
 }

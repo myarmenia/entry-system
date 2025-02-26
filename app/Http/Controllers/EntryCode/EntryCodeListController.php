@@ -5,7 +5,7 @@ namespace App\Http\Controllers\EntryCode;
 use App\Http\Controllers\Controller;
 use App\Models\Client;
 use App\Models\EntryCode;
-
+use App\Models\Staff;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,6 +26,18 @@ class EntryCodeListController extends Controller
                 $query->where('client_id', $client->id);
             }
         }
+        if ($user->hasRole('manager') ) {
+
+            $client_id = Staff::where('user_id',Auth::id())->value('client_admin_id');
+            // dd($client_id);
+
+            // $client = Client::where('user_id', $user->id)->first();
+
+            // if ($client) {
+                $query->where('client_id', $client_id);
+            // }
+        }
+
 
         $data = $query->paginate(10)->withQueryString();
 
