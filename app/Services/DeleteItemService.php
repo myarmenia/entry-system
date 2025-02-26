@@ -3,7 +3,11 @@
 namespace App\Services;
 
 use App\Models\EntryCode;
+use App\Models\Person;
+use App\Models\PersonPermission;
+use App\Models\Superviced;
 use App\Services\Log\LogService;
+use Exception;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -25,9 +29,24 @@ class DeleteItemService
       if(!is_string($model)){
 
           $item = $model->where('id', $id);
+          if (!$item) {
+            throw new Exception('Սխալ է տեղի ունեցել։');
+        }
 
           $file_path = '';
           $item_db = $item->first();
+
+          if($item_db->activation == 1 && $item_db->activation !== null){
+            $person_permissions = PersonPermission::where('entry_code_id',$item_db->id)->value('person_id');
+            $person = Person::where('id',$person_permissions)->value('id');
+            $superviceds = Superviced::where('people_id',$person)->first();
+            if($superviceds){
+
+                 throw new Exception("Նախքան ջնջելը աշխատակցին անհրաժեշտ է հանել վերահսկման ցուցակից");
+
+            }
+
+          }
 
 
           if(isset($item_db->image)){
@@ -51,6 +70,7 @@ class DeleteItemService
 
 
         if($tb_name == 'people'){
+
                   $item_db->activated_code_connected_person();
                   if($item_db->activated_code_connected_person !=null){
                     $item_db->activated_code_connected_person->status = 0;
@@ -58,14 +78,16 @@ class DeleteItemService
 
                     $entry_code = self::entryCodeChangeStatus($item_db->activated_code_connected_person->entry_code_id);
                   }
-              }
+        }
+        // dd($tb_name, $item);
 
-          $delete = $item ? $item->delete() : false;
+        //   $delete = $item ? $item->delete() : false;
 
         //   $delete ? LogService::store(null, $id, $tb_name, 'delete') : '';
 
 
-      return $delete;
+        //   return $delete;
+            return $item->delete();
       }
 
   }

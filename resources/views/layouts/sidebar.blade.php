@@ -200,14 +200,15 @@
             <span>Նույնականացման կոդեր</span>
             </a>
         </li>
+        @if (!Auth::user()->hasRole(["manager"]))
 
-
-      <li class="nav-item">
-        <a class="nav-link {{ Route::is(['users.index', 'users.create', 'users.edit']) ? '' : 'collapsed' }}"  href=" {{ route('users.index') }}">
-          <i class="bi bi-person"></i>
-          <span>Օգտատերեր</span>
-        </a>
-      </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Route::is(['users.index', 'users.create', 'users.edit']) ? '' : 'collapsed' }}"  href=" {{ route('users.index') }}">
+                <i class="bi bi-person"></i>
+                <span>Օգտատերեր</span>
+                </a>
+            </li>
+        @endif
       @if (Auth::user()->hasRole("super_admin"))
         <li class="nav-item">
             <a class="nav-link {{ Route::is(['roles.index', 'roles.create', 'roles.edit']) ? '' : 'collapsed' }}" href="{{ route('roles.index') }}">
@@ -216,7 +217,7 @@
             </a>
         </li>
        @endif
-       @if (Auth::user()->hasRole(["client_admin","client_admin_rfID"]))
+       @if (Auth::user()->hasRole(["client_admin","client_admin_rfID","manager"]))
         <li class="nav-item">
             <a class="nav-link {{ Route::is(['people.index', 'people.create', 'people.edit']) ? '' : 'collapsed' }}" href="{{ route('people.index') }}">
             <i class="bi bi-person"></i>
@@ -224,7 +225,7 @@
             </a>
         </li>
       @endif
-      @if (Auth::user()->hasRole(["client_admin","client_admin_rfID"]))
+      @if (Auth::user()->hasRole(["client_admin","client_admin_rfID","manager"]))
       <li class="nav-item">
           <a class="nav-link {{ Route::is(['reportList']) ? '' : 'collapsed' }}"  href = "{{ route('reportList') }}">
           <i class="bi bi-person"></i>
@@ -239,7 +240,7 @@
     </li>
 
 
-        {{-- @if (\App\Helpers\MyHelper::client_superviced_stuff()==true) --}}
+
             <li class="nav-item">
                 <a class="nav-link {{ Route::is(['supervisedStaff']) ? '' : 'collapsed' }}"  href = "{{ route('supervisedStaff') }}">
                 <i class="bi bi-person"></i>
@@ -247,7 +248,7 @@
                 </a>
             </li>
 
-        {{-- @endif --}}
+
 
     @endif
 

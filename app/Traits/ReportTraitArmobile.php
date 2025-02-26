@@ -4,6 +4,7 @@ namespace App\Traits;
 use App\Models\AttendanceSheet;
 use App\Models\Client;
 use App\Models\ClientWorkingDayTime;
+use App\Models\Staff;
 use App\Models\Turnstile;
 use Carbon\Carbon;
 use DateTime;
@@ -17,9 +18,20 @@ trait ReportTraitArmobile{
 
     public function report_armobile($mounth){
         // dd($mounth);
+        if(Auth::user()->hasRole('client_admin')){
+            $client_id = Auth::id();
 
-        $client = Client::where('user_id', Auth::id())->with('people.attendance_sheets')->first();
-        // dd($client->people->pluck('id'));
+        }
+        if(Auth::user()->hasRole('manager')){
+            // dd(777);
+            $client_admin_id=Staff::where('user_id',Auth::id())->value('client_admin_id');
+            $client = Client::find($client_admin_id);
+            $client_id = $client->user_id;
+        }
+        // $client = Client::where('user_id', Auth::id())->with('people.attendance_sheets')->first();
+        $client = Client::where('user_id', $client_id)->with('people.attendance_sheets')->first();
+
+      
         if($mounth!=null){
 
             [$year, $month] = explode('-', $mounth);
@@ -28,13 +40,7 @@ trait ReportTraitArmobile{
 
             $startOfMonth =  $monthDate->startOfMonth()->toDateTimeString();
             $endOfMonth =  $monthDate->endOfMonth()->toDateTimeString();
-            // dd($startOfMonth,$endOfMonth);
 
-
-            // $attendance_sheet = AttendanceSheet::whereBetween('date', [$startOfMonth, $endOfMonth])
-            //                     ->orderBy('people_id')
-            //                     ->orderBy('date')
-            //                     ->get();
 
             $attendance_sheet = AttendanceSheet::whereBetween('date', [$startOfMonth, $endOfMonth])
                                 ->whereIn("people_id", $client->people->pluck('id')->toArray())
@@ -103,7 +109,7 @@ trait ReportTraitArmobile{
                                 $peopleDailyRecord[$peopleId][$day]['enter'][]= Carbon::parse($record->date)->format('H:i');
 
 
-                           
+
                             }
 
                              elseif ($record->direction == 'exit' && $entryTime) {

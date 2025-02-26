@@ -4,20 +4,31 @@ namespace App\Traits;
 use App\Models\AttendanceSheet;
 use App\Models\Client;
 use App\Models\ClientWorkingDayTime;
+use App\Models\Staff;
 use App\Models\Turnstile;
 use Carbon\Carbon;
 use DateTime;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 trait ReportTrait{
 
-
     public function report($mounth){
-        // dd($mounth);
 
-        $client = Client::where('user_id', Auth::id())->with('people.attendance_sheets')->first();
+        if(Auth::user()->hasRole('client_admin')){
+            $client_id = Auth::id();
+
+        }
+        if(Auth::user()->hasRole('manager')){
+            // dd(777);
+            $client_admin_id=Staff::where('user_id',Auth::id())->value('client_admin_id');
+            $client = Client::find($client_admin_id);
+            $client_id = $client->user_id;
+        }
+        // $client = Client::where('user_id', Auth::id())->with('people.attendance_sheets')->first();
+        $client = Client::where('user_id', $client_id)->with('people.attendance_sheets')->first();
 // dd($client->people);
         if($mounth!=null){
 
@@ -29,6 +40,10 @@ trait ReportTrait{
             $endOfMonth =  $monthDate->endOfMonth()->toDateTimeString();
 
 
+            // if(count($client->people->pluck('id')->toArray())==0){
+            //     throw new Exception("Աշխատակազմը բացակայում է");
+
+            // }
             $attendance_sheet = AttendanceSheet::whereBetween('date', [$startOfMonth, $endOfMonth])
                                 ->whereIn("people_id", $client->people->pluck('id')->toArray())
                                 ->orderBy('people_id')

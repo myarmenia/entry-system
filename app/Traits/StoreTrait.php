@@ -4,6 +4,7 @@ namespace App\Traits;
 use App\Models\Client;
 use App\Models\EntryCode;
 use App\Models\PersonPermission;
+use App\Models\Staff;
 use App\Services\FileUploadService;
 
 use Illuminate\Support\Facades\Auth;
@@ -17,11 +18,20 @@ trait StoreTrait
 
     public function itemStore( $request)
     {
-
+$client='';
         if(auth()->user()->hasRole('client_admin')){
-            $client=Client::where('user_id',Auth::id())->first();
+
+            $client = Client::where('user_id',Auth::id())->value('id');
+        }
+        if(auth()->user()->hasRole('manager')){
+            // dd(777);
+
+            $client = Staff::where('user_id',Auth::id())->value('client_admin_id');
+// dd($client);
+        }
+
             $request['type']="faceID";
-            $request['client_id'] =$client->id;
+            $request['client_id'] = $client;
 
             if( $request->has('activation')){
                 $request['activation'] = 1;
@@ -30,9 +40,10 @@ trait StoreTrait
                 $request['activation'] = 0;
             }
 
-        }
+
 
         $data = $request->all();
+        // dd($data);
 
         $className = $this->model();
 

@@ -97,7 +97,10 @@
                                     {{ $person->type=="worker"? "Աշխատակից" : "Այցելու"}}
                                 </td>
                                 <td>
-                                    <input type="checkbox" class="supervised" {{ $person->superviced != null ? "checked": null }} value="{{$person->id}}" data-client="{{$person->client->id}}"/>
+                                    {{-- {{ dd($person->activated_code_connected_person) }} --}}
+                                    @if($person->activated_code_connected_person!=null )
+                                        <input type="checkbox" class="supervised" {{ $person->superviced != null ? "checked": null }} value="{{$person->id}}" data-client="{{$person->client->id}}"/>
+                                    @endif
                                 </td>
 
                                 <td>
