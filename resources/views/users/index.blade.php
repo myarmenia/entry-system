@@ -30,6 +30,11 @@
             {{ $value }}
         </div>
     @endsession
+    @session('error')
+    <div class="alert alert-danger" role="alert">
+        {{ $value }}
+    </div>
+@endsession
 
     <table class="table table-bordered">
         <tr>

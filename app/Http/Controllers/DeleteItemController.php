@@ -11,8 +11,18 @@ class DeleteItemController extends Controller
     {
 
    
-      $delete = DeleteItemService::delete($tb_name, $id);
+         try {
 
-      return response()->json(['result' => $delete]);
+            $delete = DeleteItemService::delete($tb_name, $id);
+            return response()->json(['result' => $delete]);
+
+            } catch (\Exception $e) {
+
+                return response()->json(['error' => $e->getMessage()], 404);
+            }
+
+
+
+
     }
 }
