@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 trait ReportTrait{
 
     public function report($mounth){
+        // dd($mounth);
 
         if(Auth::user()->hasRole('client_admin')){
             $client_id = Auth::id();

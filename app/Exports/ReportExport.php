@@ -60,7 +60,7 @@ class ReportExport implements  FromCollection, WithHeadings,WithStyles
 
             ];
             $daysInMonth = Carbon::create($this->year, $this->month)->daysInMonth;
-            dd($daysInMonth);
+            // dd($daysInMonth);
             for ($day = 1; $day <= $daysInMonth; $day++) {
 
                 if(isset($item[$day])){

@@ -17,7 +17,7 @@ trait ReportTraitArmobile{
 
 
     public function report_armobile($mounth){
-        // dd($mounth);
+
         if(Auth::user()->hasRole('client_admin')){
             $client_id = Auth::id();
 
@@ -31,7 +31,7 @@ trait ReportTraitArmobile{
         // $client = Client::where('user_id', Auth::id())->with('people.attendance_sheets')->first();
         $client = Client::where('user_id', $client_id)->with('people.attendance_sheets')->first();
 
-      
+
         if($mounth!=null){
 
             [$year, $month] = explode('-', $mounth);
@@ -336,7 +336,7 @@ trait ReportTraitArmobile{
                 $total_monthly_working_hours = $this->calculate_arm($peopleDailyRecord,$client);
 
                 $routeName = Route::currentRouteName();
-                if($routeName=="export-xlsx"){
+                if($routeName=="export-xlsx-armobil"){
                     $total_monthly_working_hours['mounth']=$month;
 
                 }
