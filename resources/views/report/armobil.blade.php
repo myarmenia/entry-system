@@ -32,7 +32,7 @@
         <table>
             <thead>
                 <tr>
-                    <td colspan="3" >Հաշվետվություն {{ $monthYear }}-ի դրությամբ</td>
+                    <td colspan="20" >Հաշվետվություն {{ $monthYear }}-ի դրությամբ</td>
 
                 </tr>
                 <tr>
