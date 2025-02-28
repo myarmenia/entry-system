@@ -28,6 +28,7 @@
     // Parse the month-year string to get the start and end of the month
     $startOfMonth = Carbon::parse($monthYear)->startOfMonth();
     $endOfMonth = Carbon::parse($monthYear)->endOfMonth();
+    // dd($startOfMonth);
 
 @endphp
 
@@ -56,7 +57,7 @@
                                 <h5 class="card-title">
                                     <nav>
                                         <ol class="breadcrumb">
-                                            <li class="breadcrumb-item active">Հաշվետվություն2</li>
+                                            <li class="breadcrumb-item active">Հաշվետվություն</li>
                                         </ol>
                                     </nav>
                                 </h5>
