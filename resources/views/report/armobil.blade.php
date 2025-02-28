@@ -1,19 +1,3 @@
-@extends('layouts.app')
-
-@section("page-script")
-    <script src="{{ asset('assets/js/change-status.js') }}"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <style>
-        th{
-            font-size:12px
-        }
-    </style>
-@endsection
-
-
-@section('content')
 @php
     use Carbon\Carbon;
 
@@ -24,18 +8,16 @@
 
     // Assuming $request->month contains "2024-10"
     $monthYear = $mounth ?? null;
+// dd( $monthYear);
 
     // Parse the month-year string to get the start and end of the month
     $startOfMonth = Carbon::parse($monthYear)->startOfMonth();
     $endOfMonth = Carbon::parse($monthYear)->endOfMonth();
 
-    $groupedEntries = $groupedEntries ?? null
-
+    $groupedEntries = $groupedEntries ?? null;
+dd( $groupedEntries)
 @endphp
-
-
-
-   <main id="main" class="main">
+<main id="main" class="main">
 
 
     <section class="section">
@@ -77,35 +59,11 @@
                             </div>
 
 
-                            <form  action="{{ route('reportListArmobile') }}" method="get" class="mb-3 justify-content-end" style="display: flex; gap: 8px">
-
-                                <div class="col-2">
-                                    <input type="text"  class="form-select"  id="monthPicker" placeholder="Ընտրել ամիսը տարեթվով" name="mounth"/>
-                                </div>
-
-                                <button type="submit" class="btn btn-primary col-2 search">Հաշվետվություն</button>
-                                <a href="{{ route('export-xlsx-armobil',$mounth) }}" type="submit" class="btn btn-primary col-2 search">Արտահանել XLSX</a>
-                            </form>
+                          {{-- {{dd($groupedEntries)}} --}}
                             <!-- Bordered Table -->
-                            @if(($groupedEntries)>0)
-                                {{-- <div>
-                                    <div class="d-flex">
-                                        <div class="d-flex border border-3 justify-content-center" style="height:30px;width:30px">+</div>
-                                        <p class="mx-1">-</p>
-                                        <p class="mx-1">Աշխատակիցը ներկայացել է աշխատանքի ժամանակին </p>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="d-flex border border-3 justify-content-center bg-danger " style="height:30px;width:30px">+</div>
-                                        <p class="mx-1">-</p>
-                                        <p class="mx-1">Աշխատակիցը ուշացել է աշխատանքային ժամից </p>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="d-flex border border-3 justify-content-center bg-warning " style="height:30px;width:30px">?</div>
-                                        <p class="mx-1">-</p>
-                                        <p class="mx-1">Աշխատակցի առաջին գործողությունն ելք է եղել </p>
-                                    </div>
+                            @if((count($groupedEntries))>0)
 
-                                </div> --}}
+
                                 <div class="table-responsive">
                                     <table class="table table-bordered">
                                         <thead>
@@ -131,8 +89,8 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {{-- {{ dd($groupedEntries) }} --}}
-                                            @foreach ($groupedEntries as $peopleId => $item)
+
+                                            {{-- @foreach ($groupedEntries as $peopleId => $item)
                                                 <tr>
                                                     <td>{{ ++$i }}</td>
                                                     <td>{{ $peopleId }}</td>
@@ -142,22 +100,23 @@
                                                     @for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay())
                                                         <td class="p-0 text-center">
                                                             @if(isset($item[$date->format('d')]['enter']))
-                                                                {{-- @foreach ($item[$date->format('d')]['enter'] as $ent) --}}
+
                                                                     <span>{{ $item[$date->format('d')]['enter'][0] }}</span><br>
-                                                                {{-- @endforeach --}}
+
                                                             @endif
                                                         </td>
                                                         <td class="p-0 text-center">
                                                             @if(isset($item[$date->format('d')]['exit']))
-                                                                {{-- {{ $item[$date->format('d')]['exit']->last() }} --}}
+                                                            {{$item[$date->format('d')]['exit']}}
 
-                                                                {{-- @foreach ($item[$date->format('d')]['exit'] as $ex) --}}
+
+
                                                                     <span>
 
                                                                         {{  last(array_slice($item[$date->format('d')]['exit'], -1))  }}
 
                                                                     </span><br>
-                                                                {{-- @endforeach --}}
+
                                                             @endif
                                                         </td>
                                                     @endfor
@@ -168,7 +127,7 @@
                                                     </td>
                                                     <td>{{ $item['totaldelayPerPerson'] }}</td>
                                                 </tr>
-                                            @endforeach
+                                            @endforeach --}}
                                         </tbody>
                                     </table>
                                 </div>
@@ -193,8 +152,4 @@
 
     </section>
 
-  </main><!-- End #main -->
-
-@endsection
-
-
+  </main>

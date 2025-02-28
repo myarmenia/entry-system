@@ -17,14 +17,20 @@ use PhpOffice\PhpSpreadsheet\Style\Style;
 
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\WithEvents;
 
 
 
 
-class ArmobilExport implements FromView
-//  FromCollection, WithHeadings,WithStyles,ShouldAutoSize
+class ArmobilExport implements FromView, ShouldAutoSize
+// FromCollection
+// , WithHeadings,WithStyles,ShouldAutoSize, WithEvents
+
 {
     use ReportTraitArmobile;
+    use Exportable;
+
 
 
     /**
@@ -33,14 +39,15 @@ class ArmobilExport implements FromView
     protected $request;
     protected $year;
     protected $month;
-    // public function __construct($request,$year=null, $month=null)
-    // {
+    protected $aa;
+    public function __construct($request,$year=null, $month=null)
+    {
 
-    //     $this->request = $request;
-    //     $this->year = $year ?? now()->year;
-    //     $this->month = $month ?? now()->month;
+        $this->request = $request;
+        $this->year = $year ?? now()->year;
+        $this->month = $month ?? now()->month;
 
-    // }
+    }
     public function collection()
     {
         // dd($this->request);
@@ -52,7 +59,7 @@ class ArmobilExport implements FromView
         $this->month = $lastElement;
         // dd($groupedEntries);
 
-        // unset($groupedEntries['mounth']);
+
         if (isset($groupedEntries['mounth'])) {
             unset($groupedEntries['mounth']);
         }
@@ -101,97 +108,113 @@ class ArmobilExport implements FromView
         // dd(collect($exportData));
         return collect($exportData);
     }
-    // public function headings(): array
+
+
+//     public function headings(): array
+//     {
+
+//     $daysInMonth = Carbon::create($this->year, $this->month)->daysInMonth;
+//     $dayHeaders = [];
+
+//     // Add headers for each day with a merged cell for "enter" and "exit"
+//     for ($day = 1; $day <= $daysInMonth; $day++) {
+//         $dayHeaders[] = $day; // Day header
+
+//     }
+
+//     // Create header rows
+//     $fixedHeaders = ['Հ/Հ', 'ID', 'Անուն', 'Ազգանուն']; // Fixed headers
+//     $dynamicHeaders = []; // Dynamic headers for each day
+//     $enterExitHeaders = []; // To hold Enter and Exit headers
+
+//     // Add "enter" and "exit" labels under each day
+//     foreach ($dayHeaders as $day) {
+
+//         $dynamicHeaders[] = $day; // Day number
+//         // $dynamicHeaders[] = 'Enter'; // Enter label
+//         // $dynamicHeaders[] = 'Exit'; // Exit label
+//         $enterExitHeaders[] = 'Enter'; // Enter label for the day
+//         $enterExitHeaders[] = 'Exit'; // Exit label for the day
+//     }
+//     // dd($dynamicHeaders);
+//     // foreach($dynamicHeaders as $exent){
+//     //     $exent[]['Enter']='Enter';
+//     //     $exent[]['exit']='Exit';
+
+//     // }
+//     //  dd($dynamicHeaders);
+
+//     // Merge fixed headers with dynamic headers
+
+//     $allHeaders = array_merge(
+//         $fixedHeaders,
+//         $dynamicHeaders,
+//         $enterExitHeaders,
+//         ['Օրերի քանակ', 'ժամերի քանակ', 'Ուշացման ժամանակի գումար'] // Additional headers
+//     );
+
+//      // Log the headers to check the output
+//     //  logger($allHeaders);
+//     // dd($allHeaders);
+//      return $allHeaders;
+
+// }
+    // public function styles(Worksheet $sheet)
     // {
-    //     dd(777);
-    //     // Dynamically create headers including each day from 1 to 31
-    //     $daysInMonth = Carbon::create($this->year, $this->month)->daysInMonth;
-    //     $dayHeaders = [];
+    // // dd($sheet);
+    //     // Start styling from the second row onward (data rows)
+    //     $rowStart = 2;
 
-    //     for ($day = 1; $day <= $daysInMonth; $day++) {
-    //         $dayHeaders[] =   $day;
+
+
+    //     // Loop through rows and check for "+", then set the style
+    //     foreach ($sheet->getRowIterator($rowStart) as $row) {
+
+    //         $rowIndex = $row->getRowIndex();
+
+
+    //         foreach ($sheet->getColumnIterator('A') as $column) { // Starting from the "D" column
+    //             $cell = $sheet->getCell($column->getColumnIndex() . $rowIndex);
+    //             // dd(  $cell->getValue());
+    //             // if ($cell->getValue() == "+ուշ") {
+    //             //     $sheet->getStyle($cell->getCoordinate())->getFont()->getColor()->setRGB('FF0000'); // Red
+    //             // }
+
+    //         }
     //     }
-    //     // dd($dayHeaders);
-
-
-    //     return array_merge(
-    //         ['Հ/Հ',	'ID','Անուն','Ազգանուն' ],  // Fixed headers
-    //         $dayHeaders ,['Օրերի քանակ','ժամերի քանակ','Ուշացման ժամանակի գումար'] // Day headers (Day 1 to Day 31)
-    //     );
     // }
-
-    public function headings(): array
-    {
-    logger('Generating headings...');
-    $daysInMonth = Carbon::create($this->year, $this->month)->daysInMonth;
-    $dayHeaders = [];
-
-    // Add headers for each day with a merged cell for "enter" and "exit"
-    for ($day = 1; $day <= $daysInMonth; $day++) {
-        $dayHeaders[] = $day; // Day header
-
-    }
-
-    // Create header rows
-    $fixedHeaders = ['Հ/Հ', 'ID', 'Անուն', 'Ազգանուն']; // Fixed headers
-    $dynamicHeaders = []; // Dynamic headers for each day
-    $enterExitHeaders = []; // To hold Enter and Exit headers
-
-    // Add "enter" and "exit" labels under each day
-    foreach ($dayHeaders as $day) {
-
-        $dynamicHeaders[] = $day; // Day number
-        // $dynamicHeaders[] = 'Enter'; // Enter label
-        // $dynamicHeaders[] = 'Exit'; // Exit label
-        $enterExitHeaders[] = 'Enter'; // Enter label for the day
-        $enterExitHeaders[] = 'Exit'; // Exit label for the day
-    }
-    // dd($dynamicHeaders);
-    // foreach($dynamicHeaders as $exent){
-    //     $exent[]['Enter']='Enter';
-    //     $exent[]['exit']='Exit';
-
+    // public function registerEvents(): array
+    // {
+    //     return [
+    //         AfterSheet::class => function (AfterSheet $event) {
+    //             $event->sheet->getDelegate()->mergeCells('A1:C1'); // Объединение заголовков
+    //             $event->sheet->getDelegate()->getStyle('A1')->getAlignment()->setHorizontal('center');
+    //         }
+    //     ];
     // }
-    //  dd($dynamicHeaders);
+    public function view():View{
+        $groupedEntries = $this->report_armobile($this->request);
+        // dd($groupedEntries);
+        $lastElement = end($groupedEntries);
 
-    // Merge fixed headers with dynamic headers
-
-    $allHeaders = array_merge(
-        $fixedHeaders,
-        $dynamicHeaders,
-        $enterExitHeaders,
-        ['Օրերի քանակ', 'ժամերի քանակ', 'Ուշացման ժամանակի գումար'] // Additional headers
-    );
-
-     // Log the headers to check the output
-    //  logger($allHeaders);
-    // dd($allHeaders);
-     return $allHeaders;
-
-}
-    public function styles(Worksheet $sheet)
-    {
-    // dd($sheet);
-        // Start styling from the second row onward (data rows)
-        $rowStart = 2;
+        // dd($lastElement);
+        $this->month = $lastElement;
+        // dd($groupedEntries);
 
 
-
-        // Loop through rows and check for "+", then set the style
-        foreach ($sheet->getRowIterator($rowStart) as $row) {
-
-            $rowIndex = $row->getRowIndex();
-
-
-            foreach ($sheet->getColumnIterator('A') as $column) { // Starting from the "D" column
-                $cell = $sheet->getCell($column->getColumnIndex() . $rowIndex);
-                // dd(  $cell->getValue());
-                // if ($cell->getValue() == "+ուշ") {
-                //     $sheet->getStyle($cell->getCoordinate())->getFont()->getColor()->setRGB('FF0000'); // Red
-                // }
-
-            }
+        if (isset($groupedEntries['mounth'])) {
+            unset($groupedEntries['mounth']);
         }
+        // dd($groupedEntries);
+        // dd($this->collection());
+        return view('report.aa',[
+            "mounth" => $this->month,
+            // "groupedEntries" => $this->collection(),
+            "groupedEntries" => $groupedEntries,
+            "i" => 0
+
+        ]);
+
     }
 
 }
