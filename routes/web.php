@@ -76,7 +76,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('supervised',[SupervicedController::class,'superviced_person']);
     Route::get('supervised-staff',[SupervicedController:: class,'supervised_staff'])->name('supervisedStaff');
     Route::post('delete-superviced',[SupervicedController::class,'delete']);
-    Route::get('/report/export/armobil',[ReportArmobileController::class,'export'])->name('export-xlsx-armobil');
+    Route::get('/report/export/armobil/{mounth}',[ReportArmobileController::class,'export'])->name('export-xlsx-armobil');
 
 
 });
@@ -88,3 +88,4 @@ Route::get('get-file', [FileUploadService::class, 'get_file'])->name('get-file')
 // ========================
 // =========
 // ===========
+// ======

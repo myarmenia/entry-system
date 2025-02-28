@@ -8,11 +8,14 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ReportArmobileController extends Controller
 {
-    public function export(){
-        $mounth = $request->mounth??\Carbon\Carbon::now()->format('Y-m');
-        
+    public function export(Request $request){
 
-        return Excel::download(new ArmobilExport($mounth), 'armobilReport.xlsx');
+        $request=$request->route()->parameters();
+        // dd($request);
+        $request = $request ?? \Carbon\Carbon::now()->format('Y-m');
+// dd($request['mounth']);
+        // return Excel::download(new ArmobilExport($request['mounth']), 'armobilReport.xlsx');
+        return Excel::download(new ArmobilExport($request['mounth']), 'armobilReport.xlsx');
 
     }
 }
