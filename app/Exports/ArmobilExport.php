@@ -2,10 +2,30 @@
 
 namespace App\Exports;
 
+use App\Traits\ReportTrait;
 use App\Traits\ReportTraitArmobile;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Carbon\Carbon;
+// use Maatwebsite\Excel\Concerns\FromCollection;
+// use Maatwebsite\Excel\Concerns\WithHeadings;
+// use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+// use Maatwebsite\Excel\Concerns\WithStyles;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Color;
+use PhpOffice\PhpSpreadsheet\Style\Style;
 
-class ArmobilExport implements FromCollection
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use Illuminate\Contracts\View\View;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+// use Maatwebsite\Excel\Concerns\Exportable;
+// use Maatwebsite\Excel\Concerns\WithEvents;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+
+
+
+
+class ArmobilExport implements FromView, ShouldAutoSize
 {
     use ReportTraitArmobile;
 
@@ -14,26 +34,40 @@ class ArmobilExport implements FromCollection
     * @return \Illuminate\Support\Collection
     */
     protected $request;
-    protected $year;
-    protected $month;
-    public function __construct($request,$year=null, $month=null)
+
+    public function __construct($request)
     {
         $this->request = $request;
-        $this->year = $year ?? now()->year;
-        $this->month = $month ?? now()->month;
-
-
     }
-    public function collection()
-    {
-dd($this->request);
+
+    public function view():View{
         $groupedEntries = $this->report_armobile($this->request);
         $lastElement = end($groupedEntries);
-        dd($groupedEntries);
-        // dd($lastElement);
-        $this->month = $lastElement;
-        dd($groupedEntries);
 
-        unset($groupedEntries['mounth']);
+        if (isset($groupedEntries['mounth'])) {
+            unset($groupedEntries['mounth']);
+        }
+
+        return view('report.armobil',[
+
+            "mounth" => $this->request,
+            "groupedEntries" => $groupedEntries,
+            "i" => 0
+
+        ]);
+
     }
+    public function styles(Worksheet $sheet)
+    {
+        $sheet->getStyle('A1:Z100')->applyFromArray([
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THICK,
+                    'color' => ['argb' => '000000'],
+                ],
+            ],
+        ]);
+    }
+
+
 }
