@@ -7,11 +7,17 @@ use App\Interfaces\AttendanceSheetInterface;
 use App\Interfaces\CheckEntryCodeInterface;
 use App\Interfaces\ClientIdFromTurnstileInterface;
 use App\Interfaces\CreateEntryCodeInterface;
+use App\Interfaces\DepartmentInterface;
 use App\Repositories\AttendanceSheetRepository;
+use App\Repositories\DepartmentRepository;
 use App\Repositories\EntryCodeRepository;
 use App\Repositories\Interfaces\PersonRepositoryInterface;
+use App\Repositories\Interfaces\ScheduleDetailsInterface;
+use App\Repositories\Interfaces\ScheduleNameInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Repositories\PersonRepository;
+use App\Repositories\ScheduleDetailsRepository;
+use App\Repositories\ScheduleNameRepository;
 use App\Repositories\TurnstileRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Pagination\Paginator;
@@ -32,6 +38,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
 
         $this->app->bind(PersonRepositoryInterface::class, PersonRepository::class);
+        $this->app->bind(ScheduleNameInterface::class,ScheduleNameRepository::class);
+        $this->app->bind(DepartmentInterface::class,DepartmentRepository::class);
+        $this->app->bind(ScheduleDetailsInterface::class,ScheduleDetailsRepository::class);
 
     }
 
@@ -42,6 +51,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useBootstrapFive();
 
-       
+
     }
 }

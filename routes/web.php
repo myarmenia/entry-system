@@ -5,6 +5,7 @@ use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ChangeStatusController;
 use App\Http\Controllers\Component\ClientComponentController;
 use App\Http\Controllers\DeleteItemController;
+use App\Http\Controllers\Department\DepartmentController;
 use App\Http\Controllers\EntryCode\EntryCodeCreateController;
 use App\Http\Controllers\EntryCode\EntryCodeEditController;
 use App\Http\Controllers\EntryCode\EntryCodeListController;
@@ -19,6 +20,8 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReportArmobileController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\Schedule\ScheduleController;
+use App\Http\Controllers\Schedule\ScheduleDetailsController;
 use App\Http\Controllers\Supervised\SupervicedController;
 use App\Http\Controllers\UserController;
 use App\Services\FileUploadService;
@@ -77,7 +80,28 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('supervised-staff',[SupervicedController:: class,'supervised_staff'])->name('supervisedStaff');
     Route::post('delete-superviced',[SupervicedController::class,'delete']);
     Route::get('/report/export/armobil/{mounth}',[ReportArmobileController::class,'export'])->name('export-xlsx-armobil');
+    // =====schedule============
+    Route::group(['prefix'=>'schedule'],function(){
+        Route::get('list',[ScheduleController::class,'index'])->name('schedule.list');
+        Route::get('createNew',[ScheduleController::class,'createScheduleNameNew'])->name('schedule.createNew');
+        Route::get('create',[ScheduleController::class,'createScheduleName'])->name('schedule.create');
+        Route::post('store',[ScheduleController::class,'storeScheduleName'])->name('schedule.store');
+        Route::get('{id}/edit/',[ScheduleController::class,'edit'])->name('schedule.edit');
+        Route::put('{id}/',[ScheduleController::class,'update'])->name('schedule.update');
+    });
+    Route::group(['prefix'=>'schedule_details'],function(){
+        Route::put('{id}/',[ScheduleDetailsController::class,'update'])->name('schedule_details.update');
 
+    });
+
+    Route::group(['prefix'=>'department'],function(){
+
+        Route::get('list', [DepartmentController::class,'index'])->name('department.list');
+        Route::get('create', [DepartmentController::class,'create'])->name('department.create');
+        Route::post('store', [DepartmentController::class,'store'])->name('department.store');
+        Route::get('{id}/edit/',[DepartmentController::class,'edit'])->name('department.edit');
+        Route::put('{id}/',[DepartmentController::class,'update'])->name('department.update');
+    });
 
 });
 

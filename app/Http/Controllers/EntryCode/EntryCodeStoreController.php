@@ -21,6 +21,7 @@ class EntryCodeStoreController extends Controller
 
      {
 
+        // dd($request->all());
           $data = $this->itemStore($request);
 
           if($data){

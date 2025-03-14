@@ -219,6 +219,22 @@
        @endif
        @if (Auth::user()->hasRole(["client_admin","client_admin_rfID","manager"]))
         <li class="nav-item">
+            <a class="nav-link {{ Route::is(['schedule.list', 'schedule.create', 'schedule.edit']) ? '' : 'collapsed' }}" href="{{ route('schedule.list') }}">
+            <i class="bi bi-person"></i>
+            <span>Հերթափոխեր</span>
+            </a>
+        </li>
+      @endif
+      @if (Auth::user()->hasRole(["client_admin","client_admin_rfID","manager"]))
+        <li class="nav-item">
+            <a class="nav-link {{ Route::is(['department.list', 'schedule.create', 'schedule.edit']) ? '' : 'collapsed' }}" href="{{ route('department.list') }}">
+            <i class="bi bi-person"></i>
+            <span>Ստորաբաժանումներ</span>
+            </a>
+        </li>
+      @endif
+       @if (Auth::user()->hasRole(["client_admin","client_admin_rfID","manager"]))
+        <li class="nav-item">
             <a class="nav-link {{ Route::is(['people.index', 'people.create', 'people.edit']) ? '' : 'collapsed' }}" href="{{ route('people.index') }}">
             <i class="bi bi-person"></i>
             <span>Անձնակազմ</span>

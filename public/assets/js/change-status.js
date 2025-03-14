@@ -7,6 +7,8 @@ $(function () {
       let status = $(this).prop('checked')
       let field_name = $(this).attr('data-field-name')
       let changeElemen = $(this)
+      console.log(changeElemen)
+
 
 console.log(id, tb_name, status, field_name)
       $.ajax({
@@ -32,6 +34,7 @@ console.log(id, tb_name, status, field_name)
                     changeElemen.closest('tr').find( 'td.personName, .personSurname, .personPhone').empty()
                 }
                 if(field_name=="status"){
+
                     status ? (status_word = 'Գործող', status_class = 'success') : (status_word = 'Կասեցված', status_class = 'danger')
                     changeElemen.closest('tr').find('td.status .statusSection').html(`<div><span class="badge bg-${status_class} me-1">${status_word}</span></div>`)
 

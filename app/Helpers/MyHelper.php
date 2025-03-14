@@ -18,6 +18,12 @@ class MyHelper
 // dd($decimal);
         return $decimal;
     }
+    public static function week_days(){
 
-   
+        $weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday','Friday','Saturday','Sunday'];
+
+        return $weekdays;
+    }
+
+
 }

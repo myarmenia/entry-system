@@ -41,6 +41,7 @@ class PersonRepository implements PersonRepositoryInterface
             $client = Client::where('user_id',Auth::id())->first();
 
             if($client!=null){
+                $schedule=Schedule::all()
 
                 $query = EntryCode::where(['client_id'=>$client->id,'activation'=>0])->get();
 

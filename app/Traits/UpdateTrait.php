@@ -35,13 +35,8 @@ trait UpdateTrait
 
       $item = $model::where('id', $id)->first();
 
-      $find_matched = EntryCode::where(['client_id'=>$item->client->id,'token'=>$request->token])->first();
+    //   dd( $data);
 
-      if($find_matched){
-        
-        session()->flash('repeating_token', 'Թոքենը կրկնվում է');
-        return redirect()->back();
-      }
 
       $data['status'] = ($item->status == 0 && $request->has('status')) ? 1 : $data['status'] ?? 0;
 // dd($data);
@@ -57,6 +52,22 @@ trait UpdateTrait
             $data['activation'] = 0;
             }
         }
+       
+        $client_all_tokens = EntryCode::where([
+                                                   ['client_id','=',$item->client->id],
+                                                   ['id','!=',$item->id]
+                                                ])->get();
+
+        foreach($client_all_tokens as $it){
+
+            if($it->token == $request->token){
+
+                session()->flash('repeating_token', 'Թոքենը կրկնվում է');
+                    return redirect()->back();
+
+            }
+        }
+
 
       $item->update($data);
 
