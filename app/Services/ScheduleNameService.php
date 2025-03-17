@@ -30,6 +30,7 @@ class ScheduleNameService
         return $data;
     }
     public function editScheduleName($id){
+        // dd($id);
 
         $data = $this->scheduleNameRepository->edit($id);
         return $data;

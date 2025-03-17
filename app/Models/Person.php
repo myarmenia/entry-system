@@ -34,6 +34,10 @@ class Person extends Model
     public function superviced(){
         return $this->hasOne(Superviced::class,'people_id');
     }
+    public function schedule_department_people(){
+
+        return $this->hasMany(ScheduleDepartmentPerson::class);
+    }
 
 
 

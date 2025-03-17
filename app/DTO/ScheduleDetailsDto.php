@@ -6,42 +6,40 @@ use Carbon\Carbon;
 class ScheduleDetailsDto
 {
     public function __construct(
-        public string $name,
+        public int $schedule_name_id,
         public string $week_day,
         public string $day_start_time,
         public string $day_end_time,
         public ?string $break_start_time,
         public ?string $break_end_time,
-        public ?int $status = null, // Должно быть int, так как в БД integer
+
 
     )
     {}
 
-    public static  function fromRequestDto(Request $request): ScheduleNameDto {
-        return  new self(
-            name: $request->name,
-            week_day: $request->week_day,
-            day_start_time: $request->day_start_time,
-            day_end_time:$request->day_end_time,
-            break_start_time: $request->break_start_time,
-            break_end_time: $request->break_end_time,
-            status: $request->has('status') ? 1 : null // Если статус не пришёл, оставляем null
+    public static  function fromRequestDto(Request $data): array {
 
-        );
-
+        return array_map(fn($weekDay) => new self(
+            schedule_name_id: $weekDay['schedule_name_id'],
+            week_day: $weekDay['week_day'],
+            day_start_time: $weekDay['day_start_time'],
+            day_end_time: $weekDay['day_end_time'],
+            break_start_time: $weekDay['break_start_time'],
+            break_end_time: $weekDay['break_end_time']
+        ), $data['week_days']);
     }
 
     public function toArray()
     {
-        return array_filter([
-            'name' => $this->name,
-            'week_day'=>$this->week_day,
-            'day_start_time'=>$this->day_start_time,
-            'day_end_time'=>$this->day_end_time,
-            'break_start_time'=>$this->break_start_time,
-            'break_end_time'=>$this->break_end_time,
-            'status' => $this->status,
-        ], fn($value) => !is_null($value)); // Убираем null-значения
+        return [
+            'schedule_name_id' => $this->schedule_name_id,
+            'week_day' => $this->week_day,
+            'day_start_time' =>Carbon::parse($this->day_start_time)->format('H:i') ,
+            'day_end_time' =>Carbon::parse($this->day_end_time)->format('H:i'),
+            'break_start_time' =>Carbon::parse($this->break_start_time),
+            'break_end_time' =>Carbon::parse($this->break_end_time)->format('H:i'),
+
+        ];
     }
 
 }

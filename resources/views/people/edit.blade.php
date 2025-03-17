@@ -41,41 +41,94 @@
                                   method="post"
                                   enctype="multipart/form-data">
                                 @method('put')
-
                                 <div class="row mb-3">
 
 
-                                        <label class="col-sm-3 col-form-label">{{ $data['non_active_entry_code']==false &&  $data['person']->activated_code_connected_person!=null ? "Նույնականացման կոդ" : null }}</label>
-                                        <div class="col-sm-9">
-                                            @if ($data['non_active_entry_code']==false &&  $data['person']->activated_code_connected_person!=null)
+                                    <label class="col-sm-3 col-form-label">{{ $data['non_active_entry_code']==false &&  $data['person']->activated_code_connected_person!=null ? "Նույնականացման կոդ" : null }}</label>
+                                    <div class="col-sm-9">
+                                        @if ($data['non_active_entry_code']==false &&  $data['person']->activated_code_connected_person!=null)
 
 
-                                                <input type="text" class="form-control" name="entry_code_id" disabled
+                                            <input type="text" class="form-control" name="entry_code_id" disabled
 
-                                                value="{{$data['person']->activated_code_connected_person->entry_code->token }}">
+                                            value="{{$data['person']->activated_code_connected_person->entry_code->token }}">
 
-                                            @endif
-                                        @if ($data['non_active_entry_code']!=false)
-                                            <select class="form-select" aria-label="Default select example" name ="entry_code_id" id="entryCodeNumber"
-                                            data-person-id="{{$data['person']->id}}">
-                                                    <option value='' disabled >Ընտրել նույնականացման կոդը</option>
-                                                    @foreach ($data['non_active_entry_code'] as $code )
-                                                    
-                                                        <option value="{{ $code->id }}">
-                                                            {{ $code->token }}
-                                                        </option>
-                                                    @endforeach
-                                                    @if ($data['person']->activated_code_connected_person != null)
-                                                        <option class="active"
-                                                               value="{{ $data['person']->activated_code_connected_person->entry_code_id  }}" selected
-                                                              >
-                                                            {{$data['person']->activated_code_connected_person->entry_code->token }}
-                                                            </option>
-                                                    @endif
-                                            </select>
                                         @endif
-                                    </div>
+                                    @if ($data['non_active_entry_code']!=false)
+                                        <select class="form-select" aria-label="Default select example" name ="entry_code_id" id="entryCodeNumber"
+                                        data-person-id="{{$data['person']->id}}">
+                                                <option value='' disabled >Ընտրել նույնականացման կոդը</option>
+                                                @foreach ($data['non_active_entry_code'] as $code )
+
+                                                    <option value="{{ $code->id }}">
+                                                        {{ $code->token }}
+                                                    </option>
+                                                @endforeach
+                                                @if ($data['person']->activated_code_connected_person != null)
+                                                    <option class="active"
+                                                           value="{{ $data['person']->activated_code_connected_person->entry_code_id  }}" selected
+                                                          >
+                                                        {{$data['person']->activated_code_connected_person->entry_code->token }}
+                                                        </option>
+                                                @endif
+                                        </select>
+                                    @endif
                                 </div>
+                                </div>
+                                @if(count($data['person']['schedule_department_people'])>0)
+                                    @foreach ($data['person']['schedule_department_people'] as $departmentpeople )
+                                    {{-- {{ dd($departmentpeople->schedule_name_id) }} --}}
+                                        <div class="row mb-3">
+                                            <label class="col-sm-3 col-form-label">Հերթափոխեր</label>
+                                            <div class="col-sm-9">
+                                            <select class="form-select" aria-label="Default select example" name ="schedule_name_id">
+                                                    <option value='' disabled>Ընտրել հերթափոխը</option>
+                                                    @foreach ($schedule_name as $key=>$schedule)
+                                                   {{ dd($departmentpeople->schedule_name_id) }}
+                                                    @if ($departmentpeople->schedule_name_id==$schedule->id)
+                                                    {{ dd(444) }}
+                                                        <option value="{{ $key }}" selected> {{ $schedule->name }}</option>
+
+                                                    @else
+                                                      <option value="{{ $key }}"> {{ $schedule->name }}</option>
+
+                                                    @endif
+
+                                                    @endforeach
+                                            </select>
+                                            @error("type")
+                                                <div class="mb-3 row justify-content-end">
+                                                    <div class="col-sm-10 text-danger fts-14">{{ $message }}
+                                                    </div>
+                                                </div>
+                                            @enderror
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label class="col-sm-3 col-form-label">Ստորաբաժանումներ</label>
+                                            <div class="col-sm-9">
+                                            <select class="form-select" aria-label="Default select example" name ="department_id">
+
+                                                    <option value='' disabled>Ընտրել ստորաբաժանումը</option>
+                                                    @foreach ($departments as $department )
+                                                        <option value="{{ $department->id }}" {{ $data['person']->type=="visitor" ?'selected': null}}>{{ $department->name }}</option>
+                                                    @endforeach
+
+                                            </select>
+                                            @error("department_id")
+                                                <div class="mb-3 row justify-content-end">
+                                                    <div class="col-sm-10 text-danger fts-14">{{ $message }}
+                                                    </div>
+                                                </div>
+                                            @enderror
+                                            </div>
+                                        </div>
+
+                                    @endforeach
+
+                                @endif
+
+
                                 <div class="row mb-3">
 
                                     <label for="inputText" class="col-sm-3 col-form-label">Անուն </label>

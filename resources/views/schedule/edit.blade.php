@@ -163,9 +163,6 @@ $day_working_end_time = $explode[1];
 
                     @endif
 
-
-
-
               </form>
 
             </div>
@@ -180,7 +177,7 @@ $day_working_end_time = $explode[1];
 
 
 
-                        <input type="hidden" class="form-control" name="week_days[{{ $key }}][schedule_name_id]{{ $data->id }}" value="{{$data->id }}">
+                        <input type="hidden" class="form-control" name="week_days[{{ $key }}][schedule_name_id]{{ $data->id }}" value={{$data->id }}>
                                         <div class="row mb-3 mt-3">
                                             <label for="inputEmail" class="col-sm-3 col-form-label ">Շաբաթվա օր </label>
                                             <div class="col-sm-9">
@@ -280,7 +277,7 @@ $day_working_end_time = $explode[1];
                         <hr/>
 
                 @endforeach
-                <input type=datetime>
+
                 <div class="row mt-3">
                     <label class="col-sm-3 col-form-label"></label>
                     <div class="col-sm-9">

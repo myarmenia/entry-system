@@ -23,20 +23,21 @@ class ScheduleDetailsRequest extends FormRequest
     public function rules(): array
 
     {
-        dd($this);
+
+
         return [
             'week_days.*.week_day' => ['required', 'string'],
 
-            'week_days.0.day_start_time'=>['required','date_format:H:i'],
-            'week_days.1.day_start_time'=>['required','date_format:H:i'],
-            'week_days.2.day_start_time'=>['required','date_format:H:i'],
-            'week_days.3.day_start_time'=>['required','date_format:H:i'],
-            'week_days.4.day_start_time'=>['required','date_format:H:i'],
-            // 'week_days.0.day_end_time'=>['required','date_format:H:i:s'],
-            // 'week_days.1.day_end_time'=>['required','date_format:H:i:s'],
-            // 'week_days.2.day_end_time'=>['required','date_format:H:i:s'],
-            // 'week_days.3.day_end_time'=>['required','date_format:H:i:s'],
-            // 'week_days.4.day_end_time'=>['required','date_format:H:i:s'],
+            'week_days.0.day_start_time'=>['required'],
+            'week_days.1.day_start_time'=>['required'],
+            'week_days.2.day_start_time'=>['required'],
+            'week_days.3.day_start_time'=>['required'],
+            'week_days.4.day_start_time'=>['required'],
+            'week_days.0.day_end_time'=>['required'],
+            'week_days.1.day_end_time'=>['required'],
+            'week_days.2.day_end_time'=>['required'],
+            'week_days.3.day_end_time'=>['required'],
+            'week_days.4.day_end_time'=>['required'],
 
 
 

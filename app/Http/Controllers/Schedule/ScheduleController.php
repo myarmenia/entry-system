@@ -48,14 +48,13 @@ class ScheduleController extends Controller
 
     }
     public function edit($id){
+        // dd($id);
         $weekdays =MyHelper::week_days();
 
         $data = $this->service->editScheduleName($id);
-
+        // dd($data);
         $schedule_Details = ScheduleDetails::where('schedule_name_id',$id)->get();
-
-
-
+        // dd( $schedule_Details);
         return view('schedule.edit',compact('data','weekdays','schedule_Details'));
 
 

@@ -70,7 +70,7 @@
 
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        {{-- <div class="row mb-3">
                             <label for="inputEmail" class="col-sm-3 col-form-label">Շաբաթվա օր </label>
                             <div class="col-sm-9">
                                 <select name="week_day"  class="form-select">
@@ -145,7 +145,7 @@
                                     </div>
                                 @enderror
                             </div>
-                        </div>
+                        </div> --}}
 
                         @if(auth()->user()->hasRole('client_admin'))
                         <div class="row mb-3">

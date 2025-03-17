@@ -80,6 +80,45 @@
                                             @enderror
                                         </div>
                                     </div>
+                                    <div class="row mb-3">
+                                        <label class="col-sm-3 col-form-label">Հերթափոխեր</label>
+                                        <div class="col-sm-9">
+                                          <select class="form-select" aria-label="Default select example" name ="schedule_name_id">
+                                                <option value='' disabled>Ընտրել հերթափոխը</option>
+                                                @foreach ($schedule_name as $key=>$schedule )
+                                                    <option value="{{ $schedule->id }}"> {{ $schedule->name }}</option>
+
+                                                @endforeach
+
+                                          </select>
+                                          @error("schedule_name_id")
+                                              <div class="mb-3 row justify-content-end">
+                                                  <div class="col-sm-10 text-danger fts-14">{{ $message }}
+                                                  </div>
+                                              </div>
+                                          @enderror
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-sm-3 col-form-label">Ստորաբաժանումներ</label>
+                                        <div class="col-sm-9">
+                                          <select class="form-select" aria-label="Default select example" name ="department_id">
+
+                                                <option value='' disabled>Ընտրել ստորաբաժանումը</option>
+                                                @foreach ($departments as $department )
+                                                    <option value="{{ $department->id }}">{{ $department->name }}</option>
+                                                @endforeach
+
+                                          </select>
+                                          @error("type")
+                                              <div class="mb-3 row justify-content-end">
+                                                  <div class="col-sm-10 text-danger fts-14">{{ $message }}
+                                                  </div>
+                                              </div>
+                                          @enderror
+                                        </div>
+                                    </div>
+
 
                                     <div class="row mb-3">
 
@@ -141,25 +180,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="row mb-3">
-                                        <label class="col-sm-3 col-form-label">Աշխատակցի կարգավիճակ</label>
-                                        <div class="col-sm-9">
-                                            <select class="form-select" aria-label="Default select example" name ="type">
-                                                <option value='' disabled>Աշխատակցի կարգավիճակը</option>
 
-                                                <option value="worker">Աշխատող</option>
-                                                <option value="visitor">Այցելու</option>
-
-
-                                            </select>
-                                            @error('type')
-                                                <div class="mb-3 row justify-content-end">
-                                                    <div class="col-sm-10 text-danger fts-14">{{ $message }}
-                                                    </div>
-                                                </div>
-                                            @enderror
-                                        </div>
-                                    </div>
                                     <div class="row mb-3">
                                         <label class="col-sm-3 col-form-label">Աշխատակցի կարգավիճակ</label>
                                         <div class="col-sm-9">

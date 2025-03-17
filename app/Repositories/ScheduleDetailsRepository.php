@@ -8,6 +8,7 @@ use App\Repositories\Interfaces\ScheduleDetailsInterface;
 class ScheduleDetailsRepository implements ScheduleDetailsInterface
 {
     public function update($dto,$id){
+        // dd($dto,$id);
 
             $existingData = ScheduleDetails::where('schedule_name_id', $id)->get();
 
@@ -19,7 +20,7 @@ class ScheduleDetailsRepository implements ScheduleDetailsInterface
 
                     $existingRecord->update($item);
                 } else {
-                   
+
                     ScheduleDetails::create(array_merge($item, ['schedule_name_id' => $id]));
                 }
             }

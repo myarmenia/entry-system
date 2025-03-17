@@ -8,6 +8,7 @@ use App\Models\Client;
 use App\Models\EntryCode;
 use App\Models\Person;
 use App\Models\PersonPermission;
+use App\Models\ScheduleDepartmentPerson;
 use App\Repositories\Interfaces\PersonRepositoryInterface;
 use App\Services\FileUploadService;
 use Illuminate\Support\Facades\Auth;
@@ -41,7 +42,7 @@ class PersonRepository implements PersonRepositoryInterface
             $client = Client::where('user_id',Auth::id())->first();
 
             if($client!=null){
-                $schedule=Schedule::all()
+
 
                 $query = EntryCode::where(['client_id'=>$client->id,'activation'=>0])->get();
 
@@ -60,6 +61,7 @@ class PersonRepository implements PersonRepositoryInterface
         $entry_code = EntryCode::where('id',$personDTO->entry_code_id)->first();
 
         $person = new Person();
+
         $person->client_id = $entry_code->client_id;
         $person->name = $personDTO->name;
         $person->surname = $personDTO->surname;
@@ -69,6 +71,15 @@ class PersonRepository implements PersonRepositoryInterface
         $person->save();
 
         if($person){
+
+            $schedule_department_people = new ScheduleDepartmentPerson();
+            $schedule_department_people->client_id = $entry_code->client_id;
+            $schedule_department_people->department_id = $personDTO->department_id;
+            $schedule_department_people->schedule_name_id = $personDTO->schedule_name_id;
+            $schedule_department_people->person_id =$person->id;
+            $schedule_department_people->save();
+
+
 
             if($personDTO->image!=null){
                $path = FileUploadService::upload($personDTO->image,  'people/' . $person->id);
@@ -109,7 +120,12 @@ class PersonRepository implements PersonRepositoryInterface
     }
     public function editPerson($personId){
 
-        $person = Person::find($personId);
+        $person = Person::where('id',$personId)
+        // find($personId)
+        ->with('schedule_department_people')
+        ->first()
+        ;
+        // dd($person);
 
         return $person;
 

@@ -5,8 +5,10 @@ namespace App\Http\Controllers\People;
 use App\DTO\PersonDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PersonRequest;
+use App\Models\Department;
 use App\Models\EntryCode;
 use App\Models\Person;
+use App\Models\ScheduleName;
 use App\Services\PersonService;
 use Illuminate\Http\Request;
 
@@ -40,7 +42,9 @@ class PeopleController extends Controller
     public function create()
     {
         $entry_codes = $this->personService->create();
-        return view('people.create',compact('entry_codes'));
+        $schedule_name = ScheduleName::all();
+        $departments = Department::all();
+        return view('people.create',compact('entry_codes','schedule_name','departments'));
     }
 
     /**
@@ -48,8 +52,10 @@ class PeopleController extends Controller
      */
     public function store(PersonRequest $request)
     {
+        // dd($request->all());
 
         $personDTO = PersonDTO::fromModel($request);
+        
         $data = $this->personService->store($personDTO);
 
         if($data){
@@ -76,9 +82,11 @@ class PeopleController extends Controller
     {
 
         $data = $this->personService->edit($id);
+        $schedule_name = ScheduleName::all();
+        $departments = Department::all();
 
         if($data['person'] != null ){
-            return view('people.edit', compact('data'));
+            return view('people.edit', compact('data','schedule_name','departments'));
         }
 
     }

@@ -2,9 +2,12 @@
 
 namespace App\Repositories;
 
+use App\Models\Client;
+use App\Models\ClientSchedule;
 use App\Models\SchedueName;
 use App\Models\ScheduleName;
 use App\Repositories\Interfaces\ScheduleNameInterface;
+use Illuminate\Support\Facades\Auth;
 
 class ScheduleNameRepository implements ScheduleNameInterface
 {
@@ -16,13 +19,24 @@ class ScheduleNameRepository implements ScheduleNameInterface
 
 
         $data = ScheduleName::create($dto);
+        $client = Client::where('user_id',Auth::id())->value('id');
+
+
+        $clients_schedule = ClientSchedule::create([
+            "client_id" => $client,
+            "schedule_name_id" => $data->id
+
+        ]);
+
         return $data;
 
 
     }
     public function edit($id){
+        // dd($id);
 
-        $data = ScheduleName::findOrFail($id)->with('schedule_details')->first();
+        $data = ScheduleName::with('schedule_details')->findOrFail($id);
+
 
 
         return $data;

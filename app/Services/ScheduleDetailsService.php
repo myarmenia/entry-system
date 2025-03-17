@@ -11,9 +11,11 @@ class  ScheduleDetailsService
         $this->scheduleDetailsRepository = $scheduleDetailsRepository;
     }
 
-    public function update($request,$id){
+    public function update($dto,$id){
+        // dd($dto);
 
-        $data = $this->scheduleDetailsRepository->update($request,$id);
+        $data = $this->scheduleDetailsRepository->update($dto,$id);
+        return true;
 
 
     }
