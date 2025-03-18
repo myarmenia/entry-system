@@ -2,15 +2,6 @@
 
 @section('content')
 
-@php
-$value = $data->name;
-$explode = explode('-',$value);
-$day_working_start_time = $explode[0];
-$day_working_end_time = $explode[1];
-
-@endphp
-
-
 
    <main id="main" class="main">
 
@@ -61,84 +52,6 @@ $day_working_end_time = $explode[1];
 
                             </div>
                         </div>
-                        {{-- <div class="row mb-3">
-                            <label for="inputEmail" class="col-sm-3 col-form-label">Շաբաթվա օր </label>
-                            <div class="col-sm-9">
-                                <select name="week_day"  class="form-select" >
-                                    @foreach ($weekdays as $key=>$day )
-
-
-                                    <option  value = {{ $day }} {{ $data->week_day==$day? "selected": null }}>
-                                        {{ $day }}
-                                    </option>
-
-                                    @endforeach
-                                </select>
-
-                                @error("week_day")
-                                    <div class="mb-3 row ">
-                                        <p class="col-sm-10 text-danger fs-6">{{ $message }}
-                                        </p>
-                                    </div>
-                                @enderror
-
-
-                            </div>
-                        </div> --}}
-                        {{-- <div class="row mb-3">
-                            <label for="inputEmail" class="col-sm-3 col-form-label">Աշխատանքային օրվա սկիզբ </label>
-                            <div class="col-sm-9">
-                                <input type="time" class="form-control" name="day_start_time" value={{ $data->day_start_time }}>
-                                @error("day_start_time")
-                                    <div class="mb-3 row ">
-                                        <p class="col-sm-10 text-danger fs-6">{{ $message }}
-                                        </p>
-                                    </div>
-                                @enderror
-
-
-                            </div>
-                        </div> --}}
-                        {{-- <div class="row mb-3">
-                            <label for="inputEmail" class="col-sm-3 col-form-label">Աշխատանքային օրվա ավարտ </label>
-                            <div class="col-sm-9">
-                                <input type="time" class="form-control" name="day_end_time" value={{ $data->day_end_time }}>
-                                @error("day_end_time")
-                                    <div class="mb-3 row ">
-                                        <p class="col-sm-10 text-danger fs-6">{{ $message }}
-                                        </p>
-                                    </div>
-                                @enderror
-
-
-                            </div>
-                        </div> --}}
-                        {{-- <div class="row mb-3">
-                            <label for="inputEmail" class="col-sm-3 col-form-label">Ընդմիջման սկիզբ </label>
-                            <div class="col-sm-9">
-                                <input type="time" class="form-control" name="break_start_time" value={{ $data->break_start_time }}>
-                                @error("break_start_time")
-                                    <div class="mb-3 row ">
-                                        <p class="col-sm-10 text-danger fs-6">{{ $message }}
-                                        </p>
-                                    </div>
-                                @enderror
-
-
-                            </div>
-                        </div> --}}
-                        {{-- <div class="row mb-3">
-                            <label for="inputEmail" class="col-sm-3 col-form-label">Ընդմիջման ավարտ</label>
-                            <div class="col-sm-9">
-                                <input type="time" class="form-control" name="break_end_time" value={{ $data->break_end_time }}>
-                                @error("break_end_time")
-                                    <div class="mb-3 row ">
-                                        <p class="col-sm-10 text-danger fs-6">{{ $message }}
-                                        </p>
-                                    </div>
-                                @enderror
-                            </div>
-                        </div> --}}
                         @if(auth()->user()->hasRole('client_admin'))
                         <div class="row mb-3">
                             <label class="col-sm-3 col-form-label">Ակտիվացում </label>

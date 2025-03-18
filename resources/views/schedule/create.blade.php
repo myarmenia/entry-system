@@ -54,7 +54,7 @@
 
                     </div>
                     @endif --}}
-                    @if (Auth::user()->hasRole("client_admin"))
+                    @if (Auth::user()->hasRole(["client_admin",'manager']))
 
                         <div class="row mb-3">
                             <label for="inputEmail" class="col-sm-3 col-form-label">Հերթափոխի անուն </label>
@@ -158,15 +158,16 @@
                             </div>
                         </div>
 
-                        <div class="row mt-3">
-                            <label class="col-sm-2 col-form-label"></label>
-                            <div class="col-sm-10">
-                                <button type="submit" class="btn btn-primary">Ստեղծել</button>
-                            </div>
-                        </div>
+
 
 
                     @endif
+                    <div class="row mt-3">
+                        <label class="col-sm-3 col-form-label"></label>
+                        <div class="col-sm-9">
+                            <button type="submit" class="btn btn-primary">Ստեղծել</button>
+                        </div>
+                    </div>
 
 
                     @endif

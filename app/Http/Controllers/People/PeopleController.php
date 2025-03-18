@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\People;
 
+use App\DTO\NewPersonDto;
 use App\DTO\PersonDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PersonRequest;
@@ -41,10 +42,13 @@ class PeopleController extends Controller
      */
     public function create()
     {
+        // dd(auth()->user()->client);
         $entry_codes = $this->personService->create();
-        $schedule_name = ScheduleName::all();
-        $departments = Department::all();
-        return view('people.create',compact('entry_codes','schedule_name','departments'));
+        // dd($entry_codes);
+
+        // $schedule_name = ScheduleName::all();
+        // $departments = Department::all();
+        return view('people.create',compact('entry_codes'));
     }
 
     /**
@@ -52,10 +56,14 @@ class PeopleController extends Controller
      */
     public function store(PersonRequest $request)
     {
-        // dd($request->all());
+        dd($request->all());
 
-        $personDTO = PersonDTO::fromModel($request);
-        
+
+
+        // $personDTO = PersonDTO::fromModel($request);
+        $personDTO = NewPersonDto::fromRequestDto($request);
+        dd( $personDTO);
+
         $data = $this->personService->store($personDTO);
 
         if($data){
@@ -94,10 +102,10 @@ class PeopleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(PersonRequest $request, string $id)
+    public function update(PersonRequest $request, Person $person)
     {
-
-        $person = Person::findOrFail($id);
+// dd($person);
+        // $person = Person::findOrFail($id);
 
         $person['entry_code_id'] = $request->entry_code_id;
 

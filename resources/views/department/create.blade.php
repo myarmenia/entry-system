@@ -34,7 +34,7 @@
               <!-- General Form Elements -->
               <form action="{{ route('department.store')}}" method="post" enctype="multipart/form-data">
 
-                    @if (Auth::user()->hasRole("client_admin"))
+                    @if (Auth::user()->hasRole(["client_admin",'manager']))
 
                         <div class="row mb-3">
                             <label for="inputEmail" class="col-sm-3 col-form-label">Ստորաբաժանման անուն </label>

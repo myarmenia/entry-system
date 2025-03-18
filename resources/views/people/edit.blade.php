@@ -75,58 +75,7 @@
                                     @endif
                                 </div>
                                 </div>
-                                @if(count($data['person']['schedule_department_people'])>0)
-                                    @foreach ($data['person']['schedule_department_people'] as $departmentpeople )
-                                    {{-- {{ dd($departmentpeople->schedule_name_id) }} --}}
-                                        <div class="row mb-3">
-                                            <label class="col-sm-3 col-form-label">Հերթափոխեր</label>
-                                            <div class="col-sm-9">
-                                            <select class="form-select" aria-label="Default select example" name ="schedule_name_id">
-                                                    <option value='' disabled>Ընտրել հերթափոխը</option>
-                                                    @foreach ($schedule_name as $key=>$schedule)
-                                                   {{ dd($departmentpeople->schedule_name_id) }}
-                                                    @if ($departmentpeople->schedule_name_id==$schedule->id)
-                                                    {{ dd(444) }}
-                                                        <option value="{{ $key }}" selected> {{ $schedule->name }}</option>
 
-                                                    @else
-                                                      <option value="{{ $key }}"> {{ $schedule->name }}</option>
-
-                                                    @endif
-
-                                                    @endforeach
-                                            </select>
-                                            @error("type")
-                                                <div class="mb-3 row justify-content-end">
-                                                    <div class="col-sm-10 text-danger fts-14">{{ $message }}
-                                                    </div>
-                                                </div>
-                                            @enderror
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <label class="col-sm-3 col-form-label">Ստորաբաժանումներ</label>
-                                            <div class="col-sm-9">
-                                            <select class="form-select" aria-label="Default select example" name ="department_id">
-
-                                                    <option value='' disabled>Ընտրել ստորաբաժանումը</option>
-                                                    @foreach ($departments as $department )
-                                                        <option value="{{ $department->id }}" {{ $data['person']->type=="visitor" ?'selected': null}}>{{ $department->name }}</option>
-                                                    @endforeach
-
-                                            </select>
-                                            @error("department_id")
-                                                <div class="mb-3 row justify-content-end">
-                                                    <div class="col-sm-10 text-danger fts-14">{{ $message }}
-                                                    </div>
-                                                </div>
-                                            @enderror
-                                            </div>
-                                        </div>
-
-                                    @endforeach
-
-                                @endif
 
 
                                 <div class="row mb-3">
@@ -148,6 +97,49 @@
                                     </div>
 
                                 </div>
+                                @if(count($data['person']['schedule_department_people'])>0)
+                                    @foreach ($data['person']['schedule_department_people'] as $departmentpeople )
+
+                                        <div class="row mb-3">
+                                            <label class="col-sm-3 col-form-label">Հերթափոխեր</label>
+                                            <div class="col-sm-9">
+                                            <select class="form-select" aria-label="Default select example" name ="schedule_name_id">
+                                                    <option value='' disabled>Ընտրել հերթափոխը</option>
+                                                    @foreach ($schedule_name as $key=>$schedule)
+                                                    <option value="{{ $schedule->id }}" {{$departmentpeople->schedule_name_id==$schedule->id ? "selected" : null }}> {{ $schedule->name }}</option>
+                                                    @endforeach
+                                            </select>
+                                            @error("schedule_name_id")
+                                                <div class="mb-3 row justify-content-end">
+                                                    <div class="col-sm-10 text-danger fts-14">{{ $message }}
+                                                    </div>
+                                                </div>
+                                            @enderror
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label class="col-sm-3 col-form-label">Ստորաբաժանումներ</label>
+                                            <div class="col-sm-9">
+                                            <select class="form-select" aria-label="Default select example" name ="department_id">
+
+                                                    <option value='' disabled>Ընտրել ստորաբաժանումը</option>
+                                                    @foreach ($departments as $department )
+                                                        <option value="{{ $department->id }}" {{$departmentpeople->department_id  == $department->id ? "selected" : null }}>{{ $department->name }}</option>
+                                                    @endforeach
+
+                                            </select>
+                                            @error("department_id")
+                                                <div class="mb-3 row justify-content-end">
+                                                    <div class="col-sm-10 text-danger fts-14">{{ $message }}
+                                                    </div>
+                                                </div>
+                                            @enderror
+                                            </div>
+                                        </div>
+
+                                    @endforeach
+
+                                @endif
 
                                  <div class="row mb-3">
                                     <label for="inputEmail" class="col-sm-3 col-form-label">Էլ.հասցե</label>

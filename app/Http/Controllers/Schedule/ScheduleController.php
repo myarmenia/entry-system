@@ -6,9 +6,12 @@ use App\DTO\ScheduleNameDto;
 use App\Helpers\MyHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ScheduleNameRequest;
+use App\Models\Client;
+use App\Models\ClientSchedule;
 use App\Models\SchedueName;
 use App\Models\ScheduleDetails;
 use App\Models\ScheduleName;
+use App\Models\Staff;
 use App\Services\ScheduleNameService;
 use Illuminate\Http\Request;
 
@@ -18,8 +21,18 @@ class ScheduleController extends Controller
     public function __construct(protected ScheduleNameService $service  ){}
     public function index(){
 
-        // return redirect()->route('schedule.list');
-        $data = ScheduleName::latest()->get();
+        // dd(auth()->user()->id);
+        if(auth()->user()->hasRole(['client_admin',"client_admin_rfID"])){
+
+            $client_id = Client::where('user_id',auth()->user()->id)->value('id');
+        }else{
+            $client_id = Staff::where('user_id',auth()->user()->id)->value('client_admin_id');
+        }
+
+        // dd($client_id);
+        $client_schedules = ClientSchedule::where('client_id',$client_id)->pluck('schedule_name_id');
+
+        $data = ScheduleName::whereIn('id',$client_schedules)->latest()->get();
         // dd( $data);
         $i=0;
 
@@ -40,11 +53,8 @@ class ScheduleController extends Controller
     }
     public function storeScheduleName(ScheduleNameRequest $request){
 
-
         $data = $this->service->storeScheduleName(ScheduleNameDto::fromRequestDto($request));
         return redirect()->route('schedule.list');
-
-
 
     }
     public function edit($id){

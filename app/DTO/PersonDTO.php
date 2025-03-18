@@ -5,8 +5,7 @@ class PersonDTO
 {
     public $id;
     public $entry_code_id;
-    public $schedule_name_id;
-    public $department_id;
+
     public $client_id;
     public $name;
     public $surname;
@@ -14,12 +13,11 @@ class PersonDTO
     public $phone;
     public $type;
     public $image;
-    public function __construct($id, $entry_code_id,$schedule_name_id,$department_id, $client_id, $name, $surname, $email, $phone, $type, $image)
+    public function __construct($id, $entry_code_id, $client_id, $name, $surname, $email, $phone, $type, $image)
     {
         $this->id = $id;
         $this->entry_code_id = $entry_code_id;
-        $this->schedule_name_id = $schedule_name_id;
-        $this->department_id = $department_id;
+
         $this->client_id = $client_id;
         $this->name = $name;
         $this->surname = $surname;
@@ -31,12 +29,10 @@ class PersonDTO
 
     public static function fromModel($person)
     {
-
+// dd($person);
         return new self(
         $person->id,
         $person->entry_code_id,
-        $person->schedule_name_id,
-        $person->department_id,
  $person->client_id,
       $person->name,
    $person->surname,
@@ -45,6 +41,11 @@ class PersonDTO
       $person->type,
      $person->image,
         );
+    }
+
+    public static  function fromRequestDto(Request $request): PersonDTO {
+        dd($request);
+
     }
 
 }
