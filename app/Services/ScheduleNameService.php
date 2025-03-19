@@ -19,6 +19,12 @@ class ScheduleNameService
     {
         $this->scheduleNameRepository = $scheduleNameRepository;
     }
+    public function list(){
+
+        $data = $this->scheduleNameRepository->index();
+        return $data;
+
+    }
 
     public function storeScheduleName($dto)
     {

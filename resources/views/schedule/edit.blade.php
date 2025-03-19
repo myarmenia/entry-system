@@ -36,12 +36,12 @@
               <!-- General Form Elements -->
               <form action="{{ route('schedule.update',$data->id)}}" method="post" enctype="multipart/form-data">
                 @method('put')
-                    @if (Auth::user()->hasRole("client_admin"))
+                    @if (Auth::user()->hasRole(["client_admin","client_admin_rfID",'manager']))
 
                         <div class="row mb-3">
                             <label for="inputEmail" class="col-sm-3 col-form-label">Հերթափոխի անուն </label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" name="name" value={{ $data->name }}>
+                                <input type="text" class="form-control" name="name" value="{{ $data->name }}">
                                 @error("name")
                                     <div class="mb-3 row ">
                                         <p class="col-sm-10 text-danger fs-6">{{ $message }}
@@ -52,16 +52,16 @@
 
                             </div>
                         </div>
-                        @if(auth()->user()->hasRole('client_admin'))
-                        <div class="row mb-3">
-                            <label class="col-sm-3 col-form-label">Ակտիվացում </label>
-                            <div class="col-sm-9">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox"
-                                        name="status" value="{{ $data->status }}" {{ $data->status == 1 ? 'checked' : '' }}>
+             
+                            <div class="row mb-3">
+                                <label class="col-sm-3 col-form-label">Ակտիվացում </label>
+                                <div class="col-sm-9">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox"
+                                            name="status" value="{{ $data->status }}" {{ $data->status == 1 ? 'checked' : '' }}>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
                         <div class="row mt-3">
                             <label class="col-sm-3 col-form-label"></label>
@@ -69,11 +69,6 @@
                                 <button type="submit" class="btn btn-primary">Պահպանել</button>
                             </div>
                         </div>
-
-
-                    @endif
-
-
                     @endif
 
               </form>

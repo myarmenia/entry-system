@@ -27,7 +27,6 @@ class ScheduleNameDto
     {
         return array_filter([
             'name' => $this->name,
-
             'status' => $this->status,
         ], fn($value) => !is_null($value)); // Убираем null-значения
     }

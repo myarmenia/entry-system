@@ -19,22 +19,11 @@ use Illuminate\Http\Request;
 class ScheduleController extends Controller
 {
     public function __construct(protected ScheduleNameService $service  ){}
+
     public function index(){
 
-        // dd(auth()->user()->id);
-        if(auth()->user()->hasRole(['client_admin',"client_admin_rfID"])){
-
-            $client_id = Client::where('user_id',auth()->user()->id)->value('id');
-        }else{
-            $client_id = Staff::where('user_id',auth()->user()->id)->value('client_admin_id');
-        }
-
-        // dd($client_id);
-        $client_schedules = ClientSchedule::where('client_id',$client_id)->pluck('schedule_name_id');
-
-        $data = ScheduleName::whereIn('id',$client_schedules)->latest()->get();
-        // dd( $data);
-        $i=0;
+        $data = $this->service->list();
+        $i = 0;
 
         return view('schedule.index', compact('data','i'));
 

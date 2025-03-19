@@ -69,7 +69,7 @@
                                             <td>
                                                 {{ $item->name ?? null }}
                                             </td>
-                                            <td class="{{ auth()->user()->hasRole(['super_admin','client_admin']) ? 'status' : 'activation' }}" >
+                                            <td class="{{ auth()->user()->hasRole(['super_admin','client_admin','manager']) ? 'status' : 'activation' }}" >
 
                                                 <div class="statusSection" ><span class="badge {{$item->status==1 ? 'bg-success' : 'bg-danger'  }} px-2">{{ $item->status==1 ? "Գործող" : "Կասեցված" }}</span></div>
 
@@ -83,7 +83,7 @@
                                                     </button>
 
                                                     <div class="dropdown-menu">
-                                                        @if(auth()->user()->hasRole(['super_admin','client_admin', 'client_admin_rfID']))
+                                                        @if(auth()->user()->hasRole(['super_admin','client_admin', 'client_admin_rfID','manager']))
                                                             <a class="dropdown-item d-flex" href="javascript:void(0);">
                                                                 <div class="form-check form-switch">
                                                                     <input class="form-check-input change_status" type="checkbox"
@@ -95,11 +95,11 @@
 
 
 
-                                                    @if (!auth()->user()->hasRole('client_admin_rfID'))
+                                                        @if (!auth()->user()->hasRole('client_admin_rfID'))
 
-                                                        <a class="dropdown-item" href="{{route('schedule.edit',$item['id'])}}"><i
-                                                                class="bx bx-edit-alt me-1"></i>Խմբագրել</a>
-                                                    @endif
+                                                            <a class="dropdown-item" href="{{route('schedule.edit',$item['id'])}}"><i
+                                                                    class="bx bx-edit-alt me-1"></i>Խմբագրել</a>
+                                                        @endif
                                                         <button type="button" class="dropdown-item click_delete_item"
                                                             data-bs-toggle="modal" data-bs-target="#smallModal"><i
                                                                 class="bx bx-trash me-1"></i>

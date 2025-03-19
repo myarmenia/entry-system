@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Helpers\MyHelper;
 use App\Models\Client;
 use App\Models\ClientSchedule;
 use App\Models\SchedueName;
@@ -13,42 +14,39 @@ use Illuminate\Support\Facades\Auth;
 class ScheduleNameRepository implements ScheduleNameInterface
 {
 
+    public function index(){
+
+        $client_schedules = ClientSchedule::where('client_id',MyHelper::find_auth_user_client())->pluck('schedule_name_id');
+
+        $data = ScheduleName::whereIn('id',$client_schedules)->latest()->get();
+
+        return $data;
+    }
+
     public function creat(){
 
     }
     public function store($dto){
 
-
         $data = ScheduleName::create($dto);
-
-        $auth_user_id = Auth::id();
-
-        $client_id = Staff::where('user_id',$auth_user_id)->value('client_admin_id');
-
 
         $client = Client::where('user_id',Auth::id())->value('id');
 
-
         $clients_schedule = ClientSchedule::create([
-            "client_id" => $client_id,
+            "client_id" => MyHelper::find_auth_user_client(),
             "schedule_name_id" => $data->id
 
         ]);
-
 
         return $data;
 
 
     }
     public function edit($id){
-        // dd($id);
 
         $data = ScheduleName::with('schedule_details')->findOrFail($id);
 
-
-
         return $data;
-
 
     }
     public function update($dto, $id){

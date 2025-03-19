@@ -5,8 +5,8 @@ class NewPersonDto
 {
 
     public function __construct(
-        public int $entry_code_id,
         public ?int $client_id =null,
+        public int $entry_code_id,
         public string $name,
         public string $surname,
         public ?int  $schedule_name_id = null,
@@ -14,12 +14,13 @@ class NewPersonDto
         public ?string $email = null,
         public ?string $phone =null,
         public string $type,
-        public ?string $image = null,
+        public ?object  $image = null,
     )
     {}
 
     public static  function fromRequestDto($request): NewPersonDto {
         return  new self(
+            client_id: $request->client_id,
             entry_code_id: $request->entry_code_id,
             name: $request->name,
             surname: $request->surname,
@@ -28,9 +29,29 @@ class NewPersonDto
             email: $request->email,
             phone: $request->phone,
             type: $request->type,
-            image: $request->image
+
+            image: $request->hasFile('image') ? $request->file('image') : null
         );
 
     }
+
+    public function toArray()
+    {
+
+        return array_filter([
+            "client_id" => $this->client_id,
+            "entry_code_id" => $this->entry_code_id,
+            "name" => $this->name,
+            "surname" => $this->surname,
+            "schedule_name_id" => $this->schedule_name_id,
+            "department_id" => $this->department_id,
+            "email" => $this->email,
+            "phone" => $this->phone,
+            "type" => $this->type,
+            "image" => $this->image
+
+        ], fn($value) => !is_null($value)); // Убираем null-значения
+    }
+
 
 }

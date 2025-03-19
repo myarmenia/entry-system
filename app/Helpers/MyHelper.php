@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use App\Models\Client;
+use App\Models\Staff;
 use App\Models\Superviced;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,6 +24,21 @@ class MyHelper
         $weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday','Friday','Saturday','Sunday'];
 
         return $weekdays;
+    }
+
+
+    public static function find_auth_user_client (){
+
+        if(auth()->user()->hasRole(['client_admin','client_admin_rfID'])){
+
+            $client_id = Client::where('user_id',Auth::id())->value('id');
+        }
+        else{
+            $client_id = Staff::where('user_id',Auth::id())->value('client_admin_id');
+
+        }
+        return $client_id;
+
     }
 
 

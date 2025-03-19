@@ -1,33 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
-    {{-- <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
-
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    {{ __('You are logged in!') }}
-                </div>
-            </div>
-        </div>
-    </div>
+@php
+$client_id = $entry_codes['client_id'];
+$schedule_name = isset($entry_codes['client_schedule']) ? $entry_codes['client_schedule'] : null;
+$departments = isset($entry_codes['department']) ? $entry_codes['department'] :null;
+unset($entry_codes['client_schedule']);
+unset($entry_codes['department']);
+unset($entry_codes['client_id']);
 
 
-</div> --}}
-
-
-    {{-- commentel em heto karox e petq gal  --}}
-    {{-- @include("navbar") --}}
-
-
+@endphp
 
 
     <main id="main" class="main">
@@ -61,17 +44,11 @@
                                 <!-- General Form Elements -->
                                 {{-- {{ dd($data->active_person->people) }} --}}
                                 <form action="{{ route('people.store') }}" method="post" enctype="multipart/form-data">
+                                    <input type="hidden" value={{$client_id}} name="client_id">
                                     <div class="row mb-3">
                                         <label class="col-sm-3 col-form-label">Նույնականացման կոդ</label>
                                         <div class="col-sm-9">
-                                            @php
-                                            $schedule_name = isset($entry_codes['client_schedule']) ? $entry_codes['client_schedule'] : null;
-                                            $departments = isset($entry_codes['department']) ? $entry_codes['department'] :null;
-                                            unset($entry_codes['client_schedule']);
-                                            unset($entry_codes['department']);
 
-
-                                            @endphp
                                             {{-- {{ dd($entry_codes) }} --}}
 
                                             <select class="form-select" aria-label="Default select example"

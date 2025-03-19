@@ -56,15 +56,8 @@ class PeopleController extends Controller
      */
     public function store(PersonRequest $request)
     {
-        dd($request->all());
-
-
-
-        // $personDTO = PersonDTO::fromModel($request);
-        $personDTO = NewPersonDto::fromRequestDto($request);
-        dd( $personDTO);
-
-        $data = $this->personService->store($personDTO);
+        // dd($request->all());
+        $data = $this->personService->store(NewPersonDto::fromRequestDto($request));
 
         if($data){
 

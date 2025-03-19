@@ -33,9 +33,13 @@ class PersonService
 
     }
 
-    public function store(PersonDTO $personDTO)
+    // public function store(PersonDTO $personDTO)
+    // {
+    //     return $this->personRepository->storePerson($personDTO);
+    // }
+    public function store( $personDTO)
     {
-        return $this->personRepository->storePerson($personDTO);
+        return $this->personRepository->storePerson($personDTO->toArray());
     }
     public function edit($personId)
     {

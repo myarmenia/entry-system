@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\DTO\NewPersonDto;
 use App\DTO\PersonDTO;
+use App\Helpers\MyHelper;
 use App\Http\Controllers\People\PeopleController;
 use App\Models\Client;
 use App\Models\ClientSchedule;
@@ -41,120 +42,131 @@ class PersonRepository implements PersonRepositoryInterface
     }
     public function createPerson()
     {
-        if(auth()->user()->hasRole(['client_admin','client_admin_rfID'])){
 
-            $client_id = Client::where('user_id',Auth::id())->value('id');
-        }
-        else{
-
-            $client_id = Staff::where('user_id',Auth::id())->value('client_admin_id');
-        }
-
-            $client = Client::where('id', $client_id)->first();
+            $client = Client::where('id', MyHelper::find_auth_user_client ())->first();
             // dd( $client);
 
             if($client!=null){
 
                 $query = EntryCode::where(['client_id'=>$client->id,'activation'=>0])->get();
                 $client_schedule = ClientSchedule::where('client_id',$client->id)->pluck("schedule_name_id");
+                $query['client_id'] = $client->id;
 
                 $department = Department::where('client_id',$client->id)->get();
                 if(count($client_schedule)>0){
-                    $query['client_schedule'] = ScheduleName::whereIn('id',$client_schedule)->get();
 
+                    $schedule_name = ScheduleName::whereIn('id',$client_schedule)
+                                                    ->where('status',1)
+                                                    ->get();
+
+                    if(count($schedule_name)>0){
+
+                        $query['client_schedule'] = $schedule_name;
+
+                    }
                 }
                 if(count($department)>0){
 
                     $query['department'] = Department::where('client_id',$client->id)->get();
                 }
 
-
-
             }
-
-
-
-// dd($query);
+          // dd($query);
         return $query;
 
     }
 
-    // public function storePerson(PersonDTO $personDTO)
-    // {
-
-    //     $entry_code = EntryCode::where('id',$personDTO->entry_code_id)->first();
-
-    //     $person = new Person();
-
-    //     $person->client_id = $entry_code->client_id;
-    //     $person->name = $personDTO->name;
-    //     $person->surname = $personDTO->surname;
-    //     $person->email = $personDTO->email;
-    //     $person->phone = $personDTO->phone;
-    //     $person->type = $personDTO->type;
-    //     $person->save();
-
-    //     if($person){
-
-    //         $schedule_department_people = new ScheduleDepartmentPerson();
-    //         $schedule_department_people->client_id = $entry_code->client_id;
-    //         $schedule_department_people->department_id = $personDTO->department_id;
-    //         $schedule_department_people->schedule_name_id = $personDTO->schedule_name_id;
-    //         $schedule_department_people->person_id =$person->id;
-    //         $schedule_department_people->save();
-
-
-
-    //         if($personDTO->image!=null){
-    //            $path = FileUploadService::upload($personDTO->image,  'people/' . $person->id);
-    //            $person->image = $path;
-    //            $person->save();
-    //         }
-
-    //         $person_permission_entry_code = PersonPermission::where(['entry_code_id' => $personDTO->entry_code_id,'status' => 1])->first();
-
-    //         if($person_permission_entry_code){
-
-    //             $person_permission_entry_code->status = 0;
-    //             $person_permission_entry_code->save();
-    //         }
-
-    //         $person_permission = new PersonPermission();
-
-    //         $person_permission->person_id = $person->id;
-    //         $person_permission->entry_code_id = $personDTO->entry_code_id;
-    //         $person_permission->save();
-
-    //         if($person_permission){
-
-    //             $entry_code->activation = 1;
-    //             $entry_code->save();
-
-    //         }
-
-    //     }
-
-
-
-
-
-    //     return $person;
-
-
-    // }
     public function storePerson($personDTO){
+
+        // dd($personDTO);
+        $entry_code_id = $personDTO['entry_code_id'];
+        $department_id = $personDTO['department_id'];
+        $schedule_name_id = $personDTO['schedule_name_id'];
+        $image=isset($personDTO['image']) ? $personDTO['image'] : null;
+        // dd($entry_code_id );
+        unset($personDTO['entry_code_id']);
+        unset($personDTO['department_id']);
+        unset($personDTO['schedule_name_id']);
+        // dd($personDTO);
+        if (isset($personDTO['image'])) {
+            unset($personDTO['image']);
+        }
+
+        $entry_code = EntryCode::where('id',$entry_code_id)->first();
+
+        $person = Person::create($personDTO);
+        if($person){
+
+            $schedule_department_people = new ScheduleDepartmentPerson();
+            $schedule_department_people->client_id = $entry_code->client_id;
+            $schedule_department_people->department_id = $department_id;
+            $schedule_department_people->schedule_name_id = $schedule_name_id;
+            $schedule_department_people->person_id =$person->id;
+            $schedule_department_people->save();
+
+        }
+
+        // dd($person);
+        if($image != null){
+            // dd($image);
+            $path = FileUploadService::upload($image,  'people/' . $person->id);
+                       $person->image = $path;
+                       $person->save();
+                    //    dd($path);
+        }
+        // dd($person);
+          // եթե նախկինում կցված է եղել
+        $person_permission_entry_code = PersonPermission::where(['entry_code_id' => $entry_code_id,'status' => 1])->first();
+
+                if($person_permission_entry_code){
+
+                    $person_permission_entry_code->status = 0;
+                    $person_permission_entry_code->save();
+                }
+
+                $person_permission = new PersonPermission();
+
+                $person_permission->person_id = $person->id;
+                $person_permission->entry_code_id = $entry_code_id;
+                $person_permission->save();
+
+                if($person_permission){
+
+                    $entry_code->activation = 1;
+                    $entry_code->save();
+
+                }
+                return $person;
 
     }
     public function editPerson($personId){
+        $person_connected_schedule_department = [];
+        $client_id = MyHelper::find_auth_user_client();
 
         $person = Person::where('id',$personId)
-        // find($personId)
-        ->with('schedule_department_people')
-        ->first()
-        ;
-        // dd($person);
+                         ->with('schedule_department_people')
+                         ->first();
 
-        return $person;
+        $person_connected_schedule_department['person'] = $person;
+
+        $client_schedule = ClientSchedule::where('client_id', $client_id)->pluck("schedule_name_id");
+        // dd($client_schedule);
+        if(count($client_schedule)>0){
+
+            $client_schedules_name = ScheduleName::whereIn('id', $client_schedule)->get();
+            if(count($client_schedules_name)>0){
+                $person_connected_schedule_department['client_schedules'] = $client_schedules_name;
+
+            }
+
+        }
+        $department = Department::where('client_id',$client_id)->get();
+        if(count($department)>0){
+            $person_connected_schedule_department['department'] = $department;
+
+        }
+        dd($person_connected_schedule_department);
+        return $person_connected_schedule_department;
 
     }
     public function updatePerson(PersonDTO $personDTO,array $data)
