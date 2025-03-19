@@ -80,9 +80,9 @@ class PersonRepository implements PersonRepositoryInterface
 
         // dd($personDTO);
         $entry_code_id = $personDTO['entry_code_id'];
-        $department_id = $personDTO['department_id'];
-        $schedule_name_id = $personDTO['schedule_name_id'];
-        $image=isset($personDTO['image']) ? $personDTO['image'] : null;
+        $department_id = isset($personDTO['department_id']) ? $personDTO['department_id'] : null;
+        $schedule_name_id = isset($personDTO['schedule_name_id']) ? $personDTO['department_id'] : null;
+        $image = isset($personDTO['image']) ? $personDTO['image'] : null;
         // dd($entry_code_id );
         unset($personDTO['entry_code_id']);
         unset($personDTO['department_id']);
@@ -96,7 +96,7 @@ class PersonRepository implements PersonRepositoryInterface
 
         $person = Person::create($personDTO);
         if($person){
-
+            // dd($entry_code->client_id,)
             $schedule_department_people = new ScheduleDepartmentPerson();
             $schedule_department_people->client_id = $entry_code->client_id;
             $schedule_department_people->department_id = $department_id;
@@ -153,7 +153,9 @@ class PersonRepository implements PersonRepositoryInterface
         // dd($client_schedule);
         if(count($client_schedule)>0){
 
-            $client_schedules_name = ScheduleName::whereIn('id', $client_schedule)->get();
+            $client_schedules_name = ScheduleName::whereIn('id', $client_schedule)
+                                                   ->where('status',1)
+                                                   ->get();
             if(count($client_schedules_name)>0){
                 $person_connected_schedule_department['client_schedules'] = $client_schedules_name;
 
@@ -165,7 +167,7 @@ class PersonRepository implements PersonRepositoryInterface
             $person_connected_schedule_department['department'] = $department;
 
         }
-        dd($person_connected_schedule_department);
+        // dd($person_connected_schedule_department);
         return $person_connected_schedule_department;
 
     }
@@ -196,18 +198,14 @@ class PersonRepository implements PersonRepositoryInterface
                 foreach($person->schedule_department_people as $item){
 
                     $item->update([
-                        "schedule_name_id" => $data['schedule_name_id'],
-                        "department_id" => $data['department_id']
+                        "schedule_name_id" => $data['schedule_name_id'] ?? null,
+                        "department_id" => $data['department_id'] ?? null
 
                     ]);
 
                     $item->save();
 
                 }
-
-
-
-
 
                 if($personDTO->entry_code_id!=null){
 

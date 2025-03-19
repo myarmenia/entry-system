@@ -33,10 +33,6 @@ class PersonService
 
     }
 
-    // public function store(PersonDTO $personDTO)
-    // {
-    //     return $this->personRepository->storePerson($personDTO);
-    // }
     public function store( $personDTO)
     {
         return $this->personRepository->storePerson($personDTO->toArray());
@@ -44,11 +40,12 @@ class PersonService
     public function edit($personId)
     {
 
-        $person = $this->personRepository->editPerson($personId);
+        $data = $this->personRepository->editPerson($personId);
+     
 
         return [
             "non_active_entry_code"=>$this->getAllNonActivatedEntryCode(),
-            "person"=>$person
+            "person_connected_schedule_department"=>$data
         ];
 
     }

@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('schedule_department_people', function (Blueprint $table) {
+        Schema::create('absences', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('client_id')->constrained('clients')->cascadeOnDelete();
-            $table->foreignId('schedule_name_id')->nullable()->constrained('schedule_names')->cascadeOnDelete();
-            $table->foreignId('department_id')->nullable()->constrained('departments')->cascadeOnDelete();
             $table->foreignId('person_id')->constrained('people')->cascadeOnDelete();
+            $table->enum('type', ['Հիվանդ', 'Գործուղում', 'Արձակուրդ'])->default('Արձակուրդ');
+            $table->date('start_date');
+            $table->date('end_date');
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('schedule_department_people');
+        Schema::dropIfExists('absences');
     }
 };

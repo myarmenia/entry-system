@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Dom\Attr;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -37,6 +39,17 @@ class Person extends Model
     public function schedule_department_people(){
 
         return $this->hasMany(ScheduleDepartmentPerson::class);
+    }
+    public function absence(){
+
+        return $this->hasMany(Absence::class);
+    }
+// using in absence/edit.blade.php as accesors
+    public function fullName(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->name." ".$this->surname
+        );
     }
 
 

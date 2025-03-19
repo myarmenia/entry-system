@@ -136,6 +136,8 @@
                                                 class="bx bx-edit-alt me-1"></i>Ժամանակացույց</a>
 
                                         @endif
+                                            <a class="dropdown-item" href="{{route('absence.list',$person->id )}}"><i
+                                            class="bx bx-edit-alt me-1"></i>Հարգելի Բացակա</a>
 
 
                                             <a class="dropdown-item" href="{{route('people.edit',$person->id)}}"><i

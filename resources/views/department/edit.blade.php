@@ -26,22 +26,23 @@
                     <ol class="breadcrumb">
                       <li class="breadcrumb-item"><a href="{{ route('department.list') }}">Ստորաբաժանումների ցանկ</a></li>
 
-                      <li class="breadcrumb-item active">Ստեղծել</li>
+                      <li class="breadcrumb-item active">Խմբագրել</li>
                     </ol>
                   </nav>
               </h5>
-
+{{-- {{ dd($data) }} --}}
 
               <!-- General Form Elements -->
               <form action="{{ route('department.update',$data->id)}}" method="post" enctype="multipart/form-data">
-           
+
                  @method('put')
-                    @if (Auth::user()->hasRole("client_admin"))
+                    @if (Auth::user()->hasRole(["client_admin","manager"]))
+                    {{-- {{ dd($data->name) }} --}}
 
                         <div class="row mb-3">
                             <label for="inputEmail" class="col-sm-3 col-form-label">Ստորաբաժանման անուն </label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" name="name" value={{ $data->name }}>
+                                <input type="text" class="form-control" name="name" value="{{ $data->name }}">
                                 @error("name")
                                     <div class="mb-3 row ">
                                         <p class="col-sm-10 text-danger fs-6">{{ $message }}
@@ -53,7 +54,7 @@
                         <div class="row mt-3">
                             <label class="col-sm-3 col-form-label"></label>
                             <div class="col-sm-9">
-                                <button type="submit" class="btn btn-primary">Ստեղծել</button>
+                                <button type="submit" class="btn btn-primary">Պահպանել</button>
                             </div>
                         </div>
 

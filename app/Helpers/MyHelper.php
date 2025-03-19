@@ -40,6 +40,11 @@ class MyHelper
         return $client_id;
 
     }
+    public  static function absence_type(){
+        
+        return ['Հիվանդ','Գործուղում','Արձակուրդ'];
+
+    }
 
 
 }

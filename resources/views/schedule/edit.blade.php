@@ -52,7 +52,7 @@
 
                             </div>
                         </div>
-             
+
                             <div class="row mb-3">
                                 <label class="col-sm-3 col-form-label">Ակտիվացում </label>
                                 <div class="col-sm-9">
@@ -128,7 +128,9 @@
                                             <div class="col-sm-9">
                                                 <input type="time" class="form-control"
                                                        name="week_days[{{ $key }}][day_end_time]"
-                                                       value="{{ isset($data->schedule_details[$key]->day_end_time) ? $data->schedule_details[$key]->day_end_time : '' }}"
+                                                       value="{{ isset($data->schedule_details[$key]->day_end_time) ?
+                                                                 $data->schedule_details[$key]->day_end_time :
+                                                                 old("week_days.$key.day_end_time")  }}"
                                                          >
                                                 @error("week_days.$key.day_end_time")
                                                     <div class="mb-3 row ">
@@ -146,7 +148,9 @@
 
                                                 <input type="time" class="form-control"
                                                                    name="week_days[{{ $key }}][break_start_time]"
-                                                                   value="{{ isset($data->schedule_details[$key]->break_start_time) ? $data->schedule_details[$key]->break_start_time : '' }}"
+                                                                   value="{{ isset($data->schedule_details[$key]->break_start_time) ?
+                                                                             $data->schedule_details[$key]->break_start_time :
+                                                                             old("week_days.$key.break_start_time")  }}"
                                                                     >
 
                                                 @error("week_days.$key.break_start_time")
@@ -164,7 +168,9 @@
                                             <div class="col-sm-9">
                                                 <input type="time" class="form-control"
                                                                    name="week_days[{{ $key }}][break_end_time]"
-                                                                    value = {{ isset($data->schedule_details[$key]->break_end_time) ? $data->schedule_details[$key]->break_end_time : '' }}
+                                                                    value = {{ isset($data->schedule_details[$key]->break_end_time) ?
+                                                                                $data->schedule_details[$key]->break_end_time :
+                                                                                old("week_days.$key.break_end_time") }}
 
                                                                         >
 
@@ -176,10 +182,6 @@
                                                 @enderror
                                             </div>
                                         </div>
-
-
-
-
 
                         </div>
                         <hr/>

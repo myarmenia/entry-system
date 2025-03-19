@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Absence\AbsenceController;
 use App\Http\Controllers\ActionController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ChangeStatusController;
@@ -93,6 +94,20 @@ Route::group(['middleware' => ['auth']], function() {
         Route::put('{id}/',[ScheduleDetailsController::class,'update'])->name('schedule_details.update');
 
     });
+    // ====== Հարգելի բացակա ==========
+    Route::group(['prefix'=>'person'],function(){
+
+        Route::get('{person}/absent',[AbsenceController::class,'index'])->name('absence.list');
+        // ===Ստեղծել ցույց տալ
+        Route::get('{person}/absence_type',[AbsenceController::class,'show'])->name('create.person.absence');
+        Route::post('store',[AbsenceController::class,'store'])->name('absence.store');
+
+    });
+    Route::group(['prefix'=>'absence'],function(){
+       Route::get('{id}/edit',[AbsenceController::class,'edit'])->name('absence.edit');
+       Route::put('{id}/',[AbsenceController::class,'update'])->name('absence.update');
+    });
+
 
     Route::group(['prefix'=>'department'],function(){
 

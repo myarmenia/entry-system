@@ -13,6 +13,10 @@ class DepartmentService
         $this->departmentInterface = $departmentInterface;
 
     }
+    public function list(){
+
+        return $this->departmentInterface->index();
+    }
 
     public function store($dto){
 

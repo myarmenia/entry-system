@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Helpers\MyHelper;
 use App\Interfaces\DepartmentInterface;
 use App\Models\Client;
 use App\Models\Department;
@@ -11,19 +12,23 @@ use Illuminate\Support\Facades\Auth;
 class DepartmentRepository implements DepartmentInterface
 {
 
+    public function index(){
+
+        return Department::where('client_id',MyHelper::find_auth_user_client ())
+                           ->get();
+    }
+
     public function store($dto){
 
         if(auth()->user()->hasRole(['client_admin','client_admin_rfID'])){
 
             $client_id = Client::where('user_id',Auth::id())->value('id');
-
         }else{
 
             $client_id = Staff::where('user_id',Auth::id())->value('client_admin_id');
         }
 
-
-        $dto['client_id']=$client_id;
+        $dto['client_id'] = $client_id;
 
         $data = Department::create($dto);
 
@@ -31,17 +36,19 @@ class DepartmentRepository implements DepartmentInterface
     }
     public function edit($id){
 
-        $data = Department::find($id);
+        return Department::find($id);
 
-        return $data;
     }
     public function update($dto,$id){
 
-        $data = Department::where('id',$id)->first();
+// dd($dto);
+        $data = Department::find($id);
+        if ($data) {
+          $data->update($dto);
 
-        $data->update($dto);
+        }
 
-        return $data;
+        return true;
 
     }
 }

@@ -42,12 +42,9 @@ class PeopleController extends Controller
      */
     public function create()
     {
-        // dd(auth()->user()->client);
-        $entry_codes = $this->personService->create();
-        // dd($entry_codes);
 
-        // $schedule_name = ScheduleName::all();
-        // $departments = Department::all();
+        $entry_codes = $this->personService->create();
+
         return view('people.create',compact('entry_codes'));
     }
 
@@ -83,11 +80,11 @@ class PeopleController extends Controller
     {
 
         $data = $this->personService->edit($id);
-        $schedule_name = ScheduleName::all();
-        $departments = Department::all();
 
-        if($data['person'] != null ){
-            return view('people.edit', compact('data','schedule_name','departments'));
+
+
+        if($data['person_connected_schedule_department']['person'] != null ){
+            return view('people.edit', compact('data'));
         }
 
     }
