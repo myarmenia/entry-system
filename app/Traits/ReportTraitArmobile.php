@@ -325,7 +325,7 @@ trait ReportTraitArmobile{
                     }
 
 
-                    // dd($peopleDailyRecord);
+                    dd($peopleDailyRecord);
 
                 }
 

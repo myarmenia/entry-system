@@ -254,6 +254,13 @@
         <span>Հաշվետվություն ըստ մուտքի և ելքի</span>
         </a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link {{ Route::is(['reportFilter.list']) ? '' : 'collapsed' }}"  href = "{{ route('reportFilter.list') }}">
+        <i class="bi bi-person"></i>
+        <span>Հաշվետվություն ֆիլտրացիա</span>
+        </a>
+    </li>
+
 
 
 

@@ -20,6 +20,7 @@ use App\Http\Controllers\PersonPermission\PersonPermissionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReportArmobileController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ReportFilterController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\Schedule\ScheduleController;
 use App\Http\Controllers\Schedule\ScheduleDetailsController;
@@ -76,7 +77,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('report-list-armobile',[ReportController::class,'index_armobile'])->name('reportListArmobile');
 
     Route::get('/report/export',[ReportController::class,'export'])->name('export-xlsx');
-    // ====ARMOBILE=============
+    // ====ARMOBILE=============hatuk
     Route::post('supervised',[SupervicedController::class,'superviced_person']);
     Route::get('supervised-staff',[SupervicedController:: class,'supervised_staff'])->name('supervisedStaff');
     Route::post('delete-superviced',[SupervicedController::class,'delete']);
@@ -117,6 +118,8 @@ Route::group(['middleware' => ['auth']], function() {
         Route::get('{id}/edit/',[DepartmentController::class,'edit'])->name('department.edit');
         Route::put('{id}/',[DepartmentController::class,'update'])->name('department.update');
     });
+
+    Route::get('report',ReportFilterController::class)->name('reportFilter.list');
 
 });
 

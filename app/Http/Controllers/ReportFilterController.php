@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\AttendanceSheet;
+use App\Services\ReportFilterService;
+use Illuminate\Http\Request;
+
+class ReportFilterController extends Controller
+{
+    /**
+     * Handle the incoming request.
+     */
+
+    public function __construct(protected ReportFilterService $service){}
+    public function __invoke(Request $request)
+    {
+        $data = $this->service->filterService($request->all());
+
+
+
+        return view('report.reportFilter');
+    }
+}
