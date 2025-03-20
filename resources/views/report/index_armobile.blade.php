@@ -9,6 +9,21 @@
         th{
             font-size:12px
         }
+        table th {
+            height: 100px;
+            text-align: center
+        }
+
+        table td {
+            text-align: center;
+        }
+
+        .fix_column {
+            position: sticky;
+            left: 0;
+            background-color: #343a40;
+            color: #fff
+        }
     </style>
 @endsection
 
@@ -88,32 +103,15 @@
                             </form>
                             <!-- Bordered Table -->
                             @if(($groupedEntries)>0)
-                                {{-- <div>
-                                    <div class="d-flex">
-                                        <div class="d-flex border border-3 justify-content-center" style="height:30px;width:30px">+</div>
-                                        <p class="mx-1">-</p>
-                                        <p class="mx-1">Աշխատակիցը ներկայացել է աշխատանքի ժամանակին </p>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="d-flex border border-3 justify-content-center bg-danger " style="height:30px;width:30px">+</div>
-                                        <p class="mx-1">-</p>
-                                        <p class="mx-1">Աշխատակիցը ուշացել է աշխատանքային ժամից </p>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="d-flex border border-3 justify-content-center bg-warning " style="height:30px;width:30px">?</div>
-                                        <p class="mx-1">-</p>
-                                        <p class="mx-1">Աշխատակցի առաջին գործողությունն ելք է եղել </p>
-                                    </div>
 
-                                </div> --}}
                                 <div class="table-responsive">
                                     <table class="table table-bordered">
                                         <thead>
                                             <tr>
-                                                <th rowspan="2">Հ/Հ</th>
-                                                <th rowspan="2">ID</th>
-                                                <th rowspan="2">Անուն</th>
-                                                <th rowspan="2">Ազգանուն</th>
+                                                <th rowspan="2" class="fix_column">Հ/Հ</th>
+                                                <th rowspan="2" class="fix_column">ID</th>
+                                                <th rowspan="2" class="fix_column">Անուն</th>
+                                                <th rowspan="2" class="fix_column">Ազգանուն</th>
 
                                                 @for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay())
                                                     <th colspan="2">{{ $date->format('d') }}</th>
@@ -134,10 +132,10 @@
                                             {{-- {{ dd($groupedEntries) }} --}}
                                             @foreach ($groupedEntries as $peopleId => $item)
                                                 <tr>
-                                                    <td>{{ ++$i }}</td>
-                                                    <td>{{ $peopleId }}</td>
-                                                    <td>{{ getPeople($peopleId)->name ?? null }}</td>
-                                                    <td>{{ getPeople($peopleId)->surname ?? null }}</td>
+                                                    <td class="fix_column">{{ ++$i }}</td>
+                                                    <td class="fix_column">{{ $peopleId }}</td>
+                                                    <td class="fix_column">{{ getPeople($peopleId)->name ?? null }}</td>
+                                                    <td class="fix_column">{{ getPeople($peopleId)->surname ?? null }}</td>
 
                                                     @for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay())
                                                         <td class="p-0 text-center">
