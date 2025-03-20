@@ -103,25 +103,8 @@
                             </form>
                             <!-- Bordered Table -->
                             @if(($groupedEntries)>0)
-                                {{-- <div>
-                                    <div class="d-flex">
-                                        <div class="d-flex border border-3 justify-content-center" style="height:30px;width:30px">+</div>
-                                        <p class="mx-1">-</p>
-                                        <p class="mx-1">Աշխատակիցը ներկայացել է աշխատանքի ժամանակին </p>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="d-flex border border-3 justify-content-center bg-danger " style="height:30px;width:30px">+</div>
-                                        <p class="mx-1">-</p>
-                                        <p class="mx-1">Աշխատակիցը ուշացել է աշխատանքային ժամից </p>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="d-flex border border-3 justify-content-center bg-warning " style="height:30px;width:30px">?</div>
-                                        <p class="mx-1">-</p>
-                                        <p class="mx-1">Աշխատակցի առաջին գործողությունն ելք է եղել </p>
-                                    </div>
 
-                                </div> --}}
-                                <div class="table-responsive">
+                                <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
                                     <table class="table table-bordered">
                                         <thead>
                                             <tr>
