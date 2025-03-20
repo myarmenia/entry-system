@@ -104,7 +104,7 @@
                             <!-- Bordered Table -->
                             @if(($groupedEntries)>0)
 
-                                <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                                <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
                                     <table class="table table-bordered">
                                         <thead>
                                             <tr>
