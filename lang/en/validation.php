@@ -224,6 +224,8 @@ return [
      "day_end_time" => "Աշխատանքային օրվա ավարտ",
      "break_start_time" => "Ընդմիջման սկիզբ",
      "break_end_time" => "Ընդմիջման ավարտ",
+     "start_date" => "Սկիզբ",
+     "end_date" => "Ավարտ"
 
   ]
 

@@ -80,18 +80,23 @@ class PersonRepository implements PersonRepositoryInterface
 
         // dd($personDTO);
         $entry_code_id = $personDTO['entry_code_id'];
-        $department_id = isset($personDTO['department_id']) ? $personDTO['department_id'] : null;
-        $schedule_name_id = isset($personDTO['schedule_name_id']) ? $personDTO['department_id'] : null;
-        $image = isset($personDTO['image']) ? $personDTO['image'] : null;
+        $department_id = $personDTO['department_id'] ?? null;
+        $schedule_name_id = $personDTO['schedule_name_id'] ?? null;
+        $image = $personDTO['image'] ?? null;
         // dd($entry_code_id );
         unset($personDTO['entry_code_id']);
-        unset($personDTO['department_id']);
-        unset($personDTO['schedule_name_id']);
+        if(isset($personDTO['schedule_name_id'])){
+            unset($personDTO['schedule_name_id']);
+        }
+        if(isset($personDTO['department_id'])){
+            unset($personDTO['department_id']);
+        }
+
         // dd($personDTO);
         if (isset($personDTO['image'])) {
             unset($personDTO['image']);
         }
-
+// dd($entry_code_id,$department_id, $schedule_name_id);
         $entry_code = EntryCode::where('id',$entry_code_id)->first();
 
         $person = Person::create($personDTO);

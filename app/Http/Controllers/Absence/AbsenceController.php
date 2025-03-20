@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Absence;
 use App\DTO\AbsenceDto;
 use App\Helpers\MyHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AbsenceRequest;
 use App\Models\Absence;
 use App\Models\AbsenceModel;
 use App\Models\Person;
@@ -31,7 +32,7 @@ class AbsenceController extends Controller
         return view('absence.create',compact('person','absence_type'));
 
     }
-    public function store(Request $request){
+    public function store(AbsenceRequest $request){
 
         $data = $this->service->store(AbsenceDto::fromRequestDto($request));
         $person = Person::find($request->person_id);

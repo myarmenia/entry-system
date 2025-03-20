@@ -94,10 +94,10 @@
                                                                 <a class="dropdown-item" href="{{route('department.edit',$item['id'])}}"><i
                                                                         class="bx bx-edit-alt me-1"></i>Խմբագրել</a>
                                                             @endif
-                                                            {{-- <button type="button" class="dropdown-item click_delete_item"
+                                                            <button type="button" class="dropdown-item click_delete_item"
                                                                 data-bs-toggle="modal" data-bs-target="#smallModal"><i
                                                                     class="bx bx-trash me-1"></i>
-                                                                Ջնջել</button> --}}
+                                                                Ջնջել</button>
                                                         </div>
                                                     </div>
                                                 </td>
