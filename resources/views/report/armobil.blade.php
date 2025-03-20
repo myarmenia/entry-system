@@ -1,12 +1,8 @@
 <!DOCTYPE html>
-
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <title>Armobil</title>
-
 </head>
 @php
     use Carbon\Carbon;
@@ -28,12 +24,10 @@
 
 <body>
     <div>
-
         <table>
             <thead>
                 <tr>
                     <td colspan="20" >Հաշվետվություն {{ $monthYear }}-ի դրությամբ</td>
-
                 </tr>
                 <tr>
 
