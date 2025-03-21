@@ -14,11 +14,17 @@ class ReportFilterController extends Controller
 
     public function __construct(protected ReportFilterService $service){}
     public function __invoke(Request $request)
+
     {
+        // dd($request->all());
         $data = $this->service->filterService($request->all());
 
 
 
-        return view('report.reportFilter');
+
+
+
+
+        return view('report.reportFilter',compact('data'));
     }
 }

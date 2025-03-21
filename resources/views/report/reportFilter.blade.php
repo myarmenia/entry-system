@@ -42,7 +42,7 @@
 
 
     // Assuming $request->month contains "2024-10"
-    $monthYear = $mounth;
+    $monthYear = $data['month'];
 
     // Parse the month-year string to get the start and end of the month
     $startOfMonth = Carbon::parse($monthYear)->startOfMonth();
@@ -89,16 +89,31 @@
                             </div>
 
 
-                            <form  action="{{ route('reportList') }}" method="get" class="mb-3 justify-content-end" style="display: flex; gap: 8px">
+                            <form  action="{{ route('reportFilter.list') }}" method="get" class="mb-3 justify-content-end" style="display: flex; gap: 8px">
+                                {{-- <div class="col-2"> --}}
+                                    {{-- <div class="row mb-3"> --}}
+
+                                        <div class="col-sm-2">
+                                                 <select class="form-select" aria-label="Default select example" name="department_id">
+                                                    <option value="" disabled="" selected>Ընտրել ստորաբաժանումը</option>
+                                                     @foreach($data['client_department'] as $department)
+                                                          <option value="{{ $department->id }}"> {{ $department->name }}</option>
+                                                     @endforeach
+
+                                                 </select>
+                                        </div>
+
+                                    {{-- </div> --}}
+                                {{-- </div> --}}
 
                                 <div class="col-2">
-                                    <input type="text"  class="form-select"  id="monthPicker" placeholder="Ընտրել ամիսը տարեթվով" name="mounth"/>
+                                    <input type="text"  class="form-select"  id="monthPicker" placeholder="Ընտրել ամիսը տարեթվով" name="month"/>
                                 </div>
                                 <button type="submit" class="btn btn-primary col-2 search">Հաշվետվություն</button>
-                                <a href="{{ route('export-xlsx',['mounth'=>$mounth]) }}" type="submit" class="btn btn-primary col-2 search">Արտահանել XLSX</a>
+                                <a href="{{ route('export-xlsx',['mounth'=>$data['month']]) }}" type="submit" class="btn btn-primary col-2 search">Արտահանել XLSX</a>
                             </form>
                             <!-- Bordered Table -->
-                         
+
 
                             <!-- End Bordered Table -->
                             <div class="demo-inline-spacing">

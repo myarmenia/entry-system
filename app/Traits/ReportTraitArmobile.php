@@ -89,7 +89,7 @@ trait ReportTraitArmobile{
                         // dd($date);
                         // dd($enter,$exit);
                         $clientSchedule = $clientWorkingTimes[$dayOfWeek] ?? null;
-                        // dd($clientSchedule);
+                        dd($clientSchedule);
 
 
                         foreach ($records as $record) {

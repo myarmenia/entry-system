@@ -59,7 +59,7 @@ trait ReportTrait{
                 $groupedEntries = $attendance_sheet->groupBy(['people_id', function ($oneFromCollection) {
                     return Carbon::parse($oneFromCollection->date)->toDateString();
                 }]);
-                dd( $groupedEntries);
+                // dd( $groupedEntries);
 
 
                 $clientWorkingTimes = DB::table('client_working_day_times')

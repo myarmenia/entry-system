@@ -3,6 +3,9 @@
 namespace App\Helpers;
 
 use App\Models\Client;
+use App\Models\ClientSchedule;
+use App\Models\Department;
+use App\Models\ScheduleName;
 use App\Models\Staff;
 use App\Models\Superviced;
 use Illuminate\Support\Facades\Auth;
@@ -27,7 +30,7 @@ class MyHelper
     }
 
 
-    public static function find_auth_user_client (){
+    public static function find_auth_user_client(){
 
         if(auth()->user()->hasRole(['client_admin','client_admin_rfID'])){
 
@@ -41,8 +44,16 @@ class MyHelper
 
     }
     public  static function absence_type(){
-        
+
         return ['Հիվանդ','Գործուղում','Արձակուրդ'];
+
+    }
+    public static function get_client_department(){
+        return Department::where('client_id',self::find_auth_user_client())->get();
+    }
+    public  static function get_client_schedule(){
+        
+        return ClientSchedule::where('client_id',self::find_auth_user_client())->with('schedule_name.schedule_details')->get();
 
     }
 
