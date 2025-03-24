@@ -89,7 +89,7 @@ trait ReportTraitArmobile{
                         // dd($date);
                         // dd($enter,$exit);
                         $clientSchedule = $clientWorkingTimes[$dayOfWeek] ?? null;
-                        dd($clientSchedule);
+                        // dd($clientSchedule);
 
 
                         foreach ($records as $record) {
@@ -325,7 +325,7 @@ trait ReportTraitArmobile{
                     }
 
 
-                    dd($peopleDailyRecord);
+                    // dd($peopleDailyRecord);
 
                 }
 
@@ -333,9 +333,11 @@ trait ReportTraitArmobile{
         }
 
             if(isset($peopleDailyRecord)){
+                // dd($peopleDailyRecord);
                 $total_monthly_working_hours = $this->calculate_arm($peopleDailyRecord,$client);
 
                 $routeName = Route::currentRouteName();
+                // dd( $routeName);
                 if($routeName=="export-xlsx-armobil"){
                     $total_monthly_working_hours['mounth']=$month;
 
@@ -399,15 +401,16 @@ trait ReportTraitArmobile{
 
     public function calculate_arm($peopleDailyRecord,$client){
 
-
+    //    dd($peopleDailyRecord);
         foreach ($peopleDailyRecord as $personId => $records) {
             $totalSeconds = 0;
-            $delaytotalSeconds =0;
+            $delaytotalSeconds = 0;
             // dd($records);
 
             // Iterate through each person's records
             foreach ($records as $key => $data) {
                 // dump($data);
+                // dd()
                 if (isset($data['working_times'])) {
                     foreach ($data['working_times'] as $time) {
                         // dump($time);
@@ -443,6 +446,7 @@ trait ReportTraitArmobile{
             $peopleDailyRecord[$personId]['totaldelayPerPerson'] = sprintf('%d ժ, %d ր', $delaytotalHours, $delaytotalMinutes, $delaytotalSeconds);
             // dd($peopleDailyRecord);
             // dd($client->working_time,$totalHours);
+            // dd($client);
             $clientWorkingHours = (float) $client->working_time; // Convert string to float
             $personWorkingHours = (float) $totalHours;
             if($clientWorkingHours>$personWorkingHours){
@@ -450,7 +454,7 @@ trait ReportTraitArmobile{
 
             }
         }
-        // dd($peopleDailyRecord);
+        dd($peopleDailyRecord);
         return  $peopleDailyRecord;
 
 

@@ -8,7 +8,10 @@ trait RecordTrait
 {
     public function getPersonWorkingHours($peopleDailyRecord,$records, $peopleId,$day, $entryTime){
 
+        $totalSeconds =0;
+        dd($records);
         foreach ($records as $record) {
+
 
             if($record->direction == "unknown"){
                 $find_mac_direction = Turnstile::where('mac',$record->mac)->value('direction');
@@ -26,6 +29,7 @@ trait RecordTrait
             }
 
              elseif ($record->direction == 'exit' && $entryTime) {
+
                 $peopleDailyRecord[$peopleId][$day]['exit'][] = Carbon::parse($record->date)->format('H:i');
 
                 $exitTime = Carbon::parse($record->date);
@@ -44,9 +48,12 @@ trait RecordTrait
 
                         $interval = $exitT->diff($entryT);
 
+
                         $peopleDailyRecord[$peopleId][$day]['working_times'][] = $interval->format('%H:%I:%S');
-
-
+                        // dd($peopleDailyRecord[$peopleId][$day]['working_times']);
+                        list($hours, $minutes, $seconds) = explode(':', $interval->format('%H:%I:%S'));
+                        $totalSeconds += $hours * 3600 + $minutes * 60 + $seconds;
+                        $peopleDailyRecord[$peopleId][$day]['daily_working_times']= $totalSeconds;
 
                     }
 
@@ -56,7 +63,9 @@ trait RecordTrait
 
             }
 
+
         }
+        // dd($peopleDailyRecord);
         return ($peopleDailyRecord);
 
     }
