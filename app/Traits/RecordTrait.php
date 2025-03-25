@@ -54,7 +54,11 @@ trait RecordTrait
                         // dd($peopleDailyRecord[$peopleId][$day]['working_times']);
                         list($hours, $minutes, $seconds) = explode(':', $interval->format('%H:%I:%S'));
                         $totalSeconds += $hours * 3600 + $minutes * 60 + $seconds;
-                        $peopleDailyRecord[$peopleId][$day]['daily_working_times']= $totalSeconds;
+
+                        $totalMinutes = intdiv($totalSeconds, 60); // Общее количество минут
+                        $hours = intdiv($totalMinutes, 60); // Количество часов
+                        $minutes = $totalMinutes % 60; // Оставшиеся минуты
+                        $peopleDailyRecord[$peopleId][$day]['daily_working_times']= "{$hours} ժ {$minutes} ր";
 
                     }
 

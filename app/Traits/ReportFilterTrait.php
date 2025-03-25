@@ -18,42 +18,23 @@ trait ReportFilterTrait{
  public function filter($data)
   {
 
-// dd($data);
-$attendance_sheet = $data['attendance_sheet'];
-// dd($attendance_sheet);
+         // dd($data);
+          $attendance_sheet = $data['attendance_sheet'];
+       // dd($attendance_sheet);
 
 
 $groupedEntries = $attendance_sheet->groupBy(['people_id', function ($oneFromCollection) {
     return Carbon::parse($oneFromCollection->date)->toDateString();
 }]);
-// dd($groupedEntries );
-// foreach ($groupedEntries as $peopleId => $dates) {
-//     // dd( $dates);
 
-//     foreach ($dates as $dateEntry) {
-//         dd($dateEntry);
-//         foreach($dateEntry as $entry){
-//             dd($entry);
-
-//             dd( $entry->schedule_name_id);
-            //   dd( $entry->department_id);
-//         }
-
-//         $scheduleNameId = $dateEntry->schedule_name_id;  // Accessing schedule_name_id
-//         $departmentId = $dateEntry->department_id;       // Accessing department_id
-
-//         echo "Date: {$dateEntry->date}, Schedule Name ID: $scheduleNameId, Department ID: $departmentId\n";
-//     }
-// }
 // dd($data['client_id']);
+// dd($groupedEntries);
 
             $get_client_schedule = $data['client_id'];
             // dd($get_client_schedule);
             $client_scheduls = MyHelper::get_client_schedule();
 
-            // foreach($client_scheduls as $schedule){
-            //     dd($schedule->schedule_details);
-            // }
+
             $peopleDailyRecord =[];
             foreach ($groupedEntries as $peopleId => $dailyRecords) {
                 // dd($dailyRecords);
@@ -61,11 +42,8 @@ $groupedEntries = $attendance_sheet->groupBy(['people_id', function ($oneFromCol
 
                 foreach ($dailyRecords as $date => $records) {
 
-                    // foreach($records as $record){
-                    //     dd($record->schedule_name_id);
-
-                    // }
                     // dd($date);   //"2025-03-20"
+                    // dd($records);
 
                     $day = date('d',strtotime($date));
                     // dd($day);//20
@@ -73,9 +51,7 @@ $groupedEntries = $attendance_sheet->groupBy(['people_id', function ($oneFromCol
                     $records = $records->sortBy('date')->unique('date'); // Ensure records are sorted by time
                      // dd()
                     $entryTime = null;
-                    $dailyWorkingTime = 0; // Секунды
-                    // $enter = [];
-                    // $exit = [];
+
                     // վերադարձնում է ամսվա այդ օրը շաբաթվա ինչ օր է
                     $dayOfWeek = Carbon::parse(time: $date)->format('l');
                     // dd($date,$dayOfWeek);//Thursday
@@ -345,8 +321,8 @@ $groupedEntries = $attendance_sheet->groupBy(['people_id', function ($oneFromCol
     }
 
     public function calculate_arm($peopleDailyRecord,$client){
-// dd($peopleDailyRecord);
-
+      // dd($peopleDailyRecord);
+      $fullTotalSeconds = 0;
         foreach ($peopleDailyRecord as $personId => $records) {
             // dd($records);
             $totalSeconds = 0;
@@ -359,16 +335,16 @@ $groupedEntries = $attendance_sheet->groupBy(['people_id', function ($oneFromCol
                 if (isset($data['working_times'])) {
                         $totalSeconds = 0;
 
-                   foreach ($data['working_times'] as $time) {
+                    foreach ($data['working_times'] as $time) {
                         // dump($time);
                          // Convert each time string (HH:MM:SS) to seconds
                          list($hours, $minutes, $seconds) = explode(':', $time);
                         $totalSeconds += $hours * 3600 + $minutes * 60 + $seconds;
-
-                     }
+                    }
                      // dd( $peopleDailyRecord[$key]);
-                     $data['daily_working_time']=$totalSeconds;
+                     $data['daily_working_time'] = $totalSeconds;
                      // $peopleDailyRecord[$records][$key]['daily_working_time'] = $totalSeconds;
+                     $fullTotalSeconds += $totalSeconds;
                 }
 
                 if (isset($data['delay_hour'])) {
@@ -380,7 +356,11 @@ $groupedEntries = $attendance_sheet->groupBy(['people_id', function ($oneFromCol
                 }
 
             }
-
+            // dd($fullTotalSeconds);
+            $fullTotalHours = floor($fullTotalSeconds / 3600);
+            $fullTotalSeconds %= 3600;
+            $fullTotalMinutes = floor($fullTotalSeconds / 60);
+            $fullTotalSeconds %= 60;
 
 
             // Convert total seconds back to hours, minutes, and seconds
@@ -397,7 +377,8 @@ $groupedEntries = $attendance_sheet->groupBy(['people_id', function ($oneFromCol
             $peopleDailyRecord[$personId]['totalMonthDayCount'] =count($records);
             // Format the result into HH:MM:SS
             // dump($totalHours, $totalMinutes, $totalSeconds);
-            $peopleDailyRecord[$personId]['totalWorkingTimePerPerson'] = sprintf( '%d ժ, %d ր, %d վ', $totalHours, $totalMinutes, $totalSeconds);
+            // dd($totalHours);
+            $peopleDailyRecord[$personId]['totalWorkingTimePerPerson'] = sprintf( '%d ժ, %d ր, %d վ', $fullTotalHours, $fullTotalMinutes, $fullTotalSeconds);
 
             $peopleDailyRecord[$personId]['totaldelayPerPerson'] = sprintf('%d ժ, %d ր, %d վ', $delaytotalHours, $delaytotalMinutes, $delaytotalSeconds);
             // dd($peopleDailyRecord);

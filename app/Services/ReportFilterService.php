@@ -16,24 +16,25 @@ class ReportFilterService
 
     public function filterService($data){
 
-
         $data['month'] = $data['month'] ??\Carbon\Carbon::now()->format('Y-m');
         $department_id = $data['department_id'] ?? null;
-        // dd($data,$department_id);
+
+        session()->put('selected_department_id',$department_id );
+        session()->put('selected_month',  $data['month']);
 
         $attendance_sheet = AttendanceSheet::forClient($data['month'], $department_id)->get();
-        // dd($attendance_sheet);
         $data['attendance_sheet'] = $attendance_sheet;
         $data['client_department'] = Myhelper::get_client_department();
-        // dd($data['client_department']);
         $data['client_id'] = Myhelper::find_auth_user_client();
 
         $service = $this->filter($data);
-        // dd( $service);
+        // dd($service);
+
         $person_data_from_attendance = $this->fill_absent_person_date($service,$data['month']);
+
         $data['attendance_sheet']= $person_data_from_attendance;
         $data['i']=0;
-        // dd($data);
+
 
         return $data;
 
@@ -66,7 +67,9 @@ class ReportFilterService
                     $get_end_day = min($endDate->format('d'), $lastDayOfMonth->format('d')); // Если конец в будущем месяце, берем последний день текущего
 
                     for ($i = $get_start_day; $i <= $get_end_day; $i++) {
-                         $dailyRecords[$i]['absence'] = $ab->type;
+                        $dayKey = str_pad($i, 2, '0', STR_PAD_LEFT); // Преобразуем 1 в '01', 2 в '02' и т. д.
+                        // $dayKey = (int) $i; // Преобразуем в число
+                        $dailyRecords[$dayKey]['absence'] = $ab->type;
                     }
                 }
             }

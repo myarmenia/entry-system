@@ -90,24 +90,29 @@
 
 
                             <form  action="{{ route('reportFilter.list') }}" method="get" class="mb-3 justify-content-end" style="display: flex; gap: 8px">
-                                {{-- <div class="col-2"> --}}
-                                    {{-- <div class="row mb-3"> --}}
 
                                         <div class="col-sm-2">
                                                  <select class="form-select" aria-label="Default select example" name="department_id">
                                                     <option value="" disabled="" selected>Ընտրել ստորաբաժանումը</option>
                                                      @foreach($data['client_department'] as $department)
-                                                          <option value="{{ $department->id }}"> {{ $department->name }}</option>
+                                                          {{-- <option value="{{ $department->id }}" {{ old('department_id') == $department->id ? 'selected' : '' }}> {{ $department->name }}
+
+                                                          </option> --}}
+                                                          <option value="{{ $department->id }}"
+                                                            {{ (session('selected_department_id') == $department->id) ? 'selected' : '' }}>
+                                                            {{ $department->name }}
+                                                        </option>
                                                      @endforeach
 
                                                  </select>
                                         </div>
-
-                                    {{-- </div> --}}
-                                {{-- </div> --}}
-
                                 <div class="col-2">
-                                    <input type="text"  class="form-select"  id="monthPicker" placeholder="Ընտրել ամիսը տարեթվով" name="month"/>
+                                     <input type="month"  class="form-select"
+                                        placeholder="Ընտրել ամիսը տարեթվով"
+                                        name="month"
+                                        value={{ session('selected_month') ?? null }}
+                                       />
+
                                 </div>
                                 <button type="submit" class="btn btn-primary col-2 search">Հաշվետվություն</button>
                                 <a href="{{ route('export-xlsx',['mounth'=>$data['month']]) }}" type="submit" class="btn btn-primary col-2 search">Արտահանել XLSX</a>
@@ -120,65 +125,75 @@
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
-                                            <th rowspan="2" class="fix_column">Հ/Հ</th>
-                                            <th rowspan="2" class="fix_column">ID</th>
-                                            <th rowspan="2" class="fix_column">Անուն</th>
-                                            <th rowspan="2" class="fix_column">Ազգանուն</th>
+                                            <th scope="col" class="fix_column">Հ/Հ</th>
+                                            <th scope="col" class="fix_column">ID</th>
+                                            <th scope="col" class="fix_column">
+                                                    <span>Անուն Ազգանուն</span>
 
-                                            @for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay())
-                                                <th colspan="2">{{ $date->format('d') }}</th>
-                                            @endfor
+                                                </th>
 
-                                            <th rowspan="2">Օրերի քանակ</th>
-                                            <th rowspan="2">ժամերի քանակ</th>
-                                            <th rowspan="2">Ուշացման ժամանակի գումար</th>
+
+                                                @for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay())
+                                                    <th>{{ $date->format('d') }}</th> <!-- Displays each day in "YYYY-MM-DD" format -->
+                                                @endfor
+                                                <th>Օրերի քանակ</th>
+                                                <th>ժամերի քանակ</th>
+                                                <th>Ուշացման ժամանակի գումար</th>
                                         </tr>
-                                        <tr>
-                                            @for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay())
-                                                <th>Մուտք</th>
-                                                <th>Ելք</th>
-                                            @endfor
-                                        </tr>
+
                                     </thead>
                                     <tbody>
                                         {{-- {{ dd$$data['attendance_sheet']) }} --}}
-                                        @foreach ($data['attendance_sheet'] as $peopleId => $item)
-                                            <tr>
-                                                <td class="fix_column">{{ ++$data['i'] }}</td>
-                                                <td class="fix_column">{{ $peopleId }}</td>
-                                                <td class="fix_column">{{ getPeople($peopleId)->name ?? null }}</td>
-                                                <td class="fix_column">{{ getPeople($peopleId)->surname ?? null }}</td>
+                                        @foreach ($data['attendance_sheet'] as $peopleId=>$item)
 
-                                                @for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay())
-                                                    <td class="p-0 text-center">
-                                                        @if(isset($item[$date->format('d')]['enter']))
-                                                            {{-- @foreach ($item[$date->format('d')]['enter'] as $ent) --}}
-                                                                <span>{{ $item[$date->format('d')]['enter'][0] }}</span><br>
-                                                            {{-- @endforeach --}}
+                                        {{-- @dump($item) --}}
+
+                                        <tr class="parent">
+                                            <td>{{ ++$data['i']}}</td>
+                                            <td scope="row">{{ $peopleId }}</td>
+                                            <td>
+                                                {{ getPeople($peopleId)->name ?? null }}  {{ getPeople($peopleId)->surname ?? null }}
+                                            </td>
+
+                                            @for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay())
+
+                                                <td class="p-0 text-center">
+
+
+
+                                                    @if(isset($item[$date->format('d')]))
+
+
+                                                        @if (isset($item[$date->format('d')]['absence']))
+
+                                                            <div class="{{ isset($item[$date->format('d')]['delay_display'])?'bg-danger':null}}"> {{ mb_substr($item[$date->format('d')]['absence'], 0, 1, "UTF-8")}}</div>
+
                                                         @endif
-                                                    </td>
-                                                    <td class="p-0 text-center">
-                                                        @if(isset($item[$date->format('d')]['exit']))
-                                                            {{-- {{ $item[$date->format('d')]['exit']->last() }} --}}
+                                                        @if (isset($item[$date->format('d')]['daily_working_times']))
 
-                                                            {{-- @foreach ($item[$date->format('d')]['exit'] as $ex) --}}
-                                                                <span>
+                                                            <div style="width:60px"> {{ $item[$date->format('d')]['daily_working_times'] }}</div>
 
-                                                                    {{  last(array_slice($item[$date->format('d')]['exit'], -1))  }}
-
-                                                                </span><br>
-                                                            {{-- @endforeach --}}
                                                         @endif
-                                                    </td>
-                                                @endfor
-
-                                                <td>{{ $item['totalMonthDayCount'] }}</td>
-                                                <td class="{{ isset($item['personWorkingTimeLessThenClientWorkingTime']) ? 'text-danger' : '' }}">
-                                                    {{ $item['totalWorkingTimePerPerson'] }}
+                                                    @endif
                                                 </td>
-                                                <td>{{ $item['totaldelayPerPerson'] }}</td>
-                                            </tr>
-                                        @endforeach
+                                            @endfor
+                                            <td>
+                                                {{$item['totalMonthDayCount'] }}
+
+                                            </td>
+                                            <td>
+
+                                                <span class="{{ isset($item['personWorkingTimeLessThenClientWorkingTime']) ? 'text-danger' : null  }}">
+                                                    {{$item['totalWorkingTimePerPerson'] }}
+                                                <span>
+
+                                            </td>
+                                            <td>
+                                                {{$item['totaldelayPerPerson'] }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+
                                     </tbody>
                                 </table>
                             </div>
