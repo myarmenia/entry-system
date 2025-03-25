@@ -273,7 +273,7 @@ $groupedEntries = $attendance_sheet->groupBy(['people_id', function ($oneFromCol
                 $client = Client::where('id', $data['client_id'])->first();
                 // dd($peopleDailyRecord);
                 $total_monthly_working_hours = $this->calculate_arm($peopleDailyRecord,$client);
-                dd( $total_monthly_working_hours);
+                // dd( $total_monthly_working_hours);
 
                 $routeName = Route::currentRouteName();
                 // dd( $routeName);
@@ -409,7 +409,7 @@ $groupedEntries = $attendance_sheet->groupBy(['people_id', function ($oneFromCol
 
             }
         }
-        dd($peopleDailyRecord);
+        // dd($peopleDailyRecord);
         return  $peopleDailyRecord;
 
 

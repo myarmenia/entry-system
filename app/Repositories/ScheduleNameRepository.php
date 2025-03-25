@@ -15,10 +15,12 @@ class ScheduleNameRepository implements ScheduleNameInterface
 {
 
     public function index(){
+        // dd(MyHelper::find_auth_user_client());
 
         $client_schedules = ClientSchedule::where('client_id',MyHelper::find_auth_user_client())->pluck('schedule_name_id');
 
         $data = ScheduleName::whereIn('id',$client_schedules)->latest()->get();
+        // dd($data);
 
         return $data;
     }

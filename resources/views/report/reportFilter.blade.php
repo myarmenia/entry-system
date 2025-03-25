@@ -113,6 +113,77 @@
                                 <a href="{{ route('export-xlsx',['mounth'=>$data['month']]) }}" type="submit" class="btn btn-primary col-2 search">Արտահանել XLSX</a>
                             </form>
                             <!-- Bordered Table -->
+                            {{-- {{dd($data)}} --}}
+                            @if(($data['attendance_sheet'])>0)
+
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th rowspan="2" class="fix_column">Հ/Հ</th>
+                                            <th rowspan="2" class="fix_column">ID</th>
+                                            <th rowspan="2" class="fix_column">Անուն</th>
+                                            <th rowspan="2" class="fix_column">Ազգանուն</th>
+
+                                            @for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay())
+                                                <th colspan="2">{{ $date->format('d') }}</th>
+                                            @endfor
+
+                                            <th rowspan="2">Օրերի քանակ</th>
+                                            <th rowspan="2">ժամերի քանակ</th>
+                                            <th rowspan="2">Ուշացման ժամանակի գումար</th>
+                                        </tr>
+                                        <tr>
+                                            @for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay())
+                                                <th>Մուտք</th>
+                                                <th>Ելք</th>
+                                            @endfor
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{-- {{ dd$$data['attendance_sheet']) }} --}}
+                                        @foreach ($data['attendance_sheet'] as $peopleId => $item)
+                                            <tr>
+                                                <td class="fix_column">{{ ++$data['i'] }}</td>
+                                                <td class="fix_column">{{ $peopleId }}</td>
+                                                <td class="fix_column">{{ getPeople($peopleId)->name ?? null }}</td>
+                                                <td class="fix_column">{{ getPeople($peopleId)->surname ?? null }}</td>
+
+                                                @for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay())
+                                                    <td class="p-0 text-center">
+                                                        @if(isset($item[$date->format('d')]['enter']))
+                                                            {{-- @foreach ($item[$date->format('d')]['enter'] as $ent) --}}
+                                                                <span>{{ $item[$date->format('d')]['enter'][0] }}</span><br>
+                                                            {{-- @endforeach --}}
+                                                        @endif
+                                                    </td>
+                                                    <td class="p-0 text-center">
+                                                        @if(isset($item[$date->format('d')]['exit']))
+                                                            {{-- {{ $item[$date->format('d')]['exit']->last() }} --}}
+
+                                                            {{-- @foreach ($item[$date->format('d')]['exit'] as $ex) --}}
+                                                                <span>
+
+                                                                    {{  last(array_slice($item[$date->format('d')]['exit'], -1))  }}
+
+                                                                </span><br>
+                                                            {{-- @endforeach --}}
+                                                        @endif
+                                                    </td>
+                                                @endfor
+
+                                                <td>{{ $item['totalMonthDayCount'] }}</td>
+                                                <td class="{{ isset($item['personWorkingTimeLessThenClientWorkingTime']) ? 'text-danger' : '' }}">
+                                                    {{ $item['totalWorkingTimePerPerson'] }}
+                                                </td>
+                                                <td>{{ $item['totaldelayPerPerson'] }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        @endif
 
 
                             <!-- End Bordered Table -->
