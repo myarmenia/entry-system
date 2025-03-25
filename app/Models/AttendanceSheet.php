@@ -43,15 +43,18 @@ class AttendanceSheet extends Model
     public function scopeForClient(Builder $query, $month, $departmentId=null)
     {
         // dd($departmentId);
-
+// dd($query);
         $clientId = MyHelper::find_auth_user_client();
+        // dd($clientId);//14
 
          [$year, $month] = explode('-', $month);
 
             $monthDate = Carbon::createFromDate($year, $month, 1);
+            // dd($monthDate);
 
             $startOfMonth =  $monthDate->startOfMonth()->toDateTimeString();
             $endOfMonth =  $monthDate->endOfMonth()->toDateTimeString();
+            // dd($startOfMonth,$endOfMonth);
 
         // return $query->whereHas('people', function ($q) use($clientId) {
         //     $q->where('client_id', $clientId);
