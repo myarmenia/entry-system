@@ -9,8 +9,9 @@ trait RecordTrait
     public function getPersonWorkingHours($peopleDailyRecord,$records, $peopleId,$day, $entryTime){
 
         $totalSeconds =0;
-        dd($records);
+        // dd($records);
         foreach ($records as $record) {
+
 
 
             if($record->direction == "unknown"){
