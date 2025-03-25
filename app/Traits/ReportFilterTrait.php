@@ -3,6 +3,7 @@ namespace App\Traits;
 
 use App\Helpers\MyHelper;
 use App\Models\Client;
+use App\Models\ScheduleDepartmentPerson;
 use App\Models\ScheduleDetails;
 use App\Models\Turnstile;
 use App\Traits\RecordTrait;
@@ -20,12 +21,13 @@ trait ReportFilterTrait{
 
          // dd($data);
           $attendance_sheet = $data['attendance_sheet'];
-       // dd($attendance_sheet);
+    //    dd($attendance_sheet);
 
 
-$groupedEntries = $attendance_sheet->groupBy(['people_id', function ($oneFromCollection) {
-    return Carbon::parse($oneFromCollection->date)->toDateString();
-}]);
+           $groupedEntries = $attendance_sheet->groupBy(['people_id', function ($oneFromCollection) {
+               return Carbon::parse($oneFromCollection->date)->toDateString();
+            }]);
+            // dd($groupedEntries);
 
 // dd($data['client_id']);
 // dd($groupedEntries);
@@ -39,7 +41,21 @@ $groupedEntries = $attendance_sheet->groupBy(['people_id', function ($oneFromCol
             foreach ($groupedEntries as $peopleId => $dailyRecords) {
                 // dd($dailyRecords);
                 // dd($peopleId);
+                $schedule_department_people = ScheduleDepartmentPerson::where('person_id', $peopleId)->value('schedule_name_id');
+                $department_details = ScheduleDetails::where('schedule_name_id',$schedule_department_people)->get();
+                // dd($department_details->first()->day_start_time);
+                $startTime = Carbon::createFromFormat('H:i:s', $department_details->first()->day_start_time);
+                $endTime = Carbon::createFromFormat('H:i:s',$department_details->first()->day_end_time);
+                if ($endTime->lessThan($startTime)) {
 
+                    $find_schedule_details = $this->find_schedule_details($peopleDailyRecord, $dailyRecords, $peopleId, $startTime, $endTime);
+
+                }else{
+
+                    dd(44);
+                }
+                // if($department_details->first()->day_start_time)
+// dd($dailyRecords);
                 foreach ($dailyRecords as $date => $records) {
 
                     // dd($date);   //"2025-03-20"
@@ -57,6 +73,9 @@ $groupedEntries = $attendance_sheet->groupBy(['people_id', function ($oneFromCol
                     // dd($date,$dayOfWeek);//Thursday
                     // $clientSchedule = $clientWorkingTimes[$dayOfWeek] ?? null;
                     //   dd($records->first()->schedule_name_id);
+                    // dd($records);
+
+
                     $peopleDailyRecord = $this->getPersonWorkingHours($peopleDailyRecord,$records, $peopleId,$day, $entryTime);
                     // dd($people_records);
 

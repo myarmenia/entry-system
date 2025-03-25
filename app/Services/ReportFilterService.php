@@ -24,6 +24,7 @@ class ReportFilterService
 
         $attendance_sheet = AttendanceSheet::forClient($data['month'], $department_id)->get();
         $data['attendance_sheet'] = $attendance_sheet;
+        // dd($data['attendance_sheet']);
         $data['client_department'] = Myhelper::get_client_department();
         $data['client_id'] = Myhelper::find_auth_user_client();
 
@@ -80,6 +81,7 @@ class ReportFilterService
         return $service;
 
     }
+    
 
 
 }
