@@ -33,6 +33,13 @@ class AttendanceSheet extends Model
           ? $this->people->schedule_department_people->first()->schedule_name_id
           : null;
     }
+    public function getScheduleDetailsAttribute()
+    {
+        return $this->people && $this->people->schedule_department_people->isNotEmpty()
+          ? $this->people->schedule_department_people->first()->schedule_name?->schedule_details
+          : null;
+
+    }
     public function getDepartmentIdAttribute()
     {
         return $this->people && $this->people->schedule_department_people->isNotEmpty()

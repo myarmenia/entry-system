@@ -4,6 +4,7 @@ namespace App\Traits;
 use App\Models\ScheduleDetails;
 use App\Models\Turnstile;
 use Carbon\Carbon;
+use DateTime;
 
 trait RecordTrait
 {
@@ -36,25 +37,28 @@ trait RecordTrait
             }
 
              elseif ($record->direction == 'exit' && $entryTime) {
+                // dd($entryTime->toTimeString());
 
                 $peopleDailyRecord[$peopleId][$day]['exit'][] = Carbon::parse($record->date)->format('H:i');
 
                 $exitTime = Carbon::parse($record->date);
 
                     $entry = explode(' ', $entryTime->toTimeString())[0];
+                    // dd($entry);
                     $entryT = Carbon::createFromFormat('H:i:s', $entry);
+                    // dd($entryT);
 
 
                     $exit = explode(' ', $exitTime->toTimeString())[0];
                     $exitT = Carbon::createFromFormat('H:i:s', $exit);
 
-                    // dump($entryT, $exitT );
+                    // dd($entryT, $exitT );
 
                     // Если вход и выход в один день, добавляем разницу
                     if ($exitT->greaterThan($entryT)) {
 
                         $interval = $exitT->diff($entryT);
-
+                        // dd($interval );
 
                         $peopleDailyRecord[$peopleId][$day]['working_times'][] = $interval->format('%H:%I:%S');
                         // dd($peopleDailyRecord[$peopleId][$day]['working_times']);
@@ -81,19 +85,39 @@ trait RecordTrait
 
     }
     public function find_schedule_details($peopleDailyRecord, $dailyRecords, $peopleId,$schedule_details, $startTime, $endTime){
-          // dd($dailyRecords, $schedule_details);
+        //   dd($dailyRecords, $schedule_details);
+        $dates = array_keys($dailyRecords->toArray());
+        // dd( $dates);
+        $totalDates = count($dates); // Количество дат
+        $index = 0; // Индекс текущей даты
 
         $totalHoursWorked = 0;
         $day_working_hours = 0;
         // dd($records);
         // dd($schedule_details);
-        foreach($dailyRecords as $date => $records){
-            $day = date('d',strtotime($date));
-            // dd( $day);//03
-            $records = $records->sortBy('date')->unique('date');
+        // foreach($dailyRecords as $date => $records){
+        //     $day = date('d',strtotime($date));
+        //     // dd( $day);//03
+        //     $nextDate = $index + 1 < $totalDates ? $dates[$index + 1] : null;
+        //     // dd( $nextDate);
+        //     $records = $records->sortBy('date')->unique('date');
+        //     // dd($records);
+        //     // dd($records->groupBy('direction')->map->pluck('date')->toArray());
+        //     $worker_first_enter = $records->first();
 
-            dd($records ->first());
-        }
+
+        //     // dd($records ->first()->date);
+        //     // foreach($records as $record){
+        //     //     if($record->direction=="enter"){
+
+        //     //     }
+
+
+        //     // }
+        //     $entryTime=null;
+        //     // $h=$this->getPersonWorkingHours($peopleDailyRecord,$records, $peopleId,$day, $entryTime);
+        //     // dd($h);
+        // }
 
             // foreach($records as $record){
             //     // dd($record->date);
@@ -120,30 +144,31 @@ trait RecordTrait
 
 
 
-        foreach ($records as $record) {
-            // Assuming $record contains schedule details, such as person_id, start_time, and end_time
-            $startTime = Carbon::createFromFormat('H:i:s', $record->day_start_time);
-            $endTime = Carbon::createFromFormat('H:i:s', $record->day_end_time);
+        // foreach ($records as $record) {
+        //     // Assuming $record contains schedule details, such as person_id, start_time, and end_time
+        //     $startTime = Carbon::createFromFormat('H:i:s', $record->day_start_time);
+        //     $endTime = Carbon::createFromFormat('H:i:s', $record->day_end_time);
 
-            // If the end time is earlier than the start time, add one day (for the shift spanning midnight)
-            if ($endTime->lessThan($startTime)) {
-                $endTime->addDay();
-            }
+        //     // If the end time is earlier than the start time, add one day (for the shift spanning midnight)
+        //     if ($endTime->lessThan($startTime)) {
+        //         $endTime->addDay();
+        //     }
 
-            // Calculate the hours worked for this schedule record
-            $hoursWorked = $startTime->diffInHours($endTime);
+        //     // Calculate the hours worked for this schedule record
+        //     $hoursWorked = $startTime->diffInHours($endTime);
 
-            // Output or accumulate the hours worked for this record (person)
-            echo "Record ID: {$record->id} - Hours Worked: {$hoursWorked} hours\n";
+        //     // Output or accumulate the hours worked for this record (person)
+        //     echo "Record ID: {$record->id} - Hours Worked: {$hoursWorked} hours\n";
 
-            // Optionally, you can accumulate hours worked across multiple records
-            $totalHoursWorked += $hoursWorked;
-        }
+        //     // Optionally, you can accumulate hours worked across multiple records
+        //     $totalHoursWorked += $hoursWorked;
+        // }
 
             return $totalHoursWorked;
 
 
     }
+
 
 
 }

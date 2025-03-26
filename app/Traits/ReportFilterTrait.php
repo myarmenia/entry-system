@@ -2,6 +2,7 @@
 namespace App\Traits;
 
 use App\Helpers\MyHelper;
+use App\Models\AttendanceSheet;
 use App\Models\Client;
 use App\Models\ScheduleDepartmentPerson;
 use App\Models\ScheduleDetails;
@@ -25,8 +26,14 @@ trait ReportFilterTrait{
 
 
            $groupedEntries = $attendance_sheet->groupBy(['people_id', function ($oneFromCollection) {
+
                return Carbon::parse($oneFromCollection->date)->toDateString();
+
             }]);
+        $groupedEntries = $this->getEntriesByScheduleInterval();
+        // dd($filteredEntries);
+
+
             // dd($groupedEntries);
 
             // dd($data['client_id']);
@@ -35,26 +42,28 @@ trait ReportFilterTrait{
             $get_client_schedule = $data['client_id'];
             // dd($get_client_schedule);
             $peopleDailyRecord =[];
+            // dd($groupedEntries);
             foreach ($groupedEntries as $peopleId => $dailyRecords) {
                 // dd($dailyRecords);
                 // dd($peopleId);
-                $schedule_department_people = ScheduleDepartmentPerson::where('person_id', $peopleId)->value('schedule_name_id');
-                $schedule_details = ScheduleDetails::where('schedule_name_id',$schedule_department_people)->get();
-            
-                $startTime = Carbon::createFromFormat('H:i:s', $schedule_details->first()->day_start_time);
-                $endTime = Carbon::createFromFormat('H:i:s',$schedule_details->first()->day_end_time);
-                if ($endTime->lessThan($startTime)) {
-                    // dd(77);
+                // $schedule_department_people = ScheduleDepartmentPerson::where('person_id', $peopleId)->value('schedule_name_id');
+                // $schedule_details = ScheduleDetails::where('schedule_name_id',$schedule_department_people)->get();
 
-                    $find_schedule_details = $this->find_schedule_details($peopleDailyRecord, $dailyRecords, $peopleId, $schedule_details, $startTime, $endTime);
+                // $startTime = Carbon::createFromFormat('H:i:s', $schedule_details->first()->day_start_time);
+                // $endTime = Carbon::createFromFormat('H:i:s',$schedule_details->first()->day_end_time);
+                // if ($endTime->lessThan($startTime)) {
+                //     // dd(77);
 
-                }else{
+                //     $find_schedule_details = $this->find_schedule_details($peopleDailyRecord, $dailyRecords, $peopleId, $schedule_details, $startTime, $endTime);
 
-                    // dd(44);
-                }
+                // }else{
+
+                //     // dd(44);
+                // }
                 // if($department_details->first()->day_start_time)
 // dd($dailyRecords);
                 foreach ($dailyRecords as $date => $records) {
+
 
                     // dd($date);   //"2025-03-20"
                     // dd($records);
@@ -76,6 +85,7 @@ trait ReportFilterTrait{
 
                     $peopleDailyRecord = $this->getPersonWorkingHours($peopleDailyRecord,$records, $peopleId,$day, $entryTime);
                     // dd($people_records);
+                    // dd( $peopleDailyRecord);
 
                     $worker_first_enter = $records->first();
                     // dd($worker_first_enter->schedule_name_id);
@@ -86,6 +96,7 @@ trait ReportFilterTrait{
                                                          ->keyBy('week_day');
                                                          ;
                     // dd( $clientWorkingTimes);
+                    // dd( $date,$dayOfWeek);
                     $clientSchedule = $clientWorkingTimes[$dayOfWeek] ?? null;
                     // dd($clientSchedule);
                     if(isset($clientSchedule)){
@@ -412,5 +423,159 @@ trait ReportFilterTrait{
 
 
     }
+
+//     public function getEntriesByScheduleInterval()
+//     {
+//         $attendanceSheets = AttendanceSheet::with('people.schedule_department_people.schedule_name.schedule_details')->get();
+//         $groupedEntries = $attendanceSheets->groupBy('people_id');
+//         $filteredEntries = [];
+
+//         foreach ($groupedEntries as $peopleId => $entries) {
+//             $scheduleDetailsArray = $entries->first()->getScheduleDetailsAttribute();
+//             if($scheduleDetailsArray!=null){
+//                 foreach ($scheduleDetailsArray as $scheduleDetails) {
+//                     $filteredEntries[$peopleId] = $entries->filter(function ($attendanceSheet) use ($scheduleDetails) {
+//                         $attendanceDate = Carbon::parse($attendanceSheet->date)->toDateString(); // YYYY-MM-DD
+
+//                         // Определяем начало и конец смены
+//                         $scheduleStart = Carbon::parse("{$attendanceDate} {$scheduleDetails['day_start_time']}");
+//                         $scheduleEnd = Carbon::parse("{$attendanceDate} {$scheduleDetails['day_end_time']}");
+
+//                         // Если смена через ночь (например, 18:00 - 09:00)
+//                         if ($scheduleEnd->lt($scheduleStart)) {
+//                             $scheduleEnd->addDay();
+//                         }
+
+//                         // Учитываем дополнительные часы до начала смены (ранний приход)
+//                         $earlyScheduleStart = $scheduleStart->copy()->subHours(4);
+
+//                         // Учитываем дополнительные часы после конца смены (поздний уход)
+//                         $extendedScheduleEnd = $scheduleEnd->copy()->addHours(4);
+
+//                         $attendanceDateTime = Carbon::parse($attendanceSheet->date);
+
+//                         // 1. Если работник пришёл в пределах нормального рабочего интервала
+//                         if ($attendanceDateTime->between($scheduleStart, $scheduleEnd, true)) {
+//                             return true;
+//                         }
+
+//                         // 2. Если работник пришёл раньше, но в пределах допустимого времени (например, на 3 часа раньше)
+//                         if ($attendanceDateTime->between($earlyScheduleStart, $scheduleStart, true)) {
+//                             return true;
+//                         }
+
+//                         // 3. Если работник ушёл позже, но в пределах допустимого времени (например, ушёл в 12:30)
+//                         if ($attendanceDateTime->between($scheduleEnd, $extendedScheduleEnd, true)) {
+//                             return true;
+//                         }
+
+//                         // 4. Проверяем, если смена была начата вчера и запись попадает в следующий день
+//                         $previousScheduleStart = $scheduleStart->copy()->subDay();
+//                         $previousScheduleEnd = $scheduleEnd->copy()->subDay();
+//                         $previousEarlyScheduleStart = $earlyScheduleStart->copy()->subDay();
+//                         $previousExtendedScheduleEnd = $extendedScheduleEnd->copy()->subDay();
+
+//                         if ($attendanceDateTime->between($previousScheduleStart, $previousScheduleEnd, true) ||
+//                             $attendanceDateTime->between($previousEarlyScheduleStart, $previousScheduleStart, true) ||
+//                             $attendanceDateTime->between($previousScheduleEnd, $previousExtendedScheduleEnd, true)) {
+//                             return true;
+//                         }
+
+//                         return false;
+//                     });
+//                 }
+
+//             }
+
+
+//         }
+// // dd($filteredEntries);
+//         return $filteredEntries;
+//     }
+
+
+// =============getEntriesByScheduleInterval
+public function getEntriesByScheduleInterval()
+{
+    $attendanceSheets = \App\Models\AttendanceSheet::with('people.schedule_department_people.schedule_name.schedule_details')->get();
+    $groupedEntries = $attendanceSheets->groupBy('people_id');
+    $monthlySchedule = [];
+
+    foreach ($groupedEntries as $peopleId => $entries) {
+        $personSchedules = [];
+
+        foreach ($entries as $attendanceSheet) {
+            $scheduleDetailsArray = $attendanceSheet->getScheduleDetailsAttribute();
+            $attendanceDateTime = Carbon::parse($attendanceSheet->date);
+
+            // Фильтруем смену, которая подходит к времени прихода
+            $matchedSchedule = null;
+            if($scheduleDetailsArray!=null){
+                foreach ($scheduleDetailsArray as $scheduleDetails) {
+                    $scheduleId = $scheduleDetails['schedule_name_id'];
+                    $attendanceDate = $attendanceDateTime->toDateString(); // YYYY-MM-DD
+
+                    // Определяем начало и конец смены
+                    $scheduleStart = Carbon::parse("{$attendanceDate} {$scheduleDetails['day_start_time']}");
+                    $scheduleEnd = Carbon::parse("{$attendanceDate} {$scheduleDetails['day_end_time']}");
+// dd(Carbon::parse($attendanceDateTime)->hour);
+                    // Если смена идёт через ночь
+                    // dd($scheduleEnd, $scheduleStart);
+                    // dd($attendanceDateTime->lt( $scheduleEnd->addDay()));
+                    if ($scheduleEnd->lt($scheduleStart) && Carbon::parse($attendanceDateTime)->hour>12 ) {
+                        $scheduleEnd->addDay();
+                    }else{
+                        $scheduleStart->subDay();
+                    }
+                    $earlyScheduleStart = $scheduleStart->copy()->subHours(4);
+                    $extendedScheduleEnd = $scheduleEnd->copy()->addHours(4);
+                    //  dd( $scheduleEnd);
+                    // dump($attendanceDateTime, $earlyScheduleStart ,$extendedScheduleEnd);
+                    // Проверка, попадает ли запись на границу смены
+                    if ($attendanceDateTime->gte($earlyScheduleStart) && $attendanceDateTime->lte($extendedScheduleEnd)) {
+                        $matchedSchedule = [
+                            'shift_date' => $scheduleStart->toDateString(),
+                            'schedule_id' => $scheduleId,
+                            'time' => $attendanceDateTime->format('H:i'),
+                            'date' => $attendanceDateTime->format('H:i'),
+                            'direction' => $attendanceSheet->direction
+                        ];
+                        break; // Берём первую подходящую смену и прекращаем проверку
+                    }
+                }
+
+                // Добавляем в массив, если смена найдена
+                if ($matchedSchedule) {
+                    $shiftDate = $matchedSchedule['shift_date'];
+                    $scheduleId = $matchedSchedule['schedule_id'];
+
+                    // Убираем дубли
+                    if (!isset($personSchedules[$shiftDate])) {
+                        $personSchedules[$shiftDate] = [];
+                    }
+
+                    $exists = collect($personSchedules[$shiftDate])
+                        ->where('time', $matchedSchedule['time'])
+                        ->where('direction', $matchedSchedule['direction'])
+                        ->count();
+
+                    if (!$exists) {
+                        $personSchedules[$shiftDate][] = [
+                            'time' => $matchedSchedule['time'],
+                            'direction' => $matchedSchedule['direction'],
+                            'date' => $matchedSchedule['date'],
+                        ];
+                    }
+                }
+
+            }
+
+        }
+
+        $monthlySchedule[$peopleId] = $personSchedules;
+    }
+
+    return $monthlySchedule;
+}
 
 }
