@@ -29,30 +29,28 @@ trait ReportFilterTrait{
             }]);
             // dd($groupedEntries);
 
-// dd($data['client_id']);
-// dd($groupedEntries);
+            // dd($data['client_id']);
+            // dd($groupedEntries);
 
             $get_client_schedule = $data['client_id'];
             // dd($get_client_schedule);
-            $client_scheduls = MyHelper::get_client_schedule();
-
-
             $peopleDailyRecord =[];
             foreach ($groupedEntries as $peopleId => $dailyRecords) {
                 // dd($dailyRecords);
                 // dd($peopleId);
                 $schedule_department_people = ScheduleDepartmentPerson::where('person_id', $peopleId)->value('schedule_name_id');
-                $department_details = ScheduleDetails::where('schedule_name_id',$schedule_department_people)->get();
-                // dd($department_details->first()->day_start_time);
-                $startTime = Carbon::createFromFormat('H:i:s', $department_details->first()->day_start_time);
-                $endTime = Carbon::createFromFormat('H:i:s',$department_details->first()->day_end_time);
+                $schedule_details = ScheduleDetails::where('schedule_name_id',$schedule_department_people)->get();
+            
+                $startTime = Carbon::createFromFormat('H:i:s', $schedule_details->first()->day_start_time);
+                $endTime = Carbon::createFromFormat('H:i:s',$schedule_details->first()->day_end_time);
                 if ($endTime->lessThan($startTime)) {
+                    // dd(77);
 
-                    $find_schedule_details = $this->find_schedule_details($peopleDailyRecord, $dailyRecords, $peopleId, $startTime, $endTime);
+                    $find_schedule_details = $this->find_schedule_details($peopleDailyRecord, $dailyRecords, $peopleId, $schedule_details, $startTime, $endTime);
 
                 }else{
 
-                    dd(44);
+                    // dd(44);
                 }
                 // if($department_details->first()->day_start_time)
 // dd($dailyRecords);

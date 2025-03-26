@@ -80,35 +80,45 @@ trait RecordTrait
         return ($peopleDailyRecord);
 
     }
-    public function find_schedule_details($peopleDailyRecord, $dailyRecords, $peopleId, $startTime, $endTime){
-dd($dailyRecords);
+    public function find_schedule_details($peopleDailyRecord, $dailyRecords, $peopleId,$schedule_details, $startTime, $endTime){
+          // dd($dailyRecords, $schedule_details);
 
         $totalHoursWorked = 0;
+        $day_working_hours = 0;
         // dd($records);
         // dd($schedule_details);
-        // foreach($schedule_details as $details){
-            foreach($records as $record){
-                // dd($record->date);
-                $dayOfWeek = Carbon::parse(time: $record->date)->format('l');
-                dd($dayOfWeek);
-            //    dd($schedule_details[$dayOfWeek]);
-               $find_details = $schedule_details->where('week_day',$dayOfWeek)->first();
-                dd( $find_details);
-                // schedule details
-                //  "day_end_time" => "09:00:00" "day_start_time" => "18:00:00"
-                  if( $find_details->day_end_time<$find_details->day_start_time){
-                    dd($record);
-                    if($record->direction == "enter"){
+        foreach($dailyRecords as $date => $records){
+            $day = date('d',strtotime($date));
+            // dd( $day);//03
+            $records = $records->sortBy('date')->unique('date');
+
+            dd($records ->first());
+        }
+
+            // foreach($records as $record){
+            //     // dd($record->date);
+            //     $dayOfWeek = Carbon::parse(time: $record->date)->format('l');
+            //     // dd($dayOfWeek);
+            //   //    dd($schedule_details[$dayOfWeek]);
+            //    $find_working_time = $schedule_details->where('week_day',$dayOfWeek)->first();
+            //     // dd( $find_details);
+            //     // schedule details
+            //     //  "day_end_time" => "09:00:00" "day_start_time" => "18:00:00"
+            //     if( $find_working_time->day_end_time<$find_working_time->day_start_time){
+            //         // dd($record);
+            //             if($record->direction == "enter"){
+            //                 dd($record);
 
 
-                    }
-                  }
+            //             }
+            //     }
 
 
-            }
+            // }
 
 
-        // }
+
+
 
         foreach ($records as $record) {
             // Assuming $record contains schedule details, such as person_id, start_time, and end_time
@@ -132,9 +142,6 @@ dd($dailyRecords);
 
             return $totalHoursWorked;
 
-
-    }
-    public function full_schedule($dailyRecords, $endTime, $startTime){
 
     }
 
