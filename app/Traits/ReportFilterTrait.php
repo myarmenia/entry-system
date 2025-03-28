@@ -51,7 +51,7 @@ trait ReportFilterTrait{
 
                     // dd($date);   //"2025-03-20"
                     // dd($records);
-                    // if($date=="2025-03-11"){
+                    if($date=="2025-03-20"){
 
                     $day = date('d',strtotime($date));
                     // dd($day);//20
@@ -59,7 +59,7 @@ trait ReportFilterTrait{
                     // $day=11;
                     $records = $records->sortBy('date')->unique('date'); // Ensure records are sorted by time
                     //  dd( $records );
-                    $entryTime = null;
+                    // $entryTime = null;
 
                     // վերադարձնում է ամսվա այդ օրը շաբաթվա ինչ օր է
                     $dayOfWeek = Carbon::parse(time: $date)->format('l');
@@ -72,7 +72,8 @@ trait ReportFilterTrait{
                         // =====
 
                         // =====
-                    $peopleDailyRecord = $this->getPersonWorkingHours($peopleDailyRecord,$records, $peopleId,$day,  $entryTime);
+                        // dd($records);
+                    $peopleDailyRecord = $this->getPersonWorkingHours($peopleDailyRecord,$records, $peopleId,$day);
                     // dd($people_records);
                     // dd( $peopleDailyRecord);
 
@@ -256,7 +257,7 @@ trait ReportFilterTrait{
 
 
 
-                //  }//date
+                 }//date
 
 
                 }

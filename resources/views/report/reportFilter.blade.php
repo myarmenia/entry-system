@@ -158,6 +158,7 @@
                                             @for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay())
 
                                                 <td class="p-0 text-center">
+                                                    {{-- {{ dd($item) }} --}}
 
 
 
