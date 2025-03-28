@@ -51,7 +51,7 @@ trait ReportFilterTrait{
 
                     // dd($date);   //"2025-03-20"
                     // dd($records);
-                    if($date=="2025-03-11"){
+                    // if($date=="2025-03-11"){
 
                     $day = date('d',strtotime($date));
                     // dd($day);//20
@@ -72,9 +72,9 @@ trait ReportFilterTrait{
                         // =====
 
                         // =====
-                    $peopleDailyRecord = $this->getPersonWorkingHours($peopleDailyRecord,$records, $peopleId,$day, $entryTime);
+                    $peopleDailyRecord = $this->getPersonWorkingHours($peopleDailyRecord,$records, $peopleId,$day,  $entryTime);
                     // dd($people_records);
-                    dd( $peopleDailyRecord);
+                    // dd( $peopleDailyRecord);
 
                     $worker_first_enter = $records->first();
                     // dd($worker_first_enter->schedule_name_id);
@@ -256,7 +256,7 @@ trait ReportFilterTrait{
 
 
 
-                 }//date
+                //  }//date
 
 
                 }
@@ -339,7 +339,7 @@ trait ReportFilterTrait{
     }
 
     public function calculate_arm($peopleDailyRecord,$client){
-      // dd($peopleDailyRecord);
+    //   dd($peopleDailyRecord);
       $fullTotalSeconds = 0;
         foreach ($peopleDailyRecord as $personId => $records) {
             // dd($records);
