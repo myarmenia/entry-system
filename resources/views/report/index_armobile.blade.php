@@ -141,23 +141,52 @@
                                                         <td class="p-0 text-center">
                                                             @if(isset($item[$date->format('d')]['enter']))
                                                                 {{-- @foreach ($item[$date->format('d')]['enter'] as $ent) --}}
-                                                                    <span>{{ $item[$date->format('d')]['enter'][0] }}</span><br>
+
+
+                                                                @if (isset($item[$date->format('d')]['enter'][0]))
+                                                                   <span>{{ $item[$date->format('d')]['enter'][0] }}</span><br>
+
+                                                                @else
+                                                                <span style="height:10px;width:10px;background-color:grey"></span><br>
+
+                                                                @endif
+
                                                                 {{-- @endforeach --}}
                                                             @endif
                                                         </td>
-                                                        <td class="p-0 text-center">
+                                                        @if (isset($item[$date->format('d')]['exit']))
+
+                                                            @if (is_array($item[$date->format('d')]['exit']))
+                                                                <td class="p-0 text-center">
+                                                                    {{  last(array_slice($item[$date->format('d')]['exit'], -1))}}
+                                                                </td>
+
+                                                            @else
+                                                              <td class="p-0 text-center" style="background-color:grey"></td>
+
+                                                            @endif
+
+                                                        @else
+                                                          <td class="p-0 text-center"></td>
+
+
+                                                        @endif
+
+                                                        {{-- <td class="p-0 text-center">
                                                             @if(isset($item[$date->format('d')]['exit']))
-                                                                {{-- {{ $item[$date->format('d')]['exit']->last() }} --}}
+                                                               @if (is_array($item[$date->format('d')]['exit']))
+                                                                 <span>
+                                                                     {{  last(array_slice($item[$date->format('d')]['exit'], -1))  }}
+                                                                 </span>
+                                                               @else
 
-                                                                {{-- @foreach ($item[$date->format('d')]['exit'] as $ex) --}}
-                                                                    <span>
+                                                                 <div style="width:100%;height:100%;background-color:grey"></div>
 
-                                                                        {{  last(array_slice($item[$date->format('d')]['exit'], -1))  }}
 
-                                                                    </span><br>
-                                                                {{-- @endforeach --}}
+                                                               @endif
+
                                                             @endif
-                                                        </td>
+                                                        </td> --}}
                                                     @endfor
 
                                                     <td>{{ $item['totalMonthDayCount'] }}</td>

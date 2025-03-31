@@ -24,12 +24,12 @@ trait RecordTrait
                 // dd($recordsArray);
                 if (!$recordsArray->contains('direction', 'exit') && $recordsArray->contains('direction', 'enter')) {
 
-                    $peopleDailyRecord[$peopleId][$day]['message'] ="Անձի ելքը չի գրանցվել";
+                    $peopleDailyRecord[$peopleId][$day]['exit'] ="Անձի ելքը չի գրանցվել";
                 }
                 if (!$recordsArray->contains('direction', 'enter')  && $recordsArray->contains('direction', 'exit')) {
                     // If no 'exit' is found, return a message
 
-                    $peopleDailyRecord[$peopleId][$day]['message'] ="Անձի մուտքը չի գրանցվել";
+                    $peopleDailyRecord[$peopleId][$day]['enter'] ="Անձի մուտքը չի գրանցվել";
                 }
 
 

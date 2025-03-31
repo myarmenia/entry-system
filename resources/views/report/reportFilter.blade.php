@@ -118,9 +118,9 @@
                                 <a href="{{ route('export-xlsx',['mounth'=>$data['month']]) }}" type="submit" class="btn btn-primary col-2 search">Արտահանել XLSX</a>
                             </form>
                             <!-- Bordered Table -->
-                            {{-- {{dd($data)}} --}}
-                            @if(($data['attendance_sheet'])>0)
 
+                            @if(($data['attendance_sheet'])>0)
+  {{-- {{dd($data['attendance_sheet'])}} --}}
                             <div class="table-responsive">
                                 <table class="table table-bordered">
                                     <thead>

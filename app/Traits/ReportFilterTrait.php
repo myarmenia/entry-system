@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 trait ReportFilterTrait{
-    use RecordTrait;
+    use RecordTrait, CalculateTotalHoursTrait;
     // abstract function model();
 
  public function filter($data)
@@ -23,15 +23,8 @@ trait ReportFilterTrait{
          // dd($data);
         //  dd($data['attendance_sheet']);
           $attendance_sheet = $data['attendance_sheet'];
-    //    dd($attendance_sheet);
 
-
-        //    $groupedEntries = $attendance_sheet->groupBy(['people_id', function ($oneFromCollection) {
-
-        //        return Carbon::parse($oneFromCollection->date)->toDateString();
-
-        //     }]);
-        $groupedEntries = $this->getEntriesByScheduleInterval($attendance_sheet);
+          $groupedEntries = $this->getEntriesByScheduleInterval($attendance_sheet);
 
 
 
@@ -51,7 +44,7 @@ trait ReportFilterTrait{
 
                     // dd($date);   //"2025-03-20"
                     // dd($records);
-                    // if($date=="2025-03-20"){
+                    // if($date=="2025-03-04"){
 
                     $day = date('d',strtotime($date));
                     // dd($day);//20
@@ -267,7 +260,7 @@ trait ReportFilterTrait{
 
                 $client = Client::where('id', $data['client_id'])->first();
                 // dd($peopleDailyRecord);
-                $total_monthly_working_hours = $this->calculate_arm($peopleDailyRecord,$client);
+                $total_monthly_working_hours = $this->calculate($peopleDailyRecord,$client);
                 // dd( $total_monthly_working_hours);
 
                 $routeName = Route::currentRouteName();
@@ -339,163 +332,11 @@ trait ReportFilterTrait{
                 return  $peopleDailyRecord;
     }
 
-    public function calculate_arm($peopleDailyRecord,$client){
-    //   dd($peopleDailyRecord);
-      $fullTotalSeconds = 0;
-        foreach ($peopleDailyRecord as $personId => $records) {
-            // dd($fullTotalSeconds);
-            // dd($records);
-            $totalSeconds = 0;
-            $delaytotalSeconds = 0;
-            // dd($records);
-            if($personId == 75){
-
-// dd($records);
-            // Iterate through each person's records
-                foreach ($records as $key=>&$data) {
-                    // dd($key,$data);
-                    if (isset($data['working_times'])) {
-                            $totalSeconds = 0;
-                            dump($totalSeconds);
-
-                        foreach ($data['working_times'] as $time) {
-                            // dump($time);
-                            // Convert each time string (HH:MM:SS) to seconds
-                            list($hours, $minutes, $seconds) = explode(':', $time);
-                            $totalSeconds += $hours * 3600 + $minutes * 60 + $seconds;
-                        }
-                        // dd( $peopleDailyRecord[$key]);
-                        $data['daily_working_time'] = $totalSeconds;
-                        // $peopleDailyRecord[$records][$key]['daily_working_time'] = $totalSeconds;
-                        $fullTotalSeconds += $totalSeconds;
-                        dump( $fullTotalSeconds);
-                    }
-
-                    if (isset($data['delay_hour'])) {
-                        foreach ($data['delay_hour'] as $delay) {
-                            // Convert each time string (HH:MM:SS) to seconds
-                            list($hours, $minutes, $seconds) = explode(':', $delay);
-                            $delaytotalSeconds += $hours * 3600 + $minutes * 60 + $seconds;
-                        }
-                    }
-
-                }
-           }
-            // dd($fullTotalSeconds);
-            $fullTotalHours = floor($fullTotalSeconds / 3600);
-            $fullTotalSeconds %= 3600;
-            $fullTotalMinutes = floor($fullTotalSeconds / 60);
-            $fullTotalSeconds %= 60;
-
-
-            // Convert total seconds back to hours, minutes, and seconds
-            $totalHours = floor($totalSeconds / 3600);
-            $totalSeconds %= 3600;
-            $totalMinutes = floor($totalSeconds / 60);
-            $totalSeconds %= 60;
-
-            $delaytotalHours = floor($delaytotalSeconds / 3600);
-            $delaytotalSeconds %= 3600;
-            $delaytotalMinutes = floor($delaytotalSeconds / 60);
-            $delaytotalSeconds %= 60;
-
-            $peopleDailyRecord[$personId]['totalMonthDayCount'] =count($records);
-            // Format the result into HH:MM:SS
-            // dump($totalHours, $totalMinutes, $totalSeconds);
-            // dd($totalHours);
-            $peopleDailyRecord[$personId]['totalWorkingTimePerPerson'] = sprintf( '%d ժ, %d ր, %d վ', $fullTotalHours, $fullTotalMinutes, $fullTotalSeconds);
-
-            $peopleDailyRecord[$personId]['totaldelayPerPerson'] = sprintf('%d ժ, %d ր, %d վ', $delaytotalHours, $delaytotalMinutes, $delaytotalSeconds);
-            // dd($peopleDailyRecord);
-            // dd($client->working_time,$totalHours);
-            $clientWorkingHours = (float) $client->working_time; // Convert string to float
-            $personWorkingHours = (float) $totalHours;
-            if($clientWorkingHours>$personWorkingHours){
-                $peopleDailyRecord[$personId]['personWorkingTimeLessThenClientWorkingTime'] =true;
-
-            }
-        }
-        // dd($peopleDailyRecord);
-        return  $peopleDailyRecord;
-
-
-    }
-
-//     public function getEntriesByScheduleInterval()
-//     {
-//         $attendanceSheets = AttendanceSheet::with('people.schedule_department_people.schedule_name.schedule_details')->get();
-//         $groupedEntries = $attendanceSheets->groupBy('people_id');
-//         $filteredEntries = [];
-
-//         foreach ($groupedEntries as $peopleId => $entries) {
-//             $scheduleDetailsArray = $entries->first()->getScheduleDetailsAttribute();
-//             if($scheduleDetailsArray!=null){
-//                 foreach ($scheduleDetailsArray as $scheduleDetails) {
-//                     $filteredEntries[$peopleId] = $entries->filter(function ($attendanceSheet) use ($scheduleDetails) {
-//                         $attendanceDate = Carbon::parse($attendanceSheet->date)->toDateString(); // YYYY-MM-DD
-
-//                         // Определяем начало и конец смены
-//                         $scheduleStart = Carbon::parse("{$attendanceDate} {$scheduleDetails['day_start_time']}");
-//                         $scheduleEnd = Carbon::parse("{$attendanceDate} {$scheduleDetails['day_end_time']}");
-
-//                         // Если смена через ночь (например, 18:00 - 09:00)
-//                         if ($scheduleEnd->lt($scheduleStart)) {
-//                             $scheduleEnd->addDay();
-//                         }
-
-//                         // Учитываем дополнительные часы до начала смены (ранний приход)
-//                         $earlyScheduleStart = $scheduleStart->copy()->subHours(4);
-
-//                         // Учитываем дополнительные часы после конца смены (поздний уход)
-//                         $extendedScheduleEnd = $scheduleEnd->copy()->addHours(4);
-
-//                         $attendanceDateTime = Carbon::parse($attendanceSheet->date);
-
-//                         // 1. Если работник пришёл в пределах нормального рабочего интервала
-//                         if ($attendanceDateTime->between($scheduleStart, $scheduleEnd, true)) {
-//                             return true;
-//                         }
-
-//                         // 2. Если работник пришёл раньше, но в пределах допустимого времени (например, на 3 часа раньше)
-//                         if ($attendanceDateTime->between($earlyScheduleStart, $scheduleStart, true)) {
-//                             return true;
-//                         }
-
-//                         // 3. Если работник ушёл позже, но в пределах допустимого времени (например, ушёл в 12:30)
-//                         if ($attendanceDateTime->between($scheduleEnd, $extendedScheduleEnd, true)) {
-//                             return true;
-//                         }
-
-//                         // 4. Проверяем, если смена была начата вчера и запись попадает в следующий день
-//                         $previousScheduleStart = $scheduleStart->copy()->subDay();
-//                         $previousScheduleEnd = $scheduleEnd->copy()->subDay();
-//                         $previousEarlyScheduleStart = $earlyScheduleStart->copy()->subDay();
-//                         $previousExtendedScheduleEnd = $extendedScheduleEnd->copy()->subDay();
-
-//                         if ($attendanceDateTime->between($previousScheduleStart, $previousScheduleEnd, true) ||
-//                             $attendanceDateTime->between($previousEarlyScheduleStart, $previousScheduleStart, true) ||
-//                             $attendanceDateTime->between($previousScheduleEnd, $previousExtendedScheduleEnd, true)) {
-//                             return true;
-//                         }
-
-//                         return false;
-//                     });
-//                 }
-
-//             }
-
-
-//         }
-// // dd($filteredEntries);
-//         return $filteredEntries;
-//     }
-
-
 // =============getEntriesByScheduleInterval
 public function getEntriesByScheduleInterval($attendance_sheet)
 {
 
-    // $attendanceSheets = AttendanceSheet::with('people.schedule_department_people.schedule_name.schedule_details')->get();
+
     $attendanceSheets =$attendance_sheet;
     // dd($attendanceSheets);
     $groupedEntries = $attendanceSheets->groupBy('people_id');
