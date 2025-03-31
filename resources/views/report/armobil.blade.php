@@ -60,32 +60,32 @@
                         <td>{{ $peopleId }}</td>
                         <td>{{ getPeople($peopleId)->name ?? null }}</td>
                         <td>{{ getPeople($peopleId)->surname ?? null }}</td>
+
+                        @for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay())
+                            <td class="p-0 text-center">
+                                @if(isset($item[$date->format('d')]['enter']))
+
+                                        <span>{{ $item[$date->format('d')]['enter'][0] }}</span><br>
+
+                                @endif
+                            </td>
+                            <td class="p-0 text-center">
+
+                            @if(isset($item[$date->format('d')]['exit']))
+                                        <span>
+                                            {{ end($item[$date->format('d')]['exit']) }}
+
+                                        </span><br>
+
+                                @endif
+                            </td>
+                        @endfor
+                        <td>{{ $item['totalMonthDayCount'] }}</td>
+                        <td class="{{ isset($item['personWorkingTimeLessThenClientWorkingTime']) ? 'text-danger' : '' }}">
+                            {{ $item['totalWorkingTimePerPerson'] }}
+                            </td>
+                        <td>{{ $item['totaldelayPerPerson'] }}</td>
                     </tr>
-                    @for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay())
-                        <td class="p-0 text-center">
-                            @if(isset($item[$date->format('d')]['enter']))
-
-                                    <span>{{ $item[$date->format('d')]['enter'][0] }}</span><br>
-
-                            @endif
-                        </td>
-                        <td class="p-0 text-center">
-
-                           @if(isset($item[$date->format('d')]['exit']))
-                                    <span>
-                                        {{ end($item[$date->format('d')]['exit']) }}
-
-                                    </span><br>
-
-                            @endif
-                        </td>
-                    @endfor
-                    <td>{{ $item['totalMonthDayCount'] }}</td>
-                    <td class="{{ isset($item['personWorkingTimeLessThenClientWorkingTime']) ? 'text-danger' : '' }}">
-                        {{ $item['totalWorkingTimePerPerson'] }}
-                        </td>
-                    <td>{{ $item['totaldelayPerPerson'] }}</td>
-
                 @endforeach
             </tbody>
         </table>
