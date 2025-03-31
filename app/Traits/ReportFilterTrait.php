@@ -350,10 +350,10 @@ trait ReportFilterTrait{
             // dd($records);
             if($personId == 75){
 
-dd($records);
+// dd($records);
             // Iterate through each person's records
                 foreach ($records as $key=>&$data) {
-                    dd($key,$data);
+                    // dd($key,$data);
                     if (isset($data['working_times'])) {
                             $totalSeconds = 0;
                             dump($totalSeconds);
@@ -381,7 +381,7 @@ dd($records);
 
                 }
            }
-            dd($fullTotalSeconds);
+            // dd($fullTotalSeconds);
             $fullTotalHours = floor($fullTotalSeconds / 3600);
             $fullTotalSeconds %= 3600;
             $fullTotalMinutes = floor($fullTotalSeconds / 60);

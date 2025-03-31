@@ -111,7 +111,7 @@ trait RecordTrait
                         // dd($interval);
                         // dump("exit" ,$entryT, $exitT);
                         $peopleDailyRecord[$peopleId][$day]['working_times'][] = $interval->format('%H:%I:%S');
-// dump(77,$records);
+                         // dump(77,$records);
                         if (isset($records[$key1 + 1]) && $records[$key1 + 1]->direction == "enter") {
                             // dump(888,$records[$key1 + 1]);
 

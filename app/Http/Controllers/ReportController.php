@@ -94,6 +94,7 @@ class ReportController extends Controller
          // Format the selected month if needed
          $mounth = $selectedMonth->format('Y-m');
         //  dd( $formattedMonth);
+        // dd( $mounth);
 
         return Excel::download(new ReportExport($mounth), 'report.xlsx');
     }

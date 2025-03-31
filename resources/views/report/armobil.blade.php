@@ -66,7 +66,7 @@
                         <td>{{ $peopleId }}</td>
                         <td>{{ getPeople($peopleId)->name ?? null }}</td>
                         <td>{{ getPeople($peopleId)->surname ?? null }}</td>
-                    </tr>
+
                     @for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay())
                         <td class="p-0 text-center">
                             @if(isset($item[$date->format('d')]['enter']))
@@ -91,7 +91,7 @@
                         {{ $item['totalWorkingTimePerPerson'] }}
                         </td>
                     <td>{{ $item['totaldelayPerPerson'] }}</td>
-
+                </tr>
                 @endforeach
             </tbody>
         </table>

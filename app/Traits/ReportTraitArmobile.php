@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 use Exception;
 
 trait ReportTraitArmobile{
+    use RecordTrait;
 
 
     public function report_armobile($mounth){
@@ -91,60 +92,60 @@ trait ReportTraitArmobile{
                         $clientSchedule = $clientWorkingTimes[$dayOfWeek] ?? null;
                         // dd($clientSchedule);
 
+                        $peopleDailyRecord = $this->getPersonWorkingHours($peopleDailyRecord,$records, $peopleId,$day);
+                        // foreach ($records as $record) {
 
-                        foreach ($records as $record) {
+                        //     if($record->direction == "unknown"){
+                        //         $find_mac_direction = Turnstile::where('mac',$record->mac)->value('direction');
 
-                            if($record->direction == "unknown"){
-                                $find_mac_direction = Turnstile::where('mac',$record->mac)->value('direction');
-
-                                $record->direction = $find_mac_direction;
-                            }
-
-
-                            if ($record->direction == 'enter') {
+                        //         $record->direction = $find_mac_direction;
+                        //     }
 
 
-                                $entryTime  = Carbon::parse($record->date);
-
-                                $peopleDailyRecord[$peopleId][$day]['enter'][]= Carbon::parse($record->date)->format('H:i');
+                        //     if ($record->direction == 'enter') {
 
 
+                        //         $entryTime  = Carbon::parse($record->date);
 
-                            }
-
-                             elseif ($record->direction == 'exit' && $entryTime) {
-                                $peopleDailyRecord[$peopleId][$day]['exit'][] = Carbon::parse($record->date)->format('H:i');
-
-                                $exitTime = Carbon::parse($record->date);
-
-                                    $entry = explode(' ', $entryTime->toTimeString())[0];
-                                    $entryT = Carbon::createFromFormat('H:i:s', $entry);
-
-
-                                    $exit = explode(' ', $exitTime->toTimeString())[0];
-                                    $exitT = Carbon::createFromFormat('H:i:s', $exit);
-
-                                    // dump($entryT, $exitT );
-
-                                    // Если вход и выход в один день, добавляем разницу
-                                    if ($exitT->greaterThan($entryT)) {
-
-                                        $interval = $exitT->diff($entryT);
-
-                                        $peopleDailyRecord[$peopleId][$day]['working_times'][] = $interval->format('%H:%I:%S');
+                        //         $peopleDailyRecord[$peopleId][$day]['enter'][]= Carbon::parse($record->date)->format('H:i');
 
 
 
-                                    }
+                        //     }
 
-                                // Сбрасываем время входа после расчета
-                                $entryTime = null;
+                        //      elseif ($record->direction == 'exit' && $entryTime) {
+                        //         $peopleDailyRecord[$peopleId][$day]['exit'][] = Carbon::parse($record->date)->format('H:i');
+
+                        //         $exitTime = Carbon::parse($record->date);
+
+                        //             $entry = explode(' ', $entryTime->toTimeString())[0];
+                        //             $entryT = Carbon::createFromFormat('H:i:s', $entry);
 
 
-                            }
+                        //             $exit = explode(' ', $exitTime->toTimeString())[0];
+                        //             $exitT = Carbon::createFromFormat('H:i:s', $exit);
+
+                        //             // dump($entryT, $exitT );
+
+                        //             // Если вход и выход в один день, добавляем разницу
+                        //             if ($exitT->greaterThan($entryT)) {
+
+                        //                 $interval = $exitT->diff($entryT);
+
+                        //                 $peopleDailyRecord[$peopleId][$day]['working_times'][] = $interval->format('%H:%I:%S');
 
 
-                        }
+
+                        //             }
+
+                        //         // Сбрасываем время входа после расчета
+                        //         $entryTime = null;
+
+
+                        //     }
+
+
+                        // }
 
                         $worker_first_enter = $records->first();
                         if(isset($clientSchedule)){
