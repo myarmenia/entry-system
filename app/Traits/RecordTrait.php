@@ -34,16 +34,24 @@ trait RecordTrait
 
 
         // dd($records);
-        foreach ($records as $key1=>$record) {
+        $key1 = 0;
+        $records_sorted_by_date = $records;
+        // dd($records_sorted_by_date);
+
+        $records=$records->values();
+        // dd("$records2",$records2[1],"$records",$records[1]);
+        foreach ($records_sorted_by_date as $record) {
+            // dump($key1);
 
             if($record->direction == "unknown"){
                 $find_mac_direction = Turnstile::where('mac',$record->mac)->value('direction');
 
                 $record->direction = $find_mac_direction;
-                $previouseDirection =$record->direction;
-            }
 
+            }
+                // dump($key1, $entryTime);
             if ($record->direction == 'enter' && !$entryTime ) {
+                // dump('key-enter', $records[$key1]);
 
                 $entryTime  = Carbon::parse($record->date);
 
@@ -51,7 +59,8 @@ trait RecordTrait
 
             }
 
-             elseif ($record->direction == 'exit' && $entryTime) {
+            if ($record->direction === 'exit' && $entryTime) {
+                // dump('key-elseif', $records[$key1]);
 
                 $peopleDailyRecord[$peopleId][$day]['exit'][] = Carbon::parse($record->date)->format('H:i');
 
@@ -66,49 +75,73 @@ trait RecordTrait
                 $exit = explode(' ', $exitTime->toTimeString())[0];
                 $exitT = Carbon::createFromFormat('H:i:s', $exit);
 
-                if ($exitT->lessThan($entryT)) {
-                    $exitT->addDay();
-                }
+
+
                 // dump($exitT, $entryT);
 
                     if ($exitT->greaterThan($entryT)) {
                     // dump($exitT, $entryT);
+                    //   dump( $entryT, $exitT);
                         $interval = $exitT->diff($entryT);
 
 
                         $peopleDailyRecord[$peopleId][$day]['working_times'][] = $interval->format('%H:%I:%S');
-                        // dd($peopleDailyRecord[$peopleId][$day]['working_times']);
-                        // list($hours, $minutes, $seconds) = explode(':', $interval->format('%H:%I:%S'));
-                        // $totalSeconds += $hours * 3600 + $minutes * 60 + $seconds;
-
-                        // $totalMinutes = intdiv($totalSeconds, 60); // Общее количество минут
-                        // $hours = intdiv($totalMinutes, 60); // Количество часов
-                        // $minutes = $totalMinutes % 60; // Оставшиеся минуты
-                        // $peopleDailyRecord[$peopleId][$day]['daily_working_times']= "{$hours} ժ {$minutes} ր";
 
                         if (isset($records[$key1 + 1]) && $records[$key1 + 1]->direction == "enter") {
-
+                            // dd($key1 + 1);
                             $entryTime = null;
 
                         }
 
                         if( (isset($records[$key1 - 1]) && $records[$key1 - 1]->direction == "exit") ){
 
-                            // $totalSeconds = 0;
+
                             array_pop($woking_array);
 
                         }
 
                         $woking_array[] = $interval->format('%H:%I:%S');
-                    }
+                        // dump(444,$woking_array);
+                    }else {
 
-                // Сбрасываем время входа после расчета
-                // $entryTime = null;
+
+                        $exitT->addDay();
+                        // dd($exitT, $entryT);
+                        $interval = $exitT->diff($entryT);
+                        // dd($interval);
+                        // dump("exit" ,$entryT, $exitT);
+                        $peopleDailyRecord[$peopleId][$day]['working_times'][] = $interval->format('%H:%I:%S');
+// dump(77,$records);
+                        if (isset($records[$key1 + 1]) && $records[$key1 + 1]->direction == "enter") {
+                            // dump(888,$records[$key1 + 1]);
+
+                            $entryTime = null;
+
+                        }
+                        // dump('key-1',$records[$key1 - 1]);
+                        // dump('key', $records[$key1]);
+                        if( (isset($records[$key1 - 1]) && $records[$key1 - 1]->direction == "exit") ){
+
+                            // $totalSeconds = 0;
+                            array_pop($woking_array);
+
+                        }
+                        $woking_array[] = $interval->format('%H:%I:%S');
+                        // dump(555,$woking_array);
+
+                    }
+                    // dump($woking_array);
+
+
 
             }
 
+            $key1++;
+
 
         }
+
+        // dump($woking_array);
 
         foreach($woking_array as $ar){
             // dd($ar->format('%H:%I:%S'));
@@ -122,7 +155,7 @@ trait RecordTrait
         $hours = intdiv($totalMinutes, 60); // Количество часов
         $minutes = $totalMinutes % 60; // Оставшиеся минуты
         $peopleDailyRecord[$peopleId][$day]['daily_working_times']= "{$hours} ժ {$minutes} ր";
-// dd($peopleDailyRecord);
+        //    dd($peopleDailyRecord);
         return ($peopleDailyRecord);
 
     }

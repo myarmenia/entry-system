@@ -51,7 +51,7 @@ trait ReportFilterTrait{
 
                     // dd($date);   //"2025-03-20"
                     // dd($records);
-                    if($date=="2025-03-20"){
+                    // if($date=="2025-03-20"){
 
                     $day = date('d',strtotime($date));
                     // dd($day);//20
@@ -257,7 +257,7 @@ trait ReportFilterTrait{
 
 
 
-                 }//date
+                //  }//date
 
 
                 }
@@ -343,39 +343,45 @@ trait ReportFilterTrait{
     //   dd($peopleDailyRecord);
       $fullTotalSeconds = 0;
         foreach ($peopleDailyRecord as $personId => $records) {
+            // dd($fullTotalSeconds);
             // dd($records);
             $totalSeconds = 0;
             $delaytotalSeconds = 0;
             // dd($records);
+            if($personId == 75){
 
+dd($records);
             // Iterate through each person's records
-             foreach ($records as $key=>&$data) {
-                // dd($key,$data);
-                if (isset($data['working_times'])) {
-                        $totalSeconds = 0;
+                foreach ($records as $key=>&$data) {
+                    dd($key,$data);
+                    if (isset($data['working_times'])) {
+                            $totalSeconds = 0;
+                            dump($totalSeconds);
 
-                    foreach ($data['working_times'] as $time) {
-                        // dump($time);
-                         // Convert each time string (HH:MM:SS) to seconds
-                         list($hours, $minutes, $seconds) = explode(':', $time);
-                        $totalSeconds += $hours * 3600 + $minutes * 60 + $seconds;
+                        foreach ($data['working_times'] as $time) {
+                            // dump($time);
+                            // Convert each time string (HH:MM:SS) to seconds
+                            list($hours, $minutes, $seconds) = explode(':', $time);
+                            $totalSeconds += $hours * 3600 + $minutes * 60 + $seconds;
+                        }
+                        // dd( $peopleDailyRecord[$key]);
+                        $data['daily_working_time'] = $totalSeconds;
+                        // $peopleDailyRecord[$records][$key]['daily_working_time'] = $totalSeconds;
+                        $fullTotalSeconds += $totalSeconds;
+                        dump( $fullTotalSeconds);
                     }
-                     // dd( $peopleDailyRecord[$key]);
-                     $data['daily_working_time'] = $totalSeconds;
-                     // $peopleDailyRecord[$records][$key]['daily_working_time'] = $totalSeconds;
-                     $fullTotalSeconds += $totalSeconds;
-                }
 
-                if (isset($data['delay_hour'])) {
-                    foreach ($data['delay_hour'] as $delay) {
-                        // Convert each time string (HH:MM:SS) to seconds
-                        list($hours, $minutes, $seconds) = explode(':', $delay);
-                        $delaytotalSeconds += $hours * 3600 + $minutes * 60 + $seconds;
+                    if (isset($data['delay_hour'])) {
+                        foreach ($data['delay_hour'] as $delay) {
+                            // Convert each time string (HH:MM:SS) to seconds
+                            list($hours, $minutes, $seconds) = explode(':', $delay);
+                            $delaytotalSeconds += $hours * 3600 + $minutes * 60 + $seconds;
+                        }
                     }
-                }
 
-            }
-            // dd($fullTotalSeconds);
+                }
+           }
+            dd($fullTotalSeconds);
             $fullTotalHours = floor($fullTotalSeconds / 3600);
             $fullTotalSeconds %= 3600;
             $fullTotalMinutes = floor($fullTotalSeconds / 60);
@@ -535,18 +541,10 @@ public function getEntriesByScheduleInterval($attendance_sheet)
                     // dd($scheduleEnd,$scheduleStart);
                     $earlyScheduleStart = $scheduleStart->copy()->subHours(2);
                     $extendedScheduleEnd = $scheduleEnd->copy()->addHours(2);
-                    //  dd( $scheduleEnd);
-                    // dump($peopleId,$key,$attendanceDateTime, $earlyScheduleStart ,$extendedScheduleEnd);
+
                     // Проверка, попадает ли запись на границу смены
                     if ($attendanceDateTime->gte($earlyScheduleStart) && $attendanceDateTime->lte($extendedScheduleEnd)) {
-                        // $matchedSchedule = [
-                        //     'shift_date' => $scheduleStart->toDateString(),
-                        //     'schedule_id' => $scheduleId,
-                        //     'time' => $attendanceDateTime->format('H:i'),
-                        //     'date' => $attendanceDateTime->format('H:i'),
-                        //     'direction' => $attendanceSheet->direction
-                        // ];
-                        // break; // Берём первую подходящую смену и прекращаем проверку
+
                         $shiftDate = $scheduleStart->toDateString();
                         if (!isset($personSchedules[$shiftDate])) {
                             $personSchedules[$shiftDate] = collect(); // Создаем коллекцию
@@ -557,29 +555,7 @@ public function getEntriesByScheduleInterval($attendance_sheet)
                     }
                 }
 
-                // Добавляем в массив, если смена найдена
-                // if ($matchedSchedule) {
-                //     $shiftDate = $matchedSchedule['shift_date'];
-                //     $scheduleId = $matchedSchedule['schedule_id'];
 
-                //     // Убираем дубли
-                //     if (!isset($personSchedules[$shiftDate])) {
-                //         $personSchedules[$shiftDate] = [];
-                //     }
-
-                //     $exists = collect($personSchedules[$shiftDate])
-                //         ->where('time', $matchedSchedule['time'])
-                //         ->where('direction', $matchedSchedule['direction'])
-                //         ->count();
-
-                //     if (!$exists) {
-                //         $personSchedules[$shiftDate][] = [
-                //             'time' => $matchedSchedule['time'],
-                //             'direction' => $matchedSchedule['direction'],
-                //             'date' => $matchedSchedule['date'],
-                //         ];
-                //     }
-                // }
 
             }
 
