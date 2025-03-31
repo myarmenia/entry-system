@@ -131,6 +131,9 @@
                                         <tbody>
                                             {{-- {{ dd($groupedEntries) }} --}}
                                             @foreach ($groupedEntries as $peopleId => $item)
+
+                                            {{-- @if($peopleId==78) --}}
+                                            {{-- {{ dd($item) }} --}}
                                                 <tr>
                                                     <td class="fix_column">{{ ++$i }}</td>
                                                     <td class="fix_column">{{ $peopleId }}</td>
@@ -147,12 +150,14 @@
                                                         </td>
                                                         <td class="p-0 text-center">
                                                             @if(isset($item[$date->format('d')]['exit']))
+
                                                                 {{-- {{ $item[$date->format('d')]['exit']->last() }} --}}
 
                                                                 {{-- @foreach ($item[$date->format('d')]['exit'] as $ex) --}}
                                                                     <span>
 
-                                                                        {{  last(array_slice($item[$date->format('d')]['exit'], -1))  }}
+                                                                        {{-- {{  last(array_slice($item[$date->format('d')]['exit'], -1))  }} --}}
+                                                                        {{ end($item[$date->format('d')]['exit']) }}
 
                                                                     </span><br>
                                                                 {{-- @endforeach --}}
@@ -166,6 +171,7 @@
                                                     </td>
                                                     <td>{{ $item['totaldelayPerPerson'] }}</td>
                                                 </tr>
+                                                {{-- @endif --}}
                                             @endforeach
                                         </tbody>
                                     </table>
