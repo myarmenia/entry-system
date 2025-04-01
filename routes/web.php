@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Absence\AbsenceController;
 use App\Http\Controllers\ActionController;
+use App\Http\Controllers\AttendansSheetEnterTimeController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ChangeStatusController;
 use App\Http\Controllers\Component\ClientComponentController;
@@ -20,6 +21,7 @@ use App\Http\Controllers\PersonPermission\PersonPermissionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReportArmobileController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ReportEnterExitController;
 use App\Http\Controllers\ReportFilterController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\Schedule\ScheduleController;
@@ -120,7 +122,8 @@ Route::group(['middleware' => ['auth']], function() {
     });
 
     Route::get('report',ReportFilterController::class)->name('reportFilter.list');
-
+    Route::get('report-enter-exit',ReportEnterExitController::class)->name('report-enter-exit.list');
+    Route::get('enter-time',AttendansSheetEnterTimeController::class);
 });
 
 Route::get('get-file', [FileUploadService::class, 'get_file'])->name('get-file');

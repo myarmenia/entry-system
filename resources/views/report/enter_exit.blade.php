@@ -2,9 +2,13 @@
 
 @section("page-script")
     <script src="{{ asset('assets/js/change-status.js') }}"></script>
+    <script src="{{ asset('assets/js/enter-time.js') }}"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> --}}
     <style>
         th{
             font-size:12px
@@ -38,13 +42,13 @@
 
 
     // Assuming $request->month contains "2024-10"
-    $monthYear = $mounth ?? null;
+    $monthYear = $data['month'];
 
     // Parse the month-year string to get the start and end of the month
     $startOfMonth = Carbon::parse($monthYear)->startOfMonth();
     $endOfMonth = Carbon::parse($monthYear)->endOfMonth();
 
-    $groupedEntries = $groupedEntries ?? null
+    $groupedEntries = $data['attendance_sheet'] ?? null
 
 @endphp
 
@@ -92,16 +96,17 @@
                             </div>
 
 
-                            <form  action="{{ route('reportListArmobile') }}" method="get" class="mb-3 justify-content-end" style="display: flex; gap: 8px">
+                            <form  action="{{ route('report-enter-exit.list') }}" method="get" class="mb-3 justify-content-end" style="display: flex; gap: 8px">
 
                                 <div class="col-2">
-                                    <input type="text"  class="form-select"  id="monthPicker" placeholder="Ընտրել ամիսը տարեթվով" name="mounth"/>
+                                    <input type="text"  class="form-select"  id="monthPicker" placeholder="Ընտրել ամիսը տարեթվով" name="month"/>
                                 </div>
 
                                 <button type="submit" class="btn btn-primary col-2 search">Հաշվետվություն</button>
-                                <a href="{{ route('export-xlsx-armobil',$mounth) }}" type="submit" class="btn btn-primary col-2 search">Արտահանել XLSX</a>
+                                <a href="{{ route('export-xlsx-armobil',parameters: $monthYear) }}" type="submit" class="btn btn-primary col-2 search">Արտահանել XLSX</a>
                             </form>
                             <!-- Bordered Table -->
+                            {{-- {{ dd($groupedEntries) }} --}}
                             @if(($groupedEntries)>0)
 
                                 <div class="table-responsive">
@@ -131,8 +136,8 @@
                                         <tbody>
                                             {{-- {{ dd($groupedEntries) }} --}}
                                             @foreach ($groupedEntries as $peopleId => $item)
-                                                <tr>
-                                                    <td class="fix_column">{{ ++$i }}</td>
+                                                <tr  class="action" data-person-id="{{ $peopleId }}"  data-tb-name="attendance_sheets">
+                                                    <td class="fix_column">{{ ++$data['i'] }}</td>
                                                     <td class="fix_column">{{ $peopleId }}</td>
                                                     <td class="fix_column">{{ getPeople($peopleId)->name ?? null }}</td>
                                                     <td class="fix_column">{{ getPeople($peopleId)->surname ?? null }}</td>
@@ -144,24 +149,29 @@
                                                                          {{ $item[$date->format('d')]['enter'][0] }}
 
                                                                 @else
-                                                                   <div class="editable" style="width:20px;height:20px;background-color:grey"></div>
 
+                                                                   <a class="dropdown-item" ><i
+                                                                    class="bx bx-edit-alt me-1"></i></a>
                                                                 @endif
                                                             @endif
                                                         </td>
 
                                                         <td class="p-0 text-center">
+
                                                             @if(isset($item[$date->format('d')]['exit']))
                                                                @if (is_array($item[$date->format('d')]['exit']))
                                                                  <span>
                                                                      {{  last(array_slice($item[$date->format('d')]['exit'], -1))  }}
                                                                  </span>
                                                                @else
-
-                                                                 <div class="editable" style="width:20px;height:20px;background-color:grey"></div>
-
-
+                                                                    <i class="bx bx-edit-alt me-1 enter_time_item"
+                                                                        data-bs-toggle = "modal"
+                                                                        data-bs-target = "#enterTime"
+                                                                        data-day = {{ $date->format('d') }}
+                                                                        data-date = {{ $monthYear }}
+                                                                    ></i>
                                                                @endif
+
 
                                                             @endif
                                                         </td>
@@ -198,8 +208,11 @@
 
     </section>
 
+
+
   </main><!-- End #main -->
 
 @endsection
+<x-modal-edit-time></x-modal-edit-time>
 
 

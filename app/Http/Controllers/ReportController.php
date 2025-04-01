@@ -62,7 +62,7 @@ class ReportController extends Controller
         try {
 
                 $i = 0;
-// dd($request->all());
+                // dd($request->all());
                 $mounth = $request->mounth??\Carbon\Carbon::now()->format('Y-m');
                 // dd($mounth);
                 $groupedEntries = $this->calculateReportArmobile($mounth);

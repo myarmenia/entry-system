@@ -9,7 +9,7 @@ use Maatwebsite\Excel\Facades\Excel;
 class ReportArmobileController extends Controller
 {
     public function export(Request $request){
-
+// dd($request->all());
         $request=$request->route()->parameters();
         // dd($request);
         $request = $request ?? \Carbon\Carbon::now()->format('Y-m');

@@ -42,6 +42,7 @@ class ArmobilExport implements FromView, ShouldAutoSize
 
     public function view():View{
         $groupedEntries = $this->report_armobile($this->request);
+        // dd($groupedEntries);
         $lastElement = end($groupedEntries);
 
         if (isset($groupedEntries['mounth'])) {

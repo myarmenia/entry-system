@@ -88,7 +88,7 @@ class ReportExport implements  FromCollection, WithHeadings,WithStyles
             $exportData[] = $dataRow;
 
         }
-        dd($exportData);
+        // dd($exportData);
         return collect($exportData);
     }
     public function headings(): array

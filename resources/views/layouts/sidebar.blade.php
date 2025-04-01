@@ -260,6 +260,13 @@
         <span>Հաշվետվություն ֆիլտրացիա</span>
         </a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link {{ Route::is(['report-enter-exit.list']) ? '' : 'collapsed' }}"  href = "{{ route('report-enter-exit.list') }}">
+        <i class="bi bi-person"></i>
+        <span>Հաշվետվություն ֆիլտրացիա մուտք ելք</span>
+        </a>
+    </li>
+
 
 
 

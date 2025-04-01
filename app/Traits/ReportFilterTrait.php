@@ -19,241 +19,220 @@ trait ReportFilterTrait{
 
  public function filter($data)
   {
+    // dd($data);
 
-         // dd($data);
-        //  dd($data['attendance_sheet']);
           $attendance_sheet = $data['attendance_sheet'];
-
+// dd( $attendance_sheet);
           $groupedEntries = $this->getEntriesByScheduleInterval($attendance_sheet);
 
-
-
-            // dd($groupedEntries);
-
-            // dd($data['client_id']);
-            // dd($groupedEntries);
-
-
-            // dd($get_client_schedule);
-            $peopleDailyRecord =[];
+          $peopleDailyRecord =[];
             // dd($groupedEntries);
             foreach ($groupedEntries as $peopleId => $dailyRecords) {
 
                 foreach ($dailyRecords as $date => $records) {
-
-
                     // dd($date);   //"2025-03-20"
                     // dd($records);
-                    // if($date=="2025-03-04"){
+                    // if($date=="2025-03-23"){
 
-                    $day = date('d',strtotime($date));
-                    // dd($day);//20
+                      $day = date('d',strtotime($date));
+                      // dd($day);//20
 
-                    // $day=11;
-                    $records = $records->sortBy('date')->unique('date'); // Ensure records are sorted by time
-                    //  dd( $records );
-                    // $entryTime = null;
+                      // $day=11;
+                      $records = $records->sortBy('date')->unique('date'); // Ensure records are sorted by time
+                      //  dd( $records );
+                      // $entryTime = null;
 
-                    // վերադարձնում է ամսվա այդ օրը շաբաթվա ինչ օր է
-                    $dayOfWeek = Carbon::parse(time: $date)->format('l');
-                    // dd($date,$dayOfWeek);//Thursday
-                    // $clientSchedule = $clientWorkingTimes[$dayOfWeek] ?? null;
-                    //   dd($records->first()->schedule_name_id);
-                    // dd($records);
+                      // վերադարձնում է ամսվա այդ օրը շաբաթվա ինչ օր է
+                      $dayOfWeek = Carbon::parse(time: $date)->format('l');
+                      // dd($date,$dayOfWeek);//Thursday
+                      // $clientSchedule = $clientWorkingTimes[$dayOfWeek] ?? null;
+                      //   dd($records->first()->schedule_name_id);
+                      // dd($records);
 
-                        // dd($records);
-                        // =====
 
-                        // =====
-                        // dd($records);
-                    $peopleDailyRecord = $this->getPersonWorkingHours($peopleDailyRecord,$records, $peopleId,$day);
-                    // dd($people_records);
-                    // dd( $peopleDailyRecord);
+                      $peopleDailyRecord = $this->getPersonWorkingHours($peopleDailyRecord,$records, $peopleId,$day);
+                      // dd($people_records);
+                      // dd( $peopleDailyRecord);
 
-                    $worker_first_enter = $records->first();
-                    // dd($worker_first_enter->schedule_name_id);
+                      $worker_first_enter = $records->first();
+                      // dd($worker_first_enter->schedule_name_id);
 
-                    $schedule_id = $worker_first_enter->schedule_name_id;
-                    $clientWorkingTimes = ScheduleDetails::where('schedule_name_id',$schedule_id)
+                      $schedule_id = $worker_first_enter->schedule_name_id;
+                      $clientWorkingTimes = ScheduleDetails::where('schedule_name_id',$schedule_id)
                                                          ->get()
                                                          ->keyBy('week_day');
-                                                         ;
-                    // dd( $clientWorkingTimes);
-                    // dd( $date,$dayOfWeek);
-                    $clientSchedule = $clientWorkingTimes[$dayOfWeek] ?? null;
-                    // dd($clientSchedule);
-                    if(isset($clientSchedule)){
-                        if($worker_first_enter->direction == "enter"){
-                            $get_client_week_working_start_time='';
-                            $get_client_week_working_end_time='';
+                      // dd( $clientWorkingTimes);
+                      // dd( $date,$dayOfWeek);
+                      $clientSchedule = $clientWorkingTimes[$dayOfWeek] ?? null;
+                      // dd($clientSchedule);
+                        if(isset($clientSchedule)){
+                            if($worker_first_enter->direction == "enter"){
+                                $get_client_week_working_start_time='';
+                                $get_client_week_working_end_time='';
 
-                            if(isset($clientSchedule->day_start_time) && $clientSchedule->day_start_time!=null){
-                                $get_client_week_working_start_time = new DateTime($clientSchedule->day_start_time);
-                                // dd($get_client_week_working_start_time);
+                                if(isset($clientSchedule->day_start_time) && $clientSchedule->day_start_time!=null){
 
-
-                            }
-                            if( isset($clientSchedule->day_start_time) && $clientSchedule->day_end_time!=null){
-                                $get_client_week_working_end_time = new DateTime($clientSchedule->day_end_time);
-
-                            }
-                            // dd($get_client_week_working_end_time);
-                            // dd($worker_first_enter->date); //"2025-03-20 10:05:38"
-                            $worker_first_enter_time = explode(' ', string: $worker_first_enter->date)[1];
-                            // dd($worker_first_enter_time); //"10:05:38"
-                            $worker_first_enter_time = new DateTime($worker_first_enter_time);
-                            // աշխատակցի առաջին մուտքի ժամը  փոքր է գործատուի տվյալ օրվա աշխատանքային ավարտի ժամից
-                            if($worker_first_enter_time < $get_client_week_working_end_time){
-                                // dd($worker_first_enter_time,$get_client_week_working_start_time);
-                                // աշխատակիցը ուշացել է, աշխատակցի առաջին մուտքը մեծ է գործատուի շաբաթվա տվյալ օրվա աշխատանքի սկսման  օրվանից
-                                if($worker_first_enter_time>$get_client_week_working_start_time){
+                                    $get_client_week_working_start_time = new DateTime($clientSchedule->day_start_time);
                                     // dd($get_client_week_working_start_time);
-
-                                    $interval = $worker_first_enter_time->diff($get_client_week_working_start_time);
-                                    $peopleDailyRecord[$peopleId][$day]['delay_hour'][]=$interval->format('%H:%I:%S');
-                                    $peopleDailyRecord[$peopleId][$day]['delay_display']=true;
-                                    $peopleDailyRecord[$peopleId][$day]['coming']=true;
-                                    // dd($peopleDailyRecord);
-
-
-                                }else{
-                                    $peopleDailyRecord[$peopleId][$day]['coming']=true;
                                 }
-                                // ============
-                                // dd($records);
-                                // dd($clientSchedule->break_start_time,  $clientSchedule->break_end_time);
-                                $breakfastInterval = $records
-                                                   ->filter(function ($record) use ($clientSchedule) {
-                                                    $recordTime = (new DateTime($record->date))->format('H:i:s');
-                                                        return $recordTime >= $clientSchedule->break_start_time && $recordTime <= $clientSchedule->break_end_time;
-                                                    })
-                                                    ->sortByDesc('date') // Sort by date in descending order
-                                                    ->groupBy('direction') // Group records by 'direction'
-                                                    ->map(function ($group) {
-                                                        return $group->first()->date; // Take the first (latest) record's date from each group
-                                                    });
-                                // dd($breakfastInterval);
-                                $breakfastInterval_find_mac = $records
-                                                            ->filter(function ($record) use ($clientSchedule) {
-                                                            $recordTime = (new DateTime($record->date))->format('H:i:s');
-                                                                return $recordTime >= $clientSchedule->break_start_time && $recordTime <= $clientSchedule->break_end_time;
-                                                            })
-                                                            ->sortByDesc('date') // Sort by date in descending order
-                                                            ->groupBy('direction') // Group records by 'direction'
-                                                            ->map(function ($group) {
-                                                                return $group->first()->mac; // Take the first (latest) record's date from each group
-                                                            });
-                                                            $ushacum = false;
-                                                            // dd($breakfastInterval);
-                                                            if(count($breakfastInterval)>0){
-                                                                // dd(888);
-                                                                if(count($breakfastInterval)==1 && isset($breakfastInterval["exit"])){
+                                if( isset($clientSchedule->day_start_time) && $clientSchedule->day_end_time!=null){
 
-                                                                    $ushacum = true;
+                                    $get_client_week_working_end_time = new DateTime($clientSchedule->day_end_time);
+                                }
+                                //  dd($get_client_week_working_end_time);
+                                //  dd($worker_first_enter->date); //"2025-03-20 10:05:38"
+                                $worker_first_enter_time = explode(' ', string: $worker_first_enter->date)[1];
+                                 // dd($worker_first_enter_time); //"10:05:38"
+                                $worker_first_enter_time = new DateTime($worker_first_enter_time);
+                                 // աշխատակցի առաջին մուտքի ժամը  փոքր է գործատուի տվյալ օրվա աշխատանքային ավարտի ժամից
+                                if($worker_first_enter_time < $get_client_week_working_end_time){
+                                          // dd($worker_first_enter_time,$get_client_week_working_start_time);
+                                          // աշխատակիցը ուշացել է, աշխատակցի առաջին մուտքը մեծ է գործատուի շաբաթվա տվյալ օրվա աշխատանքի սկսման  օրվանից
+                                        if($worker_first_enter_time>$get_client_week_working_start_time){
+                                           // dd($get_client_week_working_start_time);
+                                            $interval = $worker_first_enter_time->diff($get_client_week_working_start_time);
+                                            $peopleDailyRecord[$peopleId][$day]['delay_hour'][]=$interval->format('%H:%I:%S');
+                                            $peopleDailyRecord[$peopleId][$day]['delay_display']=true;
+                                            $peopleDailyRecord[$peopleId][$day]['coming']=true;
+                                            // dd($peopleDailyRecord);
+                                        }else{
+                                           $peopleDailyRecord[$peopleId][$day]['coming']=true;
+                                        }
+                                        // ============
+                                        // dd($records);
+                                        // dd($clientSchedule->break_start_time,  $clientSchedule->break_end_time);
+                                    $breakfastInterval = $records
+                                                    ->filter(function ($record) use ($clientSchedule) {
+                                                        $recordTime = (new DateTime($record->date))->format('H:i:s');
+                                                            return $recordTime >= $clientSchedule->break_start_time && $recordTime <= $clientSchedule->break_end_time;
+                                                        })
+                                                        ->sortByDesc('date') // Sort by date in descending order
+                                                        ->groupBy('direction') // Group records by 'direction'
+                                                        ->map(function ($group) {
+                                                            return $group->first()->date; // Take the first (latest) record's date from each group
+                                                        });
+                                    // dd($breakfastInterval);
+                                    $breakfastInterval_find_mac = $records
+                                                                ->filter(function ($record) use ($clientSchedule) {
+                                                                $recordTime = (new DateTime($record->date))->format('H:i:s');
+                                                                    return $recordTime >= $clientSchedule->break_start_time && $recordTime <= $clientSchedule->break_end_time;
+                                                                })
+                                                                ->sortByDesc('date') // Sort by date in descending order
+                                                                ->groupBy('direction') // Group records by 'direction'
+                                                                ->map(function ($group) {
+                                                                    return $group->first()->mac; // Take the first (latest) record's date from each group
+                                                                });
+                                                                $ushacum = false;
+                                                                // dd($breakfastInterval);
+                                                                if(count($breakfastInterval)>0){
+                                                                    // dd(888);
+                                                                    if(count($breakfastInterval)==1 && isset($breakfastInterval["exit"])){
 
-                                                                }
-                                                                if(count($breakfastInterval)>1 ){
+                                                                        $ushacum = true;
+
+                                                                    }
+                                                                    if(count($breakfastInterval)>1 ){
 
 
 
-                                                                    // dump( $peopleId, $breakfastInterval,$breakfastInterval_find_mac);
-                                                                    $enterTime='';
-                                                                    $exitTime = '';
-                                                                    if(isset($breakfastInterval_find_mac['unknown'])){
-                                                                        $turnstile=Turnstile::where('mac',$breakfastInterval_find_mac['unknown'])->first();
+                                                                        // dump( $peopleId, $breakfastInterval,$breakfastInterval_find_mac);
+                                                                        $enterTime='';
+                                                                        $exitTime = '';
+                                                                        if(isset($breakfastInterval_find_mac['unknown'])){
+                                                                            $turnstile=Turnstile::where('mac',$breakfastInterval_find_mac['unknown'])->first();
 
-                                                                        if($turnstile){
-                                                                            if($turnstile->direction == "exit"){
-                                                                                $exitTime = new DateTime($breakfastInterval['unknown']);
-                                                                                // dump($exitTime);
-
-                                                                            }
-                                                                            else{
-                                                                                $enterTime = new DateTime($breakfastInterval['unknown']);
-                                                                            }
-                                                                        }
-                                                                    }else{
-
-                                                                        $enterTime = new DateTime($breakfastInterval['enter']);
-                                                                        if(isset($breakfastInterval['enter'])){
-                                                                                if(isset($breakfastInterval['exit'])){
-                                                                                    $exitTime = new DateTime($breakfastInterval['exit']);
+                                                                            if($turnstile){
+                                                                                if($turnstile->direction == "exit"){
+                                                                                    $exitTime = new DateTime($breakfastInterval['unknown']);
+                                                                                    // dump($exitTime);
 
                                                                                 }
+                                                                                else{
+                                                                                    $enterTime = new DateTime($breakfastInterval['unknown']);
+                                                                                }
+                                                                            }
+                                                                        }else{
+
+                                                                            $enterTime = new DateTime($breakfastInterval['enter']);
+                                                                            if(isset($breakfastInterval['enter'])){
+                                                                                    if(isset($breakfastInterval['exit'])){
+                                                                                        $exitTime = new DateTime($breakfastInterval['exit']);
+
+                                                                                    }
+                                                                            }
+
+                                                                            //   dump( $peopleId, $breakfastInterval,$breakfastInterval_find_mac);
+
+
+                                                                        }
+                                                                        if(isset($enterTime) && isset($exitTime)){
+                                                                            // dump($peopleId, $enterTime, $exitTime);
+                                                                            if ($exitTime > $enterTime) {
+                                                                                        $ushacum = true;
+                                                                                    }
                                                                         }
 
-                                                                        //   dump( $peopleId, $breakfastInterval,$breakfastInterval_find_mac);
-
 
                                                                     }
-                                                                    if(isset($enterTime) && isset($exitTime)){
-                                                                        // dump($peopleId, $enterTime, $exitTime);
-                                                                        if ($exitTime > $enterTime) {
-                                                                                    $ushacum = true;
-                                                                                }
-                                                                    }
 
 
+
+                                                                }else{
+                                                                    // dd(777);
+
+
+                                                                    $firstActionAfterBreakfast = $records
+                                                                                    ->filter(function ($record) use ($peopleId, $clientSchedule,$day) {
+                                                                                        // Parse the date using Carbon and format it to 'H:i:s' (hours:minutes:seconds)
+                                                                                        $recordTime = Carbon::parse($record->date)->format('H:i:s');
+                                                                                        // dump($day, $peopleId, $recordTime, $clientSchedule->break_end_time);
+                                                                                        // Check if the direction is 'enter', the time is after $clientSchedule->break_end_time, and people_id is $peopleId
+                                                                                        return $record->direction === 'enter' && $recordTime >= $clientSchedule->break_end_time && $record->people_id == $peopleId;
+                                                                                    })
+                                                                                    ->sortBy('date') // Sort by date in ascending order
+                                                                                    ->first();
+                                                                                    // dump( $peopleId,$firstActionAfterBreakfast);
+
+
+                                                                        if( isset($firstActionAfterBreakfast->direction) && $firstActionAfterBreakfast->direction=="enter"){
+                                                                            $ushacum=true;
+                                                                            // dump($peopleId,"after",$day, $firstActionAfterBreakfast);
+                                                                        }
+                                                                        // dd($firstActionAfterBreakfast);
+
+
+
+                                                                }
+                                                                if($ushacum == true){
+                                                                    // dd($ushacum);
+                                                                    // dd($peopleId, $date,$day, $clientSchedule, $peopleDailyRecord);
+
+
+                                                                    $peopleDailyRecord=$this->ushacum_arm($peopleId, $date,$day, $clientSchedule, $peopleDailyRecord);
+                                                                    //   dd($peopleDailyRecord);
                                                                 }
 
 
 
-                                                            }else{
-                                                                // dd(777);
-
-
-                                                                $firstActionAfterBreakfast = $records
-                                                                                ->filter(function ($record) use ($peopleId, $clientSchedule,$day) {
-                                                                                    // Parse the date using Carbon and format it to 'H:i:s' (hours:minutes:seconds)
-                                                                                    $recordTime = Carbon::parse($record->date)->format('H:i:s');
-                                                                                    // dump($day, $peopleId, $recordTime, $clientSchedule->break_end_time);
-                                                                                    // Check if the direction is 'enter', the time is after $clientSchedule->break_end_time, and people_id is $peopleId
-                                                                                    return $record->direction === 'enter' && $recordTime >= $clientSchedule->break_end_time && $record->people_id == $peopleId;
-                                                                                })
-                                                                                ->sortBy('date') // Sort by date in ascending order
-                                                                                ->first();
-                                                                                // dump( $peopleId,$firstActionAfterBreakfast);
-
-
-                                                                    if( isset($firstActionAfterBreakfast->direction) && $firstActionAfterBreakfast->direction=="enter"){
-                                                                        $ushacum=true;
-                                                                        // dump($peopleId,"after",$day, $firstActionAfterBreakfast);
-                                                                    }
-                                                                    // dd($firstActionAfterBreakfast);
+                                }//if($worker_first_enter_time < $get_client_week_working_end_time){
 
 
 
-                                                            }
-                                                            if($ushacum == true){
-                                                                // dd($ushacum);
-                                                                // dd($peopleId, $date,$day, $clientSchedule, $peopleDailyRecord);
+                            }else{ // if($worker_first_enter->direction == "enter")
 
-
-                                                                $peopleDailyRecord=$this->ushacum_arm($peopleId, $date,$day, $clientSchedule, $peopleDailyRecord);
-                                                                //   dd($peopleDailyRecord);
-                                                            }
-
-
+                                $peopleDailyRecord[$peopleId][$day]['anomalia']=true;
 
                             }
 
-
-
-                        }else{
-
-                            $peopleDailyRecord[$peopleId][$day]['anomalia']=true;
-
-                        }
-
-                    }
+                        }//if(isset($clientSchedule)){
 
 
 
 
-                //  }//date
+                    // }//date
 
 
-                }
+                }//foreach ($dailyRecords as $date => $records)
             }
             // dd($peopleDailyRecord);
             if(isset($peopleDailyRecord)){
@@ -266,7 +245,9 @@ trait ReportFilterTrait{
                 $routeName = Route::currentRouteName();
                 // dd( $routeName);
                 if($routeName=="export-xlsx-armobil"){
-                    $total_monthly_working_hours['mounth']=$month;
+
+                    // $total_monthly_working_hours['mounth'] = $month;
+                    $total_monthly_working_hours['mounth'] = $data['month'];
 
                 }
                 // dd($total_monthly_working_hours);
@@ -395,9 +376,6 @@ public function getEntriesByScheduleInterval($attendance_sheet)
                         break; // Берём первую подходящую смену и прекращаем проверку
                     }
                 }
-
-
-
             }
 
         }

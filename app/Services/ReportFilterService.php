@@ -21,8 +21,9 @@ class ReportFilterService
 
         session()->put('selected_department_id',$department_id );
         session()->put('selected_month',  $data['month']);
-
+         // dd($data['month']);
         $attendance_sheet = AttendanceSheet::forClient($data['month'], $department_id)->get();
+        // dd($attendance_sheet);
         $data['attendance_sheet'] = $attendance_sheet;
         // dd($data['attendance_sheet']);
         $data['client_department'] = Myhelper::get_client_department();
