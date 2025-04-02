@@ -123,7 +123,7 @@ Route::group(['middleware' => ['auth']], function() {
 
     Route::get('report',ReportFilterController::class)->name('reportFilter.list');
     Route::get('report-enter-exit',ReportEnterExitController::class)->name('report-enter-exit.list');
-    Route::get('enter-time',AttendansSheetEnterTimeController::class);
+    Route::get('/enter-time/{tb_name}/{person_id}/{client_id}/{direction}/{date}/{day}/{time}',AttendansSheetEnterTimeController::class);
 });
 
 Route::get('get-file', [FileUploadService::class, 'get_file'])->name('get-file');

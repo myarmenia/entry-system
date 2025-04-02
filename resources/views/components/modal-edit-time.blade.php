@@ -14,7 +14,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Չեղարկել</button>
-          <button type="button" class="btn btn-primary enter_time_item" data-url="">Հաստատել</button>
+          <button type="button" class="btn btn-primary send_enter_time" data-url="">Հաստատել</button>
         </div>
       </div>
     </div>

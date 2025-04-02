@@ -5,12 +5,14 @@ namespace App\Providers;
 use App\Helpers\MyHelper;
 use App\Interfaces\AbsenceInterface;
 use App\Interfaces\AttendanceSheetInterface;
+use App\Interfaces\AttendanceSheetTimeInterface;
 use App\Interfaces\CheckEntryCodeInterface;
 use App\Interfaces\ClientIdFromTurnstileInterface;
 use App\Interfaces\CreateEntryCodeInterface;
 use App\Interfaces\DepartmentInterface;
 use App\Repositories\AbsenceRepository;
 use App\Repositories\AttendanceSheetRepository;
+use App\Repositories\AttendanceSheetTimeRepository;
 use App\Repositories\DepartmentRepository;
 use App\Repositories\EntryCodeRepository;
 use App\Repositories\Interfaces\PersonRepositoryInterface;
@@ -40,10 +42,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
 
         $this->app->bind(PersonRepositoryInterface::class, PersonRepository::class);
-        $this->app->bind(ScheduleNameInterface::class,ScheduleNameRepository::class);
-        $this->app->bind(DepartmentInterface::class,DepartmentRepository::class);
-        $this->app->bind(ScheduleDetailsInterface::class,ScheduleDetailsRepository::class);
-        $this->app->bind(AbsenceInterface::class,AbsenceRepository::class);
+        $this->app->bind(ScheduleNameInterface::class, ScheduleNameRepository::class);
+        $this->app->bind(DepartmentInterface::class, DepartmentRepository::class);
+        $this->app->bind(ScheduleDetailsInterface::class, ScheduleDetailsRepository::class);
+        $this->app->bind(AbsenceInterface::class, AbsenceRepository::class);
+        $this->app->bind(AttendanceSheetTimeInterface::class, AttendanceSheetTimeRepository::class);
 
     }
 

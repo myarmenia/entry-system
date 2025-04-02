@@ -20,7 +20,7 @@ $(function () {
       let row = $(`.action[data-id="${id}"]`).parents('tr')
       let image_div = $(this).parent('.uploaded-image-div')
       let image_divs = $('.uploaded-image-div')
-    //   console.log(image_div)
+      console.log(image_div)
       if ((image_divs.length > 1 && row.length == 0) || (image_divs.length == 0 && row.length > 0)) {
         $.ajax({
           type: "GET",
