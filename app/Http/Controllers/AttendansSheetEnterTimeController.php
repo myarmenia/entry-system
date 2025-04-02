@@ -11,7 +11,7 @@ class AttendansSheetEnterTimeController extends Controller
 
     public function __invoke($tb_name, $person_id, $client_id, $direction, $date, $day, $time){
         // dd($tb_name,$person_id,$date,$day,$time);
-        $data=$this->service->store($tb_name, $person_id, $client_id, $direction, $date, $day, $time);
-
+        $data = $this->service->store($tb_name, $person_id, $client_id, $direction, $date, $day, $time);
+        return response()->json(['result'=>$data]);
     }
 }

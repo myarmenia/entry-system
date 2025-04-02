@@ -18,8 +18,13 @@ class AttendanceSheetTimeRepository implements AttendanceSheetTimeInterface
         $db_time='';
         $compeare_direction ='';
 
-        $fullDate = $date = $date."-".$day;
+        $fullDate =  $date."-".$day;
+        // dd($fullDate);
+
         $fullTime = $time.":00";
+        // dd($fullTime);
+
+        // dd($formatted_time);
 
         $dayOfWeek = Carbon::parse(time: $fullDate)->format('l');
         $schedule_name_id = ScheduleDepartmentPerson::where(['client_id'=>$client_id,'person_id'=>$person_id])->value('schedule_name_id');
@@ -32,18 +37,22 @@ class AttendanceSheetTimeRepository implements AttendanceSheetTimeInterface
             $db_time = $schedule_details->day_start_time;
         }
         $db_time = strtotime($db_time);
-        $fullTime = strtotime($fullTime);
+        $time_tostr = strtotime($fullTime);
 
-            if ($db_time !== $fullTime) {
-                
-                return  "Մուտքագրվող ժամանակը պետք է լինի ". $db_time;
+
+            if ($db_time !== $time_tostr) {
+                $formatted_time = date("H:i:s", $db_time);
+
+                return  "Մուտքագրվող ժամանակը պետք է լինի ". $formatted_time;
             }
 
 
         $entry_code_id = PersonPermission::where('person_id',$person_id)->value('entry_code_id');
         // dd($entry_code);
         $entry_code_token = EntryCode::where('id',$entry_code_id)->value('token');
-        $date = $date."-".$day." ".$time.":00";
+
+        $date = $fullDate." ".$fullTime;
+        // dd($date);
 
         $store_data = [
             "people_id" => $person_id,
@@ -51,7 +60,10 @@ class AttendanceSheetTimeRepository implements AttendanceSheetTimeInterface
             "date" => $date,
             "direction" => $direction
         ];
-        return AttendanceSheet::create($store_data);
+        $attendance_sheet =  AttendanceSheet::create($store_data);
         // dd($data);
+        if($attendance_sheet){
+            return "Գործողությունը հաստատված է:";
+        }
     }
 }

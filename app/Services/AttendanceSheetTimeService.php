@@ -12,6 +12,6 @@ class AttendanceSheetTimeService
     public function store($tb_name,$person_id,$client_id,$direction,$date,$day,$time){
 
         $data = $this->attendanceSheetTimeRepository->store($tb_name,$person_id,$client_id,$direction,$date,$day,$time);
-
+        return $data;
     }
 }

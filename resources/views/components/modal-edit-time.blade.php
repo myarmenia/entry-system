@@ -7,7 +7,8 @@
         </div>
         <div class="modal-body">
           <div class="row">
-            <div class="col mb-3 message_cont text-center">
+            <p class="message_cont"></p>
+            <div class="col mb-3  text-center">
                 <input type="time" class="form-control" id="time"  />
             </div>
           </div>

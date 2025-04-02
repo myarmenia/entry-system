@@ -40,27 +40,35 @@ $(function () {
           url: url,
           cache: false,
           success: function (data) {
+            console.log(data)
             let message = ''
             let type = ''
             if (data.result) {
                     console.log(data.result)
-                message = 'Գործողությունը հաստատված է։'
-                type = 'success'
-                // row.remove()
-                // image_div.remove()
-                }
-                else {
-                message = 'Սխալ է տեղի ունեցել։'
-                type = 'danger'
-                }
+                     message = data.result
+                     console.log(message)
+                     if(message!="Գործողությունը հաստատված է:"){
+                        type = 'danger'
+                     }
+                     else{
+                        type = 'success'
+                     }
+                // message = 'Գործողությունը հաստատված է։'
+                // type = 'success'
+                // // row.remove()
+                // // image_div.remove()
+                // }
+                // else {
+                // message = 'Սխալ է տեղի ունեցել։'
+                // type = 'danger'
+                // }
 
-    //         $('.message_cont').html(`<span class="text-${type}">${message}</span>`)
+                $('.message_cont').html(`<span class="text-${type}">${message}</span>`)
+
+            // $('.message_cont').html(`<span class="text-${type}">${message}</span>`)
+            }
              },
-    //       error:function(xhr, status,error){
-
-    //         console.log(xhr.responseJSON.error)
-    //         $('.message_cont').html(`<span class="text-danger">${xhr.responseJSON.error}</span>`)
-    //       }
+    
         });
       }
     })
