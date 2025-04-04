@@ -24,7 +24,7 @@ trait ReportFilterTrait{
           $attendance_sheet = $data['attendance_sheet'];
 // dd( $attendance_sheet);
           $groupedEntries = $this->getEntriesByScheduleInterval($attendance_sheet);
-
+// dd($groupedEntries);
           $peopleDailyRecord =[];
             // dd($groupedEntries);
             foreach ($groupedEntries as $peopleId => $dailyRecords) {
@@ -32,7 +32,7 @@ trait ReportFilterTrait{
                 foreach ($dailyRecords as $date => $records) {
                     // dd($date);   //"2025-03-20"
                     // dd($records);
-                    if($date=="2025-03-04"){
+                    if($date == "2025-03-20"){
 
                       $day = date('d',strtotime($date));
                       // dd($day);//20
@@ -250,7 +250,7 @@ trait ReportFilterTrait{
                     $total_monthly_working_hours['mounth'] = $data['month'];
 
                 }
-                dd($total_monthly_working_hours);
+                // dd($total_monthly_working_hours);
 
                 return  $peopleDailyRecord = $total_monthly_working_hours ?? null;
 
