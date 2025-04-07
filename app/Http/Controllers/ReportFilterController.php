@@ -20,7 +20,7 @@ class ReportFilterController extends Controller
 
 
         $data = $this->service->filterService($request->all());
-        // dd($data);
+        dd($data);
 
 
         return view('report.reportFilter',compact('data'));

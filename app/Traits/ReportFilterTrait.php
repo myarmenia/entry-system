@@ -32,7 +32,7 @@ trait ReportFilterTrait{
                 foreach ($dailyRecords as $date => $records) {
                     // dd($date);   //"2025-03-20"
                     // dd($records);
-                    if($date == "2025-03-20"){
+                    if($date == "2025-03-13" && $peopleId==53 ){
 
                       $day = date('d',strtotime($date));
                       // dd($day);//20
@@ -52,16 +52,19 @@ trait ReportFilterTrait{
 
                       $peopleDailyRecord = $this->getPersonWorkingHours($peopleDailyRecord,$records, $peopleId,$day);
                       // dd($people_records);
-                      // dd( $peopleDailyRecord);
+                       //   dd( $peopleDailyRecord);
+                      // dump($peopleDailyRecord);
 
                       $worker_first_enter = $records->first();
+                       //   dd( $worker_first_enter);
                       // dd($worker_first_enter->schedule_name_id);
 
                       $schedule_id = $worker_first_enter->schedule_name_id;
+                       //   dd($schedule_id);
                       $clientWorkingTimes = ScheduleDetails::where('schedule_name_id',$schedule_id)
                                                          ->get()
                                                          ->keyBy('week_day');
-                      // dd( $clientWorkingTimes);
+                       //   dd( $clientWorkingTimes);
                       // dd( $date,$dayOfWeek);
                       $clientSchedule = $clientWorkingTimes[$dayOfWeek] ?? null;
                       // dd($clientSchedule);
@@ -83,20 +86,35 @@ trait ReportFilterTrait{
                                 //  dd($worker_first_enter->date); //"2025-03-20 10:05:38"
                                 $worker_first_enter_time = explode(' ', string: $worker_first_enter->date)[1];
                                  // dd($worker_first_enter_time); //"10:05:38"
+                                $worker_first_enter_day = explode(' ', string: $worker_first_enter->date)[0];
+                                // dd($worker_first_enter_day);
                                 $worker_first_enter_time = new DateTime($worker_first_enter_time);
                                  // աշխատակցի առաջին մուտքի ժամը  փոքր է գործատուի տվյալ օրվա աշխատանքային ավարտի ժամից
                                 if($worker_first_enter_time < $get_client_week_working_end_time){
-                                          // dd($worker_first_enter_time,$get_client_week_working_start_time);
+                                    // dd($worker_first_enter_time,$get_client_week_working_end_time);
+                                        //   dd($worker_first_enter_time,$get_client_week_working_start_time);
                                           // աշխատակիցը ուշացել է, աշխատակցի առաջին մուտքը մեծ է գործատուի շաբաթվա տվյալ օրվա աշխատանքի սկսման  օրվանից
-                                        if($worker_first_enter_time>$get_client_week_working_start_time){
-                                           // dd($get_client_week_working_start_time);
-                                            $interval = $worker_first_enter_time->diff($get_client_week_working_start_time);
+                                        //   if($worker_first_enter_time>$get_client_week_working_start_time){
+                                        if($worker_first_enter_time<$get_client_week_working_start_time || $worker_first_enter_day!=$date){
+                                        //    dd($get_client_week_working_start_time);
+
+                                            if($worker_first_enter_time<$get_client_week_working_start_time && $worker_first_enter_day==$date){
+                                                $interval = $worker_first_enter_time->diff($get_client_week_working_start_time);
+                                            }else{
+                                                $time1 = Carbon::parse($worker_first_enter_time); // 18:00-09:00// first enter 01:00
+                                                $time1->addDay(); // Добавляем 24 часа
+
+
+                                                $interval = $get_client_week_working_start_time->diff($time1);
+                                            }
+                                            // $interval = $worker_first_enter_time->diff($get_client_week_working_start_time);
                                             $peopleDailyRecord[$peopleId][$day]['delay_hour'][]=$interval->format('%H:%I:%S');
                                             $peopleDailyRecord[$peopleId][$day]['delay_display']=true;
                                             $peopleDailyRecord[$peopleId][$day]['coming']=true;
-                                            // dd($peopleDailyRecord);
+
                                         }else{
                                            $peopleDailyRecord[$peopleId][$day]['coming']=true;
+
                                         }
                                         // ============
                                         // dd($records);
@@ -122,6 +140,7 @@ trait ReportFilterTrait{
                                                                 ->map(function ($group) {
                                                                     return $group->first()->mac; // Take the first (latest) record's date from each group
                                                                 });
+                                                        //    dd($breakfastInterval_find_mac);
                                                                 $ushacum = false;
                                                                 // dd($breakfastInterval);
                                                                 if(count($breakfastInterval)>0){
@@ -177,9 +196,9 @@ trait ReportFilterTrait{
 
 
 
-                                                                }else{
+                                                                }else if($clientSchedule->day_start_time < $clientSchedule->day_end_time){
                                                                     // dd(777);
-
+                                                                    // dd($clientSchedule);
 
                                                                     $firstActionAfterBreakfast = $records
                                                                                     ->filter(function ($record) use ($peopleId, $clientSchedule,$day) {
@@ -193,7 +212,7 @@ trait ReportFilterTrait{
                                                                                     ->first();
                                                                                     // dump( $peopleId,$firstActionAfterBreakfast);
 
-
+                                                                    // dd($firstActionAfterBreakfast);
                                                                         if( isset($firstActionAfterBreakfast->direction) && $firstActionAfterBreakfast->direction=="enter"){
                                                                             $ushacum=true;
                                                                             // dump($peopleId,"after",$day, $firstActionAfterBreakfast);
