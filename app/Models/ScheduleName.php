@@ -14,5 +14,6 @@ class ScheduleName extends Model
 
         return $this->hasMany(ScheduleDetails::class);
     }
+    
 
 }

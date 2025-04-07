@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 use Exception;
 
 trait ReportTraitArmobile{
+    use RecordTrait;
 
 
     public function report_armobile($mounth){
@@ -91,60 +92,8 @@ trait ReportTraitArmobile{
                         $clientSchedule = $clientWorkingTimes[$dayOfWeek] ?? null;
                         // dd($clientSchedule);
 
+                        $peopleDailyRecord = $this->getPersonWorkingHours($peopleDailyRecord,$records, $peopleId,$day);
 
-                        foreach ($records as $record) {
-
-                            if($record->direction == "unknown"){
-                                $find_mac_direction = Turnstile::where('mac',$record->mac)->value('direction');
-
-                                $record->direction = $find_mac_direction;
-                            }
-
-
-                            if ($record->direction == 'enter') {
-
-
-                                $entryTime  = Carbon::parse($record->date);
-
-                                $peopleDailyRecord[$peopleId][$day]['enter'][]= Carbon::parse($record->date)->format('H:i');
-
-
-
-                            }
-
-                             elseif ($record->direction == 'exit' && $entryTime) {
-                                $peopleDailyRecord[$peopleId][$day]['exit'][] = Carbon::parse($record->date)->format('H:i');
-
-                                $exitTime = Carbon::parse($record->date);
-
-                                    $entry = explode(' ', $entryTime->toTimeString())[0];
-                                    $entryT = Carbon::createFromFormat('H:i:s', $entry);
-
-
-                                    $exit = explode(' ', $exitTime->toTimeString())[0];
-                                    $exitT = Carbon::createFromFormat('H:i:s', $exit);
-
-                                    // dump($entryT, $exitT );
-
-                                    // Если вход и выход в один день, добавляем разницу
-                                    if ($exitT->greaterThan($entryT)) {
-
-                                        $interval = $exitT->diff($entryT);
-
-                                        $peopleDailyRecord[$peopleId][$day]['working_times'][] = $interval->format('%H:%I:%S');
-
-
-
-                                    }
-
-                                // Сбрасываем время входа после расчета
-                                $entryTime = null;
-
-
-                            }
-
-
-                        }
 
                         $worker_first_enter = $records->first();
                         if(isset($clientSchedule)){
@@ -333,9 +282,11 @@ trait ReportTraitArmobile{
         }
 
             if(isset($peopleDailyRecord)){
+                // dd($peopleDailyRecord);
                 $total_monthly_working_hours = $this->calculate_arm($peopleDailyRecord,$client);
 
                 $routeName = Route::currentRouteName();
+                // dd( $routeName);
                 if($routeName=="export-xlsx-armobil"){
                     $total_monthly_working_hours['mounth']=$month;
 
@@ -399,15 +350,16 @@ trait ReportTraitArmobile{
 
     public function calculate_arm($peopleDailyRecord,$client){
 
-
+    //    dd($peopleDailyRecord);
         foreach ($peopleDailyRecord as $personId => $records) {
             $totalSeconds = 0;
-            $delaytotalSeconds =0;
+            $delaytotalSeconds = 0;
             // dd($records);
 
             // Iterate through each person's records
             foreach ($records as $key => $data) {
                 // dump($data);
+                // dd()
                 if (isset($data['working_times'])) {
                     foreach ($data['working_times'] as $time) {
                         // dump($time);
@@ -443,6 +395,7 @@ trait ReportTraitArmobile{
             $peopleDailyRecord[$personId]['totaldelayPerPerson'] = sprintf('%d ժ, %d ր', $delaytotalHours, $delaytotalMinutes, $delaytotalSeconds);
             // dd($peopleDailyRecord);
             // dd($client->working_time,$totalHours);
+            // dd($client);
             $clientWorkingHours = (float) $client->working_time; // Convert string to float
             $personWorkingHours = (float) $totalHours;
             if($clientWorkingHours>$personWorkingHours){

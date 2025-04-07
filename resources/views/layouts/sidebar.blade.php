@@ -242,18 +242,32 @@
         </li>
       @endif
       @if (Auth::user()->hasRole(["client_admin","client_admin_rfID","manager"]))
-      <li class="nav-item">
+      {{-- <li class="nav-item">
           <a class="nav-link {{ Route::is(['reportList']) ? '' : 'collapsed' }}"  href = "{{ route('reportList') }}">
           <i class="bi bi-person"></i>
           <span>Հաշվետվություն</span>
           </a>
-      </li>
-      <li class="nav-item">
+      </li> --}}
+      {{-- <li class="nav-item">
         <a class="nav-link {{ Route::is(['reportListArmobile']) ? '' : 'collapsed' }}"  href = "{{ route('reportListArmobile') }}">
         <i class="bi bi-person"></i>
         <span>Հաշվետվություն ըստ մուտքի և ելքի</span>
         </a>
+    </li> --}}
+    <li class="nav-item">
+        <a class="nav-link {{ Route::is(['reportFilter.list']) ? '' : 'collapsed' }}"  href = "{{ route('reportFilter.list') }}">
+        <i class="bi bi-person"></i>
+        <span>Հաշվետվություն ֆիլտրացիա</span>
+        </a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link {{ Route::is(['report-enter-exit.list']) ? '' : 'collapsed' }}"  href = "{{ route('report-enter-exit.list') }}">
+        <i class="bi bi-person"></i>
+        <span>Հաշվետվություն ըստ մուտքի և ելքի</span>
+        </a>
+    </li>
+
+
 
 
 

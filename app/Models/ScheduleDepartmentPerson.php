@@ -14,4 +14,8 @@ class ScheduleDepartmentPerson extends Model
     public function person(){
         return $this->belongsTo(Person::class,'person_id');
     }
+    public function schedule_name(){
+        return $this->belongsTo(ScheduleName::class,'schedule_name_id');
+    }
+
 }

@@ -44,6 +44,7 @@ class Person extends Model
 
         return $this->hasMany(Absence::class);
     }
+
 // using in absence/edit.blade.php as accesors
     public function fullName(): Attribute
     {

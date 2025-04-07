@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Absence\AbsenceController;
 use App\Http\Controllers\ActionController;
+use App\Http\Controllers\AttendansSheetEnterTimeController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ChangeStatusController;
 use App\Http\Controllers\Component\ClientComponentController;
@@ -20,6 +21,8 @@ use App\Http\Controllers\PersonPermission\PersonPermissionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReportArmobileController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ReportEnterExitController;
+use App\Http\Controllers\ReportFilterController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\Schedule\ScheduleController;
 use App\Http\Controllers\Schedule\ScheduleDetailsController;
@@ -76,7 +79,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('report-list-armobile',[ReportController::class,'index_armobile'])->name('reportListArmobile');
 
     Route::get('/report/export',[ReportController::class,'export'])->name('export-xlsx');
-    // ====ARMOBILE=============
+    // ====ARMOBILE=============hatuk
     Route::post('supervised',[SupervicedController::class,'superviced_person']);
     Route::get('supervised-staff',[SupervicedController:: class,'supervised_staff'])->name('supervisedStaff');
     Route::post('delete-superviced',[SupervicedController::class,'delete']);
@@ -118,6 +121,9 @@ Route::group(['middleware' => ['auth']], function() {
         Route::put('{id}/',[DepartmentController::class,'update'])->name('department.update');
     });
 
+    Route::get('report',ReportFilterController::class)->name('reportFilter.list');
+    Route::get('report-enter-exit',ReportEnterExitController::class)->name('report-enter-exit.list');
+    Route::get('/enter-time/{tb_name}/{person_id}/{client_id}/{direction}/{date}/{day}/{time}',AttendansSheetEnterTimeController::class);
 });
 
 Route::get('get-file', [FileUploadService::class, 'get_file'])->name('get-file');

@@ -28,6 +28,7 @@
 
 <body>
     <div>
+        {{-- {{ dd($groupedEntries) }} --}}
 
         <table>
             <thead>
@@ -66,24 +67,33 @@
                         <td>{{ $peopleId }}</td>
                         <td>{{ getPeople($peopleId)->name ?? null }}</td>
                         <td>{{ getPeople($peopleId)->surname ?? null }}</td>
-                    </tr>
+
                     @for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay())
                         <td class="p-0 text-center">
                             @if(isset($item[$date->format('d')]['enter']))
+                                @if (is_array($item[$date->format('d')]['enter']))
+                                        {{ $item[$date->format('d')]['enter'][0] }}
 
-                                    <span>{{ $item[$date->format('d')]['enter'][0] }}</span><br>
-
+                                @else
+                                  <div class="editable" style="width:20px;height:20px;background-color:grey"></div>
+                                @endif
                             @endif
                         </td>
                         <td class="p-0 text-center">
 
-                           @if(isset($item[$date->format('d')]['exit']))
-                                    <span>
-                                        {{ end($item[$date->format('d')]['exit']) }}
+                            @if(isset($item[$date->format('d')]['exit']))
+                                                               @if (is_array($item[$date->format('d')]['exit']))
+                                                                 <span>
+                                                                     {{  last(array_slice($item[$date->format('d')]['exit'], -1))  }}
+                                                                 </span>
+                                                               @else
 
-                                    </span><br>
+                                                                 <div class="editable" style="width:20px;height:20px;background-color:grey"></div>
 
-                            @endif
+
+                                                               @endif
+
+                                                            @endif
                         </td>
                     @endfor
                     <td>{{ $item['totalMonthDayCount'] }}</td>
@@ -91,12 +101,12 @@
                         {{ $item['totalWorkingTimePerPerson'] }}
                         </td>
                     <td>{{ $item['totaldelayPerPerson'] }}</td>
-
+                </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
 </body>
-
+{{-- {{ dd(777) }} --}}
 </html>
 
