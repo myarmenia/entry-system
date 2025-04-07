@@ -176,6 +176,7 @@
                                                                         data-day = {{ $date->format('d') }}
                                                                         data-direction = "exit"
                                                                         data-clientId = {{$data['client_id']}}
+                                                                        data-time =  {{ $item[$date->format('d')]['enter'][0] }}
                                                                         data-date = {{ $monthYear }}
                                                                     ></i>
                                                                @endif

@@ -1,5 +1,6 @@
 $(function () {
     $('.enter_time_item').on('click', function () {
+        $('#time').val('')
       let person_id = $(this).parents('.action').attr('data-person-id')
 
       let tb_name = $(this).parents('.action').attr('data-tb-name')
@@ -7,10 +8,11 @@ $(function () {
       let date = $(this).attr('data-date')
       let direction = $(this).attr('data-direction')
       let clientId = $(this).attr('data-clientId')
+      let existingTime =$(this).attr('data-time')
 
     //   console.log(person_id,tb_name,day,date, 5252)
 
-      let url = `/enter-time/${tb_name}/${person_id}/${clientId}/${direction}/${date}/${day}`
+      let url = `/enter-time/${tb_name}/${person_id}/${clientId}/${direction}/${date}/${day}/${existingTime}`
       console.log( url)
 
       $('.send_enter_time').attr('data-url', url)
@@ -68,7 +70,7 @@ $(function () {
             // $('.message_cont').html(`<span class="text-${type}">${message}</span>`)
             }
              },
-    
+
         });
       }
     })

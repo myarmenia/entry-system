@@ -12,8 +12,9 @@ use Dotenv\Parser\Entry;
 
 class AttendanceSheetTimeRepository implements AttendanceSheetTimeInterface
 {
-    public function store($tb_name,$person_id,$client_id,$direction,$date,$day,$time)
+    public function store($tb_name,$person_id,$client_id,$direction,$date,$day,$time,$existingTime)
     {
+        // dd($tb_name,$person_id,$client_id,$direction,$date,$day,$time,$existingTime);
 
         $db_time='';
         $compeare_direction ='';
@@ -29,13 +30,13 @@ class AttendanceSheetTimeRepository implements AttendanceSheetTimeInterface
         $dayOfWeek = Carbon::parse(time: $fullDate)->format('l');
         $schedule_name_id = ScheduleDepartmentPerson::where(['client_id'=>$client_id,'person_id'=>$person_id])->value('schedule_name_id');
         $schedule_details = ScheduleDetails::where(['schedule_name_id'=>$schedule_name_id,'week_day'=>$dayOfWeek])->first();
-        $day_end_time = Carbon::parse($schedule_details->day_end_time);
-        $day_start_time = Carbon::parse($schedule_details->day_start_time);
+        $day_end_time = Carbon::parse($schedule_details->day_end_time); // client working end time
+        $day_start_time = Carbon::parse($schedule_details->day_start_time); // client working start time
 
         if($direction=="exit"){
             $db_time = $schedule_details->day_end_time;
             // dd($db_time);
-            if( $day_end_time<$day_start_time){
+            if($day_end_time<$day_start_time){
                 // dd("db_time",$db_time,"day_start_time",$day_start_time);
                 $fullDate = Carbon::parse($fullDate);
                 // dd($fullDate);
@@ -53,8 +54,9 @@ class AttendanceSheetTimeRepository implements AttendanceSheetTimeInterface
 
         }
 
-        $db_time = strtotime($db_time);
+        $db_time = strtotime($db_time);  //client working time
         $time_tostr = strtotime($fullTime);
+        dd($db_time,$time_tostr);
 
 
             if ($db_time !== $time_tostr) {
