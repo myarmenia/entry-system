@@ -34,6 +34,9 @@
                 <div class="col-lg-10 col-md-10 col-sm-12">
                     <div class="card mb-4">
                         <div class="card-body py-0">
+
+                            <p class="mt-2">{{ $data->full_name }}</p>
+
                             <div id='calendar'></div>
 
                         </div>
@@ -45,9 +48,7 @@
 
     <div class="your-component">
 
-        {{-- @if (isset($reservetions))
-            {{dd($reservetions)}}
-        @endif --}}
+
 
         <x-offcanvas :reservetions=" isset($reservetions) ? $reservetions : [] " ></x-offcanvas>
     </div>
