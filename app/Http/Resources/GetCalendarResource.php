@@ -14,10 +14,10 @@ class GetCalendarResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-
+// dd(777);
         return [
             "title" =>  $this->type,
             "start" => $this->date,
-          ];;
+          ];
     }
 }

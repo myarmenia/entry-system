@@ -71,7 +71,7 @@ class PersonRepository implements PersonRepositoryInterface
                 }
 
             }
-          // dd($query);
+
         return $query;
 
     }

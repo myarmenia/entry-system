@@ -46,6 +46,15 @@
 
                             </div>
                             <!-- Bordered Table -->
+                            @if (count($data)==0)
+                                <div class="alert alert-danger" role="alert">
+                                    <p>Դուք չունեք ստեղծած հերթափոխեր</p>
+                                </div>
+
+
+                            @else
+
+
 
                             <table class="table table-bordered">
                                 <thead>
@@ -114,6 +123,8 @@
 
                                 </tbody>
                             </table>
+
+                            @endif
 
                             <div class="demo-inline-spacing">
                                 {{-- {{ $data->links() }} --}}
