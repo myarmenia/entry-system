@@ -13,7 +13,7 @@ trait RecordTrait
             $totalSeconds = 0;
             $entryTime = null;  // To store the entry time
             $exitTime = null;
-            $woking_array = [];
+            $working_array = [];
             // dd($day);
             // dd($records->values());
             $recordsArray = $records->map(function ($item) {
@@ -79,7 +79,7 @@ trait RecordTrait
                         // dump($exitT, $entryT);
 
                             if ($exitT->greaterThan($entryT)) {
-                            dump($key1,'exitT',$exitT,'entryT', $entryT);
+                            // dump($key1,'exitT',$exitT,'entryT', $entryT);
                             //   dump( $entryT, $exitT);
                                 $interval = $exitT->diff($entryT);
 
@@ -92,14 +92,17 @@ trait RecordTrait
                                 }
 
                                 if( (isset($records[$key1 - 1]) && $records[$key1 - 1]->direction == "exit") ){
+                                //   dump($key1,$record->);
+                                  $interval = $exitT->diff($entryT);
 
+                                    array_pop($working_array);
 
-                                    array_pop($woking_array);
 
                                 }
 
-                                $woking_array[] = $interval->format('%H:%I:%S');
-                                // dump(444,$woking_array);
+                                $working_array[] = $interval->format('%H:%I:%S');
+
+                                // dump(444,$working_array);
                             }else {
 
                                 $exitT->addDay();
@@ -120,15 +123,16 @@ trait RecordTrait
                                 if( (isset($records[$key1 - 1]) && $records[$key1 - 1]->direction == "exit") ){
 
                                     // $totalSeconds = 0;
-                                    array_pop($woking_array);
+                                    array_pop($working_array);
 
                                 }
-                                $woking_array[] = $interval->format('%H:%I:%S');
-                                // dump(555,$woking_array);
+                                $working_array[] = $interval->format('%H:%I:%S');
+                                // dump(555,$working_array);
 
                             }
-                            // dump($woking_array);
-                            dump($woking_array);
+
+                            // dump($working_array);
+
 
 
 
@@ -141,21 +145,25 @@ trait RecordTrait
 
             }
 
-            dump($woking_array);
-
-            foreach($woking_array as $ar){
+            // dump($working_array);
+// dd($working_array);
+            foreach($working_array as $ar){
+                // dd($ar);
                 // dd($ar->format('%H:%I:%S'));
 
                 list($hours, $minutes, $seconds) = explode(':',  $ar);
                 $totalSeconds += $hours * 3600 + $minutes * 60 + $seconds;
+                // dd($totalSeconds);
 
             }
             // dd($totalSeconds);
-            $totalMinutes = intdiv($totalSeconds, 60); // Общее количество минут
+            $totalMinutes = intdiv( $totalSeconds, 60); // Общее количество минут
+            // dd( $totalMinutes);
             $hours = intdiv($totalMinutes, 60); // Количество часов
             $minutes = $totalMinutes % 60; // Оставшиеся минуты
-            $peopleDailyRecord[$peopleId][$day]['daily_working_times']= "{$hours} ժ {$minutes} ր";
-            //    dd($peopleDailyRecord);
+            $peopleDailyRecord[$peopleId][$day]['daily_working_times'] = "{$hours} ժ {$minutes} ր";
+            $peopleDailyRecord[$peopleId][$day]['daily_working_times_totalSeconds'] = $totalSeconds;
+        //     //    dd($peopleDailyRecord);
 
 
         // dd($peopleDailyRecord);

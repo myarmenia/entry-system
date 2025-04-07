@@ -20,24 +20,27 @@
                    // Iterate through each person's records
                     foreach ($records as $key=>&$data) {
                         // dd($key,$data);
-                        if (isset($data['working_times'])) {
-                                $totalSeconds = 0;
-                                // dd($totalSeconds);
+                        // if (isset($data['working_times'])) {
+                        //         $totalSeconds = 0;
+                        //         // dd($totalSeconds);
 
-                            foreach ($data['working_times'] as $time) {
-                                // dump($time);
-                                // Convert each time string (HH:MM:SS) to seconds
-                                list($hours, $minutes, $seconds) = explode(':', $time);
-                                $totalSeconds += $hours * 3600 + $minutes * 60 + $seconds;
-                                // list($hours, $minutes) = explode(':', $time);
-                                // $totalSeconds += $hours * 3600 + $minutes * 60;
-                            }
-                            // dd($totalSeconds);
-                            // dd( $peopleDailyRecord[$key]);
-                            $data['daily_working_time'] = $totalSeconds;
-                            // $peopleDailyRecord[$records][$key]['daily_working_time'] = $totalSeconds;
-                            $fullTotalSeconds += $totalSeconds;
+                        //     foreach ($data['working_times'] as $time) {
+                        //         // dump($time);
+                        //         // Convert each time string (HH:MM:SS) to seconds
+                        //         list($hours, $minutes, $seconds) = explode(':', $time);
+                        //         $totalSeconds += $hours * 3600 + $minutes * 60 + $seconds;
+                        //         // list($hours, $minutes) = explode(':', $time);
+                        //         // $totalSeconds += $hours * 3600 + $minutes * 60;
+                        //     }
+                        //     // dd($totalSeconds);
+                        //     // dd( $peopleDailyRecord[$key]);
+                        //     $data['daily_working_time'] = $totalSeconds;
+                        //     // $peopleDailyRecord[$records][$key]['daily_working_time'] = $totalSeconds;
+                        //     $fullTotalSeconds += $totalSeconds;
 
+                        // }
+                        if(isset($data['daily_working_times_totalSeconds'])){
+                            $fullTotalSeconds+=$data['daily_working_times_totalSeconds'];
                         }
 
                         if (isset($data['delay_hour'])) {
