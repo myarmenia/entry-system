@@ -8,11 +8,11 @@ $(function () {
       let date = $(this).attr('data-date')
       let direction = $(this).attr('data-direction')
       let clientId = $(this).attr('data-clientId')
-      let existingTime =$(this).attr('data-time')
+      let enterExitTime =$(this).attr('data-enterExitTime')
 
     //   console.log(person_id,tb_name,day,date, 5252)
 
-      let url = `/enter-time/${tb_name}/${person_id}/${clientId}/${direction}/${date}/${day}/${existingTime}`
+      let url = `/enter-time/${tb_name}/${person_id}/${clientId}/${direction}/${date}/${day}/${enterExitTime}`
       console.log( url)
 
       $('.send_enter_time').attr('data-url', url)
@@ -46,7 +46,7 @@ $(function () {
             let message = ''
             let type = ''
             if (data.result) {
-                    console.log(data.result)
+                    console.log(data.result,5555)
                      message = data.result
                      console.log(message)
                      if(message!="Գործողությունը հաստատված է:"){
