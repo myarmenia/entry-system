@@ -33,7 +33,7 @@ trait ReportFilterTrait{
                     // dd($date);   //"2025-03-20"
                     // dd($records);
                     // $date == "2025-03-22" &&
-                    if( $peopleId==75){
+                    // if( $peopleId==75){
 
                       $day = date('d',strtotime($date));
                       // dd($day);//20
@@ -249,7 +249,7 @@ trait ReportFilterTrait{
 
 
 
-                    }//date
+                    // }//date
 
 
                 }//foreach ($dailyRecords as $date => $records)
