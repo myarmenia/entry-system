@@ -1,6 +1,7 @@
 $(function () {
     $('.enter_time_item').on('click', function () {
         $('#time').val('')
+        $('.text-danger').text('');
       let person_id = $(this).parents('.action').attr('data-person-id')
 
       let tb_name = $(this).parents('.action').attr('data-tb-name')
@@ -18,7 +19,9 @@ $(function () {
       $('.send_enter_time').attr('data-url', url)
     //   $('.message_cont').html('')
 
+
     })
+
 })
 
 
@@ -46,6 +49,7 @@ $(function () {
             let message = ''
             let type = ''
             if (data.result) {
+                $('.text-danger').text('');
                     console.log(data.result,5555)
                      message = data.result
                      console.log(message)
@@ -74,6 +78,9 @@ $(function () {
         });
       }
     })
+    $('.btn-close').on('click', function () {
+        window.location.reload();
+    });
 
 
   })

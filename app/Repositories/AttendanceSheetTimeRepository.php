@@ -34,55 +34,60 @@ class AttendanceSheetTimeRepository implements AttendanceSheetTimeInterface
         $clientDayStartTime = Carbon::parse($schedule_details->day_start_time); // client working start time
         $workerEnterExitTime  = Carbon::parse($fullTime);      // աշխատակցի մուտքի կամ ելքի ժամանակն է
         $beforEnterExitTime = Carbon::parse($enterExitTime);   // աշխատակցի մուտքի կամ ելքի  բազայի ժամանակն է
-// dd("day_end_time",$clientDayEndTime , "day_start_time",$clientDayStartTime, $workerEnterExitTime);
-// dump($workerEnterExitTime);
-        if ($workerEnterExitTime->between($clientDayStartTime, $clientDayEndTime)) {
-            // dd($workerEnterExitTime, $beforEnterExitTime);
-            if($workerEnterExitTime->lessThan($beforEnterExitTime)){
+        // dd("day_end_time",$clientDayEndTime , "day_start_time",$clientDayStartTime, $workerEnterExitTime);
+        // dump($workerEnterExitTime);
+        if($clientDayStartTime->lessThan($clientDayEndTime)){
+            if ($workerEnterExitTime->between($clientDayStartTime, $clientDayEndTime)) {
+                if($workerEnterExitTime->lessThan($beforEnterExitTime)){
+                    if($direction=="exit"){
+                        return "Մուտքագրված ժամը չի կարող մեծ լինել բազայում առկա մուտքի ժամից";
 
-                return "Մուտքագրված ժամ";
+                    }
+                }
+            } else {
+
+                return "Մուտքագրված ժամանակը չի համապատասխանում գործատուի աշխատանքային ժամանակացույցին";
             }
-
-
-            // return response()->json(['message' => 'Worker entry time is OK'], 200);
-        } else {
-            return "Մուտքագրված ժամանակը չի համապատասխանում գործատուի աշխատանքային ժամանակացույցին";
         }
+        if ($clientDayStartTime->greaterThan($clientDayEndTime)) {
+
+            $clientDayEndTime->addDay();
+
+            if ($workerEnterExitTime ->isBetween($clientDayStartTime, $clientDayEndTime, true, true)  ) {
 
 
+                if($workerEnterExitTime->isBefore($beforEnterExitTime)){
 
-        if($direction=="exit"){
-            $db_time = $schedule_details->day_end_time;
-            // dd($db_time);
-            if($clientDayEndTime<$clientDayStartTime){
-                // dd("db_time",$db_time,"day_start_time",$day_start_time);
-                $fullDate = Carbon::parse($fullDate);
-                // dd($fullDate);
-                $fullDate->addDay();
-                // dd($fullDate);
-                $fullDate = $fullDate->toDateString();
-                // $fullDate = $fullDate->format('Y-m-d');
-                // dd($fullDate);
+                    return "Մուտքագրված ժամը չի կարող մեծ լինել բազայում առկա մուտքի ժամից";
+                }
+
+
+            } else {
+             
+
+                $fullDate = Carbon::parse($fullDate); // 2025-03-22 00:00:00.0 որպեսզի կարողանանք օր ավելացնենք
+
+                    // dd($fullDate);//2025-03-22 00:00:00.0 Asia/Yerevan (+04:00)
+                // dd($fullTime);
+                $fullTimeCarbon = Carbon::parse($fullTime)->format('H:i:s');
+                 $midnight = Carbon::parse("00:00:00")->format('H:i:s');
+
+
+                if($workerEnterExitTime->isBefore($beforEnterExitTime) &&  $fullTimeCarbon < $midnight ){
+
+                    return "Մուտքագրված ժամը չի կարող մեծ լինել բազայում առկա մուտքի ժամից";
+                }
+
+                $fullDate = $fullDate->addDay()->format('Y-m-d'); //  օգտագործում եմ բազայում մուտք անելու ժամանակ
+                // dd($fullDate,456);
+
+                if ($workerEnterExitTime->format('H:i:s') > $clientDayEndTime->format('H:i:s')) {
+
+                    return "Մուտքագրված ժամը չի համապատասխանում գործատուի աշխատանքային ժամանակացույցին";
+                }
 
             }
-
-        }else{
-            $db_time = $schedule_details->day_start_time;
-
-
         }
-
-        $db_time = strtotime($db_time);  //client working time
-        $time_tostr = strtotime($fullTime);
-        dd($fullTime);
-        dd($db_time,$time_tostr);
-
-
-            if ($db_time !== $time_tostr) {
-                $formatted_time = date("H:i:s", $db_time);
-
-                return  "Մուտքագրվող ժամանակը պետք է լինի ". $formatted_time;
-            }
 
 
         $entry_code_id = PersonPermission::where('person_id',$person_id)->value('entry_code_id');
@@ -90,7 +95,7 @@ class AttendanceSheetTimeRepository implements AttendanceSheetTimeInterface
         $entry_code_token = EntryCode::where('id',$entry_code_id)->value('token');
 
         $date = $fullDate." ".$fullTime;
-        // dd($date);
+
 
         $store_data = [
             "people_id" => $person_id,
