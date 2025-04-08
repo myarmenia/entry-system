@@ -1,10 +1,12 @@
 <?php
 namespace App\Traits;
 
+use App\Mail\MyMail;
 use App\Models\ScheduleDetails;
 use App\Models\Turnstile;
 use Carbon\Carbon;
 use DateTime;
+use Illuminate\Support\Facades\Mail;
 
 trait RecordTrait
 {
@@ -26,6 +28,10 @@ trait RecordTrait
                     if (!$recordsArray->contains('direction', 'exit') && $recordsArray->contains('direction', 'enter')) {
 
                         $peopleDailyRecord[$peopleId][$day]['exit'] ="Անձի ելքը չի գրանցվել";
+
+                        $user = auth()->user(); // Получаем текущего пользователя
+                        Mail::to("armine.khachatryan1982@gmail.com")->send(new MyMail($user));
+
 
                     }
                     if (!$recordsArray->contains('direction', 'enter')  && $recordsArray->contains('direction', 'exit')) {
