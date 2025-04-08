@@ -148,17 +148,10 @@
                                                                 @if (is_array($item[$date->format('d')]['enter']))
                                                                          {{ $item[$date->format('d')]['enter'][0] }}
 
-                                                                @else
-
-                                                                    <i class="bx bx-edit-alt me-1 enter_time_item"
-                                                                        data-bs-toggle = "modal"
-                                                                        data-bs-target = "#enterTime"
-                                                                        data-day = {{ $date->format('d') }}
-                                                                        data-direction = "enter"
-                                                                        data-clientId = {{$data['client_id']}}
-                                                                        data-date = {{ $monthYear }}
-                                                                    ></i>
                                                                 @endif
+
+
+
                                                             @endif
                                                         </td>
 
@@ -176,6 +169,7 @@
                                                                         data-day = {{ $date->format('d') }}
                                                                         data-direction = "exit"
                                                                         data-clientId = {{$data['client_id']}}
+                                                                        data-enterExitTime =  {{ $item[$date->format('d')]['enter'][0] }}
                                                                         data-date = {{ $monthYear }}
                                                                     ></i>
                                                                @endif
