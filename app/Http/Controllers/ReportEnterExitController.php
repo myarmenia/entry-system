@@ -10,8 +10,10 @@ class ReportEnterExitController extends Controller
     public function __construct(protected ReportFilterService $service){}
     public function __invoke(Request $request){
 
+
         $data = $this->service->filterService($request->all());
-       
+
+// dd($data);
         return view('report.enter_exit', compact('data'));
 
     }
