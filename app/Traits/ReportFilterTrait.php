@@ -28,47 +28,47 @@ trait ReportFilterTrait{
           $peopleDailyRecord =[];
             // dd($groupedEntries);
             foreach ($groupedEntries as $peopleId => $dailyRecords) {
+                // dump($peopleId);
 
                 foreach ($dailyRecords as $date => $records) {
                     // dd($date);   //"2025-03-20"
                     // dd($records);
                     // $date == "2025-03-22" &&
-                    // if( $peopleId==75){
+                    // if( $date == "2025-03-14" && $peopleId==72 ){
+                        // dd(77);
 
                       $day = date('d',strtotime($date));
-                      // dd($day);//20
+                    //   dd($day);//20
 
                       // $day=11;
                       $records = $records->sortBy('date')->unique('date'); // Ensure records are sorted by time
-                      //  dd( $records );
+                      // dd( $records );
                       // $entryTime = null;
 
                       // վերադարձնում է ամսվա այդ օրը շաբաթվա ինչ օր է
                       $dayOfWeek = Carbon::parse(time: $date)->format('l');
-                      // dd($date,$dayOfWeek);//Thursday
-                      // $clientSchedule = $clientWorkingTimes[$dayOfWeek] ?? null;
-                      //   dd($records->first()->schedule_name_id);
-                      // dd($records);
+                    //    dd($date,$dayOfWeek);//Thursday
+                       // dd($records);
 
 
                       $peopleDailyRecord = $this->getPersonWorkingHours($peopleDailyRecord,$records, $peopleId,$day);
-                      // dd($people_records);
-                       //   dd( $peopleDailyRecord);
+                    //    dd($peopleDailyRecord);
+                        //  dump( $peopleDailyRecord);
                       // dump($peopleDailyRecord);
 
                       $worker_first_enter = $records->first();
-                       //   dd( $worker_first_enter);
+                        //  dd( $worker_first_enter);
                       // dd($worker_first_enter->schedule_name_id);
 
                       $schedule_id = $worker_first_enter->schedule_name_id;
-                       //   dd($schedule_id);
+                        //  dd($schedule_id);
                       $clientWorkingTimes = ScheduleDetails::where('schedule_name_id',$schedule_id)
                                                          ->get()
                                                          ->keyBy('week_day');
-                       //   dd( $clientWorkingTimes);
+                        //  dd( $clientWorkingTimes);
                       // dd( $date,$dayOfWeek);
                       $clientSchedule = $clientWorkingTimes[$dayOfWeek] ?? null;
-                      // dd($clientSchedule);
+                    //   dd($clientSchedule);
                         if(isset($clientSchedule)){
                             if($worker_first_enter->direction == "enter"){
                                 $get_client_week_working_start_time='';
