@@ -6,6 +6,7 @@ use App\Http\Controllers\AttendansSheetEnterTimeController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ChangeStatusController;
 use App\Http\Controllers\Component\ClientComponentController;
+use App\Http\Controllers\CronJobController;
 use App\Http\Controllers\DeleteItemController;
 use App\Http\Controllers\Department\DepartmentController;
 use App\Http\Controllers\EntryCode\EntryCodeCreateController;
@@ -127,6 +128,7 @@ Route::group(['middleware' => ['auth']], function() {
 });
 
 Route::get('get-file', [FileUploadService::class, 'get_file'])->name('get-file');
+Route::get('cron-job',[CronJobController::class,'index']);
 // =====================coment=====================================
 // ========================================================
 // ==========================
