@@ -1,15 +1,17 @@
 <?php
 namespace App\Traits;
 
+use App\Mail\MyMail;
 use App\Models\ScheduleDetails;
 use App\Models\Turnstile;
 use Carbon\Carbon;
 use DateTime;
+use Illuminate\Support\Facades\Mail;
 
 trait RecordTrait
 {
     public function getPersonWorkingHours($peopleDailyRecord,$records, $peopleId,$day){
-
+            // dd($peopleDailyRecord,$records, $peopleId,$day);
             $totalSeconds = 0;
             $entryTime = null;  // To store the entry time
             $exitTime = null;
@@ -22,11 +24,13 @@ trait RecordTrait
                             'direction' => $item->direction
                         ];
                     });
+                    // dd($recordsArray);
 
                     if (!$recordsArray->contains('direction', 'exit') && $recordsArray->contains('direction', 'enter')) {
 
                         $peopleDailyRecord[$peopleId][$day]['exit'] ="Անձի ելքը չի գրանցվել";
 
+                      
                     }
                     if (!$recordsArray->contains('direction', 'enter')  && $recordsArray->contains('direction', 'exit')) {
 

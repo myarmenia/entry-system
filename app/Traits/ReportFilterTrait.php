@@ -28,47 +28,47 @@ trait ReportFilterTrait{
           $peopleDailyRecord =[];
             // dd($groupedEntries);
             foreach ($groupedEntries as $peopleId => $dailyRecords) {
+                // dump($peopleId);
 
                 foreach ($dailyRecords as $date => $records) {
                     // dd($date);   //"2025-03-20"
                     // dd($records);
                     // $date == "2025-03-22" &&
-                    // if( $peopleId==75){
+                    // if( $date == "2025-03-14" && $peopleId==72 ){
+                        // dd(77);
 
                       $day = date('d',strtotime($date));
-                      // dd($day);//20
+                    //   dd($day);//20
 
                       // $day=11;
                       $records = $records->sortBy('date')->unique('date'); // Ensure records are sorted by time
-                      //  dd( $records );
+                      // dd( $records );
                       // $entryTime = null;
 
                       // վերադարձնում է ամսվա այդ օրը շաբաթվա ինչ օր է
                       $dayOfWeek = Carbon::parse(time: $date)->format('l');
-                      // dd($date,$dayOfWeek);//Thursday
-                      // $clientSchedule = $clientWorkingTimes[$dayOfWeek] ?? null;
-                      //   dd($records->first()->schedule_name_id);
-                      // dd($records);
+                    //    dd($date,$dayOfWeek);//Thursday
+                       // dd($records);
 
 
                       $peopleDailyRecord = $this->getPersonWorkingHours($peopleDailyRecord,$records, $peopleId,$day);
-                      // dd($people_records);
-                       //   dd( $peopleDailyRecord);
+                    //    dd($peopleDailyRecord);
+                        //  dump( $peopleDailyRecord);
                       // dump($peopleDailyRecord);
 
                       $worker_first_enter = $records->first();
-                       //   dd( $worker_first_enter);
+                        //  dd( $worker_first_enter);
                       // dd($worker_first_enter->schedule_name_id);
 
                       $schedule_id = $worker_first_enter->schedule_name_id;
-                       //   dd($schedule_id);
+                        //  dd($schedule_id);
                       $clientWorkingTimes = ScheduleDetails::where('schedule_name_id',$schedule_id)
                                                          ->get()
                                                          ->keyBy('week_day');
-                       //   dd( $clientWorkingTimes);
+                        //  dd( $clientWorkingTimes);
                       // dd( $date,$dayOfWeek);
                       $clientSchedule = $clientWorkingTimes[$dayOfWeek] ?? null;
-                      // dd($clientSchedule);
+                    //   dd($clientSchedule);
                         if(isset($clientSchedule)){
                             if($worker_first_enter->direction == "enter"){
                                 $get_client_week_working_start_time='';
@@ -352,59 +352,71 @@ public function getEntriesByScheduleInterval($attendance_sheet)
             $personSchedules = [];
 
             foreach ($entries as $key=>$attendanceSheet) {
-                $scheduleDetailsArray = $attendanceSheet->getScheduleDetailsAttribute();
-                // dd($peopleId, $scheduleDetailsArray);
-                $attendanceDateTime = Carbon::parse($attendanceSheet->date);
-                // dd($attendanceDateTime); // date: 2025-03-20 18:05:38.0 Asia/Yerevan (+04:00)
+                // if($key==0){
+                    $scheduleDetailsArray = $attendanceSheet->getScheduleDetailsAttribute();
+                    // dd($peopleId, $scheduleDetailsArray);
+                    $attendanceDateTime = Carbon::parse($attendanceSheet->date);
+                    // dd($attendanceDateTime); // date: 2025-03-20 18:05:38.0 Asia/Yerevan (+04:00)
 
-                // Фильтруем смену, которая подходит к времени прихода
-                $matchedSchedule = null;
-                if($scheduleDetailsArray!=null){
-                    foreach ($scheduleDetailsArray as $scheduleDetails) {
-                        // dd($scheduleDetails);
-                        $scheduleId = $scheduleDetails['schedule_name_id'];
-                        $attendanceDate = $attendanceDateTime->toDateString(); // YYYY-MM-DD
-                        // dd( $attendanceDate);//"2025-03-20"
-                        // Определяем начало и конец смены
-                        $scheduleStart = Carbon::parse("{$attendanceDate} {$scheduleDetails['day_start_time']}");
-                        $scheduleEnd = Carbon::parse("{$attendanceDate} {$scheduleDetails['day_end_time']}");
-                        // dd(Carbon::parse($attendanceDateTime)->hour);
-                        // Если смена идёт через ночь
-                        // dump($key, $peopleId,$attendanceSheet, $scheduleDetails,$scheduleEnd, $scheduleStart);
-                        // dd($attendanceDateTime->lt( $scheduleEnd->addDay()));
-                        // 9<18 && 18>12
-                        if ($scheduleEnd->lt($scheduleStart) && Carbon::parse($attendanceDateTime)->hour>12) {
-                            // dd($scheduleEnd);
-                            $scheduleEnd->addDay();
-                        }
-                        elseif ($scheduleStart->lt($scheduleEnd)) {
-                            // Если $scheduleStart меньше $scheduleEnd, ничего не делаем
-                        }
-                        else{
-                            $scheduleStart->subDay();
-                        }
-                        // dd($scheduleEnd,$scheduleStart);
-                        $earlyScheduleStart = $scheduleStart->copy()->subHours(2);
-                        $extendedScheduleEnd = $scheduleEnd->copy()->addHours(2);
-
-                        // Проверка, попадает ли запись на границу смены
-                        if ($attendanceDateTime->gte($earlyScheduleStart) && $attendanceDateTime->lte($extendedScheduleEnd)) {
-
-                            $shiftDate = $scheduleStart->toDateString();
-                            if (!isset($personSchedules[$shiftDate])) {
-                                $personSchedules[$shiftDate] = collect(); // Создаем коллекцию
+                    // Фильтруем смену, которая подходит к времени прихода
+                    $matchedSchedule = null;
+                    // dd($scheduleDetailsArray);
+                    if($scheduleDetailsArray!=null){
+                        foreach ($scheduleDetailsArray as $scheduleDetails) {
+                            // dd($scheduleDetails);
+                            $scheduleId = $scheduleDetails['schedule_name_id'];
+                            $attendanceDate = $attendanceDateTime->toDateString(); // YYYY-MM-DD
+                            // dd( $attendanceDate);//"2025-03-20"
+                            // Определяем начало и конец смены
+                            $scheduleStart = Carbon::parse("{$attendanceDate} {$scheduleDetails['day_start_time']}");
+                            $scheduleEnd = Carbon::parse("{$attendanceDate} {$scheduleDetails['day_end_time']}");
+                            // dd(Carbon::parse($attendanceDateTime)->hour);
+                            // Если смена идёт через ночь
+                            // dump($key, $peopleId,$attendanceSheet, $scheduleDetails,$scheduleEnd, $scheduleStart);
+                            // dd($attendanceDateTime->lt( $scheduleEnd->addDay()));
+                            // 9<18 && 18>12
+                            // dd("scheduleEnd",$scheduleEnd,'scheduleStart',$scheduleStart);
+                            if ($scheduleEnd->lt($scheduleStart) && Carbon::parse($attendanceDateTime)->hour>12) {
+                                // dd(11,$scheduleEnd);
+                                $scheduleEnd->addDay();
                             }
+                            elseif ($scheduleStart->lt($scheduleEnd)) {
+                                // dd(12);
+                                // Если $scheduleStart меньше $scheduleEnd, ничего не делаем
+                            }
+                            // elseif($scheduleEnd->lt($scheduleStart) && Carbon::parse($attendanceDateTime)->hour<12){
+                            //     // dd(13);
+                            //     // dd(Carbon::parse($attendanceDateTime)->hour);
+                            // }
+                            else{
 
-                            $personSchedules[$shiftDate]->push($attendanceSheet); // Добавляем объект модели
-                            break; // Берём первую подходящую смену и прекращаем проверку
+                                $scheduleStart->subDay();
+                            }
+                            // dd($scheduleEnd,$scheduleStart);
+                            $earlyScheduleStart = $scheduleStart->copy()->subHours(1);
+                            $extendedScheduleEnd = $scheduleEnd->copy()->addHours(1);
+
+                            // Проверка, попадает ли запись на границу смены
+                            if ($attendanceDateTime->gte($earlyScheduleStart) && $attendanceDateTime->lte($extendedScheduleEnd)) {
+
+                                $shiftDate = $scheduleStart->toDateString();
+                                if (!isset($personSchedules[$shiftDate])) {
+                                    $personSchedules[$shiftDate] = collect(); // Создаем коллекцию
+                                }
+
+                                $personSchedules[$shiftDate]->push($attendanceSheet); // Добавляем объект модели
+                                break; // Берём первую подходящую смену и прекращаем проверку
+                            }
                         }
-                    }
+
+                // } if($key==0){
+
                 }
 
             }
 
             $monthlySchedule[$peopleId] = $personSchedules;
-        // }
+        // } // if($peopleId==75){
     }
 // dd($monthlySchedule);
     return $monthlySchedule;
