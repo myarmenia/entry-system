@@ -1,5 +1,6 @@
 <?php
 
+use App\Console\Commands\SendEmailCron;
 use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -39,4 +40,8 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
-    })->create();
+    })
+    ->withCommands([
+        SendEmailCron::class, // Register command here
+    ])
+    ->create();

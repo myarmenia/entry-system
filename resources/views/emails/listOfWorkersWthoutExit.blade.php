@@ -4,7 +4,7 @@
     <title>Email from Laravel</title>
 </head>
 <body>
-    <h1>Hello, {{ $data['name'] }}</h1>
-    <p>{{ $data['message'] }}</p>
+    <h1>Hello, </h1>
+    <p>{{$user}}</p>
 </body>
 </html>
