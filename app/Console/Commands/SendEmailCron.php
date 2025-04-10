@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Mail\SendEmailClient;
 use App\Models\AttendanceSheet;
+use App\Services\CronJobService;
 use App\Services\ReportFilterService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Auth;
@@ -26,11 +27,11 @@ class SendEmailCron extends Command
      * @var string
      */
     protected $description = 'Command description';
-    protected $reportFilterService;
-    public function __construct(ReportFilterService $reportFilterService)
+
+    public function __construct(protected CronJobService $cronJobService)
     {
         parent::__construct();
-        $this->reportFilterService = $reportFilterService;
+
     }
 
     /**
@@ -38,21 +39,9 @@ class SendEmailCron extends Command
      */
     public function handle()
     {
-        // now()->format('Y-m')
-         $data = AttendanceSheet::all();
-        // dd($user);
-        Log::info([ $data]);
-        // $filteredData = $this->reportFilterService->filterService(['month' =>"2025-03" ]);
-        // $data = "444444";
-        // Log::info("aaaaa");
-        // foreach($filteredData as $peopleId => $item){
-        //     Log::info(111);
-        // }
 
-        // dd( $filteredData );
+        $data = $this->cronJobService->get();
+        Log::info("email sending client successfully");
 
-        // Mail::send(new SendEmailClient($data));
-        // Log::info("aaaaa", $filteredData);
-        //
     }
 }

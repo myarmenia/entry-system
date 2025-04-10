@@ -1,12 +1,13 @@
 <?php
 namespace App\Services;
 
+use App\Mail\SendEmailClient;
 use App\Models\AttendanceSheet;
 use App\Models\Client;
 use App\Models\Person;
 use App\Models\ScheduleDepartmentPerson;
 use App\Traits\ScheduleIntervalTrait;
-
+use Illuminate\Support\Facades\Mail;
 
 class CronJobService
 {
@@ -42,10 +43,13 @@ class CronJobService
 
                             $client = Client::where('id',$person->client_id)->first();
 
-                            dump($peopleId );
+                            // $client->email
+                            $data['client_email'] ="armine.khachatryan1982@gmail.com" ;
+                            $data['userFullName'] = $person->full_name;
+                            $data['date'] = $previous_day;
 
-                        }else{
-                            dump($peopleId );
+                            Mail::send(new SendEmailClient($data));
+
                         }
                     }
                 }
