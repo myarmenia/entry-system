@@ -8,6 +8,7 @@ use App\Models\Person;
 use App\Models\ScheduleDepartmentPerson;
 use App\Traits\ScheduleIntervalTrait;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class CronJobService
 {
@@ -17,7 +18,7 @@ class CronJobService
 
         // $current_day = \Carbon\Carbon::now()->format('Y-m-d');
         // $current_day="2025-03-13";
-        $current_day = \Carbon\Carbon::parse("2025-04-11");
+        $current_day = \Carbon\Carbon::parse("2025-04-10");
         $previous_day = $current_day->subDay()->format('Y-m-d'); // "2025-04-08"
         // dd($current_day);
 
@@ -28,11 +29,15 @@ class CronJobService
         $attendance_sheet = AttendanceSheet::whereIn('people_id',$scheduleDepartmentPerson)->get();
 
         $groupedEntries = $this->getEntriesByScheduleInterval($attendance_sheet);
+        // Log::info("email sending client successfully1");
         // dd($current_day, $previous_day,$groupedEntries);
         foreach ($groupedEntries as $peopleId => $day) {
             if($peopleId == 84){
-
+                // Log::info("peopleId == 84");
+                // Log::info("array_key_exists");
+// dd($previous_day);
                 if (array_key_exists($previous_day, $day)) {
+                    // Log::info("array_key_exists");
 
                     if ($day[$previous_day]) {
                         $recordsArray = $day[$previous_day];
@@ -48,11 +53,18 @@ class CronJobService
                             $data['userFullName'] = $person->full_name;
                             $data['date'] = $previous_day;
 
+                            Log::info("before email");
                             Mail::send(new SendEmailClient($data));
 
+                        }else{
+                            Log::info("else");
                         }
                     }
+                }else{
+                    Log::info(" not exist array_key_exists previous_day");
                 }
+            }else{
+                Log::info("peopleId != 84");
             }
         }
 
