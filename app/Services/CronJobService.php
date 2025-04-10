@@ -17,7 +17,7 @@ class CronJobService
 
         // $current_day = \Carbon\Carbon::now()->format('Y-m-d');
         // $current_day="2025-03-13";
-        $current_day = \Carbon\Carbon::parse("2025-03-15");
+        $current_day = \Carbon\Carbon::parse("2025-04-11");
         $previous_day = $current_day->subDay()->format('Y-m-d'); // "2025-04-08"
         // dd($current_day);
 
@@ -30,7 +30,7 @@ class CronJobService
         $groupedEntries = $this->getEntriesByScheduleInterval($attendance_sheet);
         // dd($current_day, $previous_day,$groupedEntries);
         foreach ($groupedEntries as $peopleId => $day) {
-            if($peopleId == 80){
+            if($peopleId == 84){
 
                 if (array_key_exists($previous_day, $day)) {
 
