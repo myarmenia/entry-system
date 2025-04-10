@@ -30,7 +30,7 @@ trait RecordTrait
 
                         $peopleDailyRecord[$peopleId][$day]['exit'] ="Անձի ելքը չի գրանցվել";
 
-                      
+
                     }
                     if (!$recordsArray->contains('direction', 'enter')  && $recordsArray->contains('direction', 'exit')) {
 
