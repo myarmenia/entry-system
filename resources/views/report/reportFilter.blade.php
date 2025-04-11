@@ -27,6 +27,17 @@
             background-color: #343a40;
             color: #fff
         }
+        .table-responsive {
+            max-height: 700px;
+            overflow: auto;
+            position: relative;
+        }
+        .table thead {
+            position: sticky;
+            top: 0;
+            background-color: white;
+            z-index: 100;
+        }
 
     </style>
 @endsection

@@ -28,6 +28,19 @@
             background-color: #343a40;
             color: #fff
         }
+        .table-responsive {
+            max-height: 700px;
+            overflow: auto;
+            position: relative;
+        }
+        .table thead {
+            position: sticky;
+            top: 0;
+            background-color: white;
+            z-index: 100;
+        }
+
+
     </style>
 @endsection
 
@@ -103,7 +116,7 @@
                                 </div>
 
                                 <button type="submit" class="btn btn-primary col-2 search">Հաշվետվություն</button>
-                                {{-- <a href="{{ route('export-xlsx-armobil',parameters: $monthYear) }}" type="submit" class="btn btn-primary col-2 search">Արտահանել XLSX</a> --}}
+                                <a href="{{ route('export-xlsx-armobil',parameters: $monthYear) }}" type="submit" class="btn btn-primary col-2 search">Արտահանել XLSX</a>
                             </form>
                             <!-- Bordered Table -->
                             {{-- {{ dd($groupedEntries) }} --}}
@@ -115,8 +128,8 @@
                                             <tr>
                                                 <th rowspan="2" class="fix_column">Հ/Հ</th>
                                                 <th rowspan="2" class="fix_column">ID</th>
-                                                <th rowspan="2" class="fix_column">Անուն</th>
-                                                <th rowspan="2" class="fix_column">Ազգանուն</th>
+                                                <th rowspan="2" class="fix_column">Անուն Ազգանուն</th>
+                                                {{-- <th rowspan="2" class="fix_column"></th> --}}
 
                                                 @for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay())
                                                     <th colspan="2">{{ $date->format('d') }}</th>
@@ -139,8 +152,8 @@
                                                 <tr  class="action" data-person-id="{{ $peopleId }}"  data-tb-name="attendance_sheets">
                                                     <td class="fix_column">{{ ++$data['i'] }}</td>
                                                     <td class="fix_column">{{ $peopleId }}</td>
-                                                    <td class="fix_column">{{ getPeople($peopleId)->name ?? null }}</td>
-                                                    <td class="fix_column">{{ getPeople($peopleId)->surname ?? null }}</td>
+                                                    <td class="fix_column">{{ getPeople($peopleId)->name ?? null }} {{ getPeople($peopleId)->surname ?? null }}</td>
+                                                    {{-- <td class="fix_column">{{ getPeople($peopleId)->surname ?? null }}</td> --}}
 
                                                     @for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay())
                                                         <td class="p-0 text-center">
