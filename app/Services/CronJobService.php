@@ -16,9 +16,9 @@ class CronJobService
 
     public function get(){
 
-        // $current_day = \Carbon\Carbon::now()->format('Y-m-d');
+        $current_day = \Carbon\Carbon::now(); // Carbon instance
         // $current_day="2025-03-13";
-        $current_day = \Carbon\Carbon::parse("2025-04-07");
+        // $current_day = \Carbon\Carbon::parse("2025-04-07");
         $previous_day = $current_day->subDay()->format('Y-m-d'); // "2025-04-08"
         // dd($current_day);
 
