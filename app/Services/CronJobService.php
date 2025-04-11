@@ -16,9 +16,9 @@ class CronJobService
 
     public function get(){
 
-        // $current_day = \Carbon\Carbon::now()->format('Y-m-d');
+        $current_day = \Carbon\Carbon::now(); // Carbon instance
         // $current_day="2025-03-13";
-        $current_day = \Carbon\Carbon::parse("2025-04-11");
+        // $current_day = \Carbon\Carbon::parse("2025-04-07");
         $previous_day = $current_day->subDay()->format('Y-m-d'); // "2025-04-08"
         // dd($current_day);
 
@@ -32,7 +32,7 @@ class CronJobService
         // Log::info("email sending client successfully1");
         // dd($current_day, $previous_day,$groupedEntries);
         foreach ($groupedEntries as $peopleId => $day) {
-            if($peopleId == 84){
+            // if($peopleId == 45){
                 // Log::info("peopleId == 84");
                 // Log::info("array_key_exists");
                 // dd($previous_day);
@@ -48,8 +48,8 @@ class CronJobService
 
                             $client = Client::where('id',$person->client_id)->first();
 
-                            // $client->email
-                            $data['client_email'] ="armine.khachatryan1982@gmail.com" ;
+                            //  "armine.khachatryan1982@gmail.com"
+                            $data['client_email'] = $client->email ;
                             $data['userFullName'] = $person->full_name;
                             $data['date'] = $previous_day;
 
@@ -63,9 +63,9 @@ class CronJobService
                 }else{
                     Log::info(" not exist array_key_exists previous_day");
                 }
-            }else{
-                Log::info("peopleId != 84");
-            }
+            // }else{// if($peopleId == 45){
+            //     Log::info("peopleId != 84");
+            // }
         }
 
     }
